@@ -123,7 +123,7 @@ class Isomorphism():
     #    The step 5
     #    goal is to do a final col sort by similarity - a measure of how many shared True rows two cols have
     # 
-    #     algorithm: changing
+    #     algorithm: changing :/
     #
     #    6. sort the rows once more by ascending row index vectors, which contain the col-index of each True in the row
     #        - can also be described as "a vector of the index of each shape the vertex for that row is involved in"
@@ -537,71 +537,118 @@ class Isomorphism():
                     ties.append([col_vector_group[0].get_index(), col_vector_group[len(col_vector_group) - 1].get_index()])
         return ties
 
-    # needs to be tested
-    @staticmethod
-    def _similarity_col_sort_manager(pvim):
-        # print("welcome to sim col sort manager")
-        col_sum_groups = Isomorphism._get_col_sum_ties(pvim)
-        # print(col_sum_groups)
-        ties = Isomorphism._get_col_vector_ties(col_sum_groups, pvim)
-        # print(ties)
-        # ties is a list of lists of length 2 containing the
-        # start and end indices (inclusive) to consider for step 5 movement
-        # call out to step 5 movement if ties are large enough
-        for iSet in ties:
-            # print(iSet)
-            # print("leaving to sim col sort")
-            pvim = Isomorphism._similarity_col_sort(iSet[0], iSet[1], pvim)
-        return pvim
+    # # needs to be tested
+    # @staticmethod
+    # def _similarity_col_sort_manager(pvim):
+    #     # print("welcome to sim col sort manager")
+    #     col_sum_groups = Isomorphism._get_col_sum_ties(pvim)
+    #     # print(col_sum_groups)
+    #     ties = Isomorphism._get_col_vector_ties(col_sum_groups, pvim)
+    #     # print(ties)
+    #     # ties is a list of lists of length 2 containing the
+    #     # start and end indices (inclusive) to consider for step 5 movement
+    #     # call out to step 5 movement if ties are large enough
+    #     for iSet in ties:
+    #         # print(iSet)
+    #         # print("leaving to sim col sort")
+    #         pvim = Isomorphism._similarity_col_sort(iSet[0], iSet[1], pvim)
+    #     return pvim
 
     # needs to be tested
     @staticmethod
     def _similarity_col_sort(start_index, end_index, pvim):
-        # start with the third-to-last column as a default
-        # no need to handle the last or penult. because no order change necessary
-        active_col = start_index #0 #pvim.dimensions()[1] - 1 - 2
 
-        # tracks sim vector and index
-        sim_vectors = []
-
-        # while the col you are looking at is not beyond the current col,
-        while active_col <= end_index: #pvim.dimensions()[1] - 1 - 2: # 0:
-
-            # get the similarity vector
-            sim_vectors.append([Isomorphism._get_similarity_vector(active_col, end_index, pvim), active_col])
-            # print("before:")
-            # print(sim_vector)
-            # print(pvim)
-
-            # sort the remaining columns and the similarity vector in parallel
-            # (basically, step 2 again but with a different vector)
-            # bubble sort the values in the similarity vector descending, and
-            # do the matching swaps to the columns
-            # bubble sort (Copilot code, thanks copilot)
-            # n = len(sim_vector)
-            # for i in range(n):
-            #     for j in range(0, n-i-1):
-            #         if sim_vector[j+1] > sim_vector[j]:
-            #             sim_vector[j], sim_vector[j + 1] = sim_vector[j + 1], sim_vector[j]
-            #             pvim.col_swap(active_col + 1 + j, active_col + 1 + j + 1)
-            # print("after:")
-            # print(sim_vector)
-            # print(pvim)
-            #repeat for every column remaining to the right
-            active_col = active_col + 1
+        # get groups
+        col_sum_groups = Isomorphism._get_col_sum_ties(pvim)
+        tied_groups = Isomorphism._get_col_vector_ties(col_sum_groups, pvim)
+        # put all indices not included in a tied group in s
+        s = []
         
-        # sort sim_vectors?
-
-        # move cols by sim vectors
-        n = len(sim_vectors)
-        for i in range(n):
-            for j in range(0, n-i-1):
-                if sim_vectors[j+1][0] > sim_vectors[j][0]:
-                    sim_vectors[j], sim_vectors[j + 1] = sim_vectors[j + 1], sim_vectors[j]
-                    pvim.col_swap(sim_vectors[j][1], sim_vectors[j+1][1])
-                    #pvim.col_swap(active_col + 1 + j, active_col + 1 + j + 1)
-
+        # continue until either 1) all columns are in S or 2) no more changes produced
+        moved_in_last = True # for tracking if changes occured. needs to start as True so loop starts
+        while len(s) != pvim.dimensions[1] and moved_in_last==True:
+            # by group,
+            for group in tied_groups:
+                sim_vectors = []
+                colI = group[0]
+                while colI <= group[1]:
+                    sim_vectors.append(Isomorphism._get_similarity_vector(colI, pvim, s))
+                s.extend(Isomorphism._step_5_sort(group[0], pvim, sim_vectors))
         return pvim
+
+    # returns list of indices to add to s
+    @staticmethod    
+    def _step_5_sort(start_i, pvim, sim_vectors):
+        sorted_is = []
+        # now a list of tuples, the pvim index and the sim_vector
+        sims_e = enumerate(sim_vectors, start = start_i)
+
+        # sort cols in group by sim vector
+        # selection sort
+        # i need all this crazy +start_i and -start_i because i'm working in the middle of the matrix
+        # prob a better way to do it though
+        # over the indexes of the group,
+        for i in range(start_i, start_i + len(sims_e)):   
+            max_idx = i
+            for j in range(i+1-start_i, len(sims_e)):
+                if sims_e[j][1] > sims_e[max_idx - start_i][1]:
+                    max_idx = j + start_i
+            sims_e[i-start_i], sims_e[max_idx-start_i] = sims_e[max_idx-start_i], sims_e[i-start_i]
+            pvim.col_swap(i, max_idx)
+            # move whatever has been sorted to s
+            if i != max_idx:
+                # order matters! max will be greater than i because max reassigned
+                # until told otherwise, i will add the index of the larger column first
+                sorted_is.append(max_idx)
+                sorted_is.append(i)
+
+        return list(set(sorted_is))
+
+        # # start with the third-to-last column as a default
+        # # no need to handle the last or penult. because no order change necessary
+        # active_col = start_index #0 #pvim.dimensions()[1] - 1 - 2
+
+        # # tracks sim vector and index
+        # sim_vectors = []
+
+        # # while the col you are looking at is not beyond the current col,
+        # while active_col <= end_index: #pvim.dimensions()[1] - 1 - 2: # 0:
+
+        #     # get the similarity vector
+        #     sim_vectors.append([Isomorphism._get_similarity_vector(active_col, end_index, pvim), active_col])
+        #     # print("before:")
+        #     # print(sim_vector)
+        #     # print(pvim)
+
+        #     # sort the remaining columns and the similarity vector in parallel
+        #     # (basically, step 2 again but with a different vector)
+        #     # bubble sort the values in the similarity vector descending, and
+        #     # do the matching swaps to the columns
+        #     # bubble sort (Copilot code, thanks copilot)
+        #     # n = len(sim_vector)
+        #     # for i in range(n):
+        #     #     for j in range(0, n-i-1):
+        #     #         if sim_vector[j+1] > sim_vector[j]:
+        #     #             sim_vector[j], sim_vector[j + 1] = sim_vector[j + 1], sim_vector[j]
+        #     #             pvim.col_swap(active_col + 1 + j, active_col + 1 + j + 1)
+        #     # print("after:")
+        #     # print(sim_vector)
+        #     # print(pvim)
+        #     #repeat for every column remaining to the right
+        #     active_col = active_col + 1
+        
+        # # sort sim_vectors?
+
+        # # move cols by sim vectors
+        # n = len(sim_vectors)
+        # for i in range(n):
+        #     for j in range(0, n-i-1):
+        #         if sim_vectors[j+1][0] > sim_vectors[j][0]:
+        #             sim_vectors[j], sim_vectors[j + 1] = sim_vectors[j + 1], sim_vectors[j]
+        #             pvim.col_swap(sim_vectors[j][1], sim_vectors[j+1][1])
+        #             #pvim.col_swap(active_col + 1 + j, active_col + 1 + j + 1)
+
+        # return pvim
 
     # passed
     # helper for restricting step 5 working area
@@ -622,6 +669,7 @@ class Isomorphism():
         return groups
 
     # passed
+    # helper for _col_sum_get_groups
     # given an index, get the group of col_sums that match the value at that index
     # identifies a group of tied col sums by index
     # modeled closely after step 4 get_next_group
@@ -644,44 +692,46 @@ class Isomorphism():
         # end is reached, this group extends to the end of the list
         return len(col_sums) - 1
 
-    # CHANGE COMMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # get the similarity vector of one column to the remaining columns to the right
+    # get the similarity vector of one column as compared to the columns in set S
+    #
     # a similarity vector is how many of the column's rows are both true
-    # ex.    True  True    the first col has a similarity vector of [2] because both are true on the first and second rows
-    #        True  True    the second col has a similarity vector of [] because there are no more columns to the right
+    # ex.    True  True    the first col has a similarity vector of [2] because the cols share two True rows
+    #        True  True    
     #        False True
     #        True  False
     #
-    # ex.    True, True, False        first col has [2, 1] because both are true on the first and second rows in the first and second cols                                                      
-    #        True, True, False                             and the first and third are only both true on row 2
-    #        True, False, True        second col has [] because the second and third cols are not both true on any rows
-    #        False, True, False       third col has [] because there are no more cols to the right
+    # ex. comparing col 1 to 2 and 3
+    #        True, True, False        first col has [2, 1] because both are true on the first and second rows in cols 1 and 2                                                      
+    #        True, True, False                             and cols 1 and 3 are only both true on row 2
+    #        True, False, True
+    #        False, True, False
     #        False, False, True
     #        False, False, True
     #
     # process: get the col_index_vector for col (the row indices where this column is True)        
-    #          for each column to the right of col,
+    #          for each column in S,
     #                  get the col_index_vector
     #                  sum how many of the same values the two vectors have and append that to the similarity vector
     #
     # col - the column index to get the similarity vector for
     # pvim - a PolygonVertexIncidenceMatrix
+    # s - set of the indicies of the sorted columns
     #
     # returns a list of similarity values (ints)
     # returns [] if no similarities or no remaining columns to be similar to
     @staticmethod                  # thats inclusive of group
-    def _get_similarity_vector(col, group_end_index, pvim):
+    def _get_similarity_vector(col, pvim, s):
         sim_vector = []
 
         # get the row-indices of each true for this column
         col_indices = Isomorphism._get_col_index_vector(col, pvim)
 
-        # for every other column remaining to the left of col,
-        index = group_end_index + 1
-        while index >= 0:#< len(pvim._matrix[0]):
+        # for every column in S,
+        for index in s:
             sum = 0
             # add up how many of the Trues in the two columns are on the same row
-            # (get the indexes of each true in that col, 
+            # you can probably improve the efficiency of this with set cast
+            # (get the indexes of each True in that col, 
             other_col_indices = Isomorphism._get_col_index_vector(index, pvim)
             for item in col_indices:
                 # check each and add one to a sum if they match,
@@ -711,70 +761,70 @@ class Isomorphism():
 
         return col_index_vector
 
-    # get the groups of the same values in a similarity vector
-    # we need the groups so we can identify where we need to break ties in sort_sim_group
-    # expects a sorted sim_vector
-    # same code as in step 4
-    #
-    # sim_vector - a list of similarity values you want the groups from, sorted
-    #
-    # returns a list of groups, each group being a list of indexes where the values are the same in the sim_vector
-    @staticmethod
-    def _get_sim_groups(sim_vector):   #@ passed
-        groups = []
-        start_index = 0
+    # # get the groups of the same values in a similarity vector
+    # # we need the groups so we can identify where we need to break ties in sort_sim_group
+    # # expects a sorted sim_vector
+    # # same code as in step 4
+    
+    # # sim_vector - a list of similarity values you want the groups from, sorted
+    
+    # # returns a list of groups, each group being a list of indexes where the values are the same in the sim_vector
+    # @staticmethod
+    # def _get_sim_groups(sim_vector):   #@ passed
+    #     groups = []
+    #     start_index = 0
 
-        while start_index < len(sim_vector):
-            group = Isomorphism._get_next_sim_group(start_index, sim_vector, sim_vector[start_index])
-            groups.append(group)
+    #     while start_index < len(sim_vector):
+    #         group = Isomorphism._get_next_sim_group(start_index, sim_vector, sim_vector[start_index])
+    #         groups.append(group)
 
-            start_index = group[-1] + 1
+    #         start_index = group[-1] + 1
 
-        return groups
+    #     return groups
 
-    # helper for get sim group
-    # gets the next group to be added to the list of groups in get sim groups
-    # a group has the same values in the sim_vector
-    # expects a sorted sim_vector
-    # same code as in step 4
-    #
-    # start - the index to start from in the sim_vector (so we exclude what is already part of a group)
-    # sim_vector - the list of similarity values to be grouped, sorted
-    # target - int, the value to identify this group by
-    #
-    # returns the sim_vector indexes of the grouped elements
-    # if at end of sim vector, returns []
-    @staticmethod
-    def _get_next_sim_group(start, sim_vector, target): #@ passed
-        group = []
-        for i in range(start, len(sim_vector)):
-            if sim_vector[i] == target:
-                group.append(i)
-        return group
+    # # helper for get sim group
+    # # gets the next group to be added to the list of groups in get sim groups
+    # # a group has the same values in the sim_vector
+    # # expects a sorted sim_vector
+    # # same code as in step 4
+    # #
+    # # start - the index to start from in the sim_vector (so we exclude what is already part of a group)
+    # # sim_vector - the list of similarity values to be grouped, sorted
+    # # target - int, the value to identify this group by
+    # #
+    # # returns the sim_vector indexes of the grouped elements
+    # # if at end of sim vector, returns []
+    # @staticmethod
+    # def _get_next_sim_group(start, sim_vector, target): #@ passed
+    #     group = []
+    #     for i in range(start, len(sim_vector)):
+    #         if sim_vector[i] == target:
+    #             group.append(i)
+    #     return group
 
-    # break ties by the most-top-most True
-    # in groups where the similarity vector values are the same,
-    # the group gets sorted by which col has the top-most True
-    # same code as in step 4
-    #
-    # start_to_sort - the index to start from in the matrix (the one next to the col whose sim vector you are looking at)
-    # pvim - a PolygonVertexIncidenceMatrix
-    # group - a list of indexes where the values are the same in the sim_vector
-    #
-    # returns the pvim after ONE group has been sorted
-    @staticmethod
-    def _sort_sim_group(start_to_sort, pvim, group):
-        # bubble sort
-        #print("length of group")
-        n = len(group)
-        #print(n)
-        for i in range(n):
-            for j in range(0, n-i-1):
-                if Isomorphism._get_col_index_vector(start_to_sort + group[j], pvim) > Isomorphism._get_col_index_vector(start_to_sort + group[j + 1], pvim):
-                    group[j], group[j + 1] = group[j + 1], group[j]
-                    pvim.col_swap(start_to_sort + group[j], start_to_sort + group[j + 1])
+    # # break ties by the most-top-most True
+    # # in groups where the similarity vector values are the same,
+    # # the group gets sorted by which col has the top-most True
+    # # same code as in step 4
+    # #
+    # # start_to_sort - the index to start from in the matrix (the one next to the col whose sim vector you are looking at)
+    # # pvim - a PolygonVertexIncidenceMatrix
+    # # group - a list of indexes where the values are the same in the sim_vector
+    # #
+    # # returns the pvim after ONE group has been sorted
+    # @staticmethod
+    # def _sort_sim_group(start_to_sort, pvim, group):
+    #     # bubble sort
+    #     #print("length of group")
+    #     n = len(group)
+    #     #print(n)
+    #     for i in range(n):
+    #         for j in range(0, n-i-1):
+    #             if Isomorphism._get_col_index_vector(start_to_sort + group[j], pvim) > Isomorphism._get_col_index_vector(start_to_sort + group[j + 1], pvim):
+    #                 group[j], group[j + 1] = group[j + 1], group[j]
+    #                 pvim.col_swap(start_to_sort + group[j], start_to_sort + group[j + 1])
        
-        return pvim
+    #     return pvim
 
     #@------------------@#
     #@----- Step 6 -----@#
