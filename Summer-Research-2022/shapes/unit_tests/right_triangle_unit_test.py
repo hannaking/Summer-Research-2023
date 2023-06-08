@@ -2,7 +2,7 @@ import unittest
 import sys
 import numpy as np
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
 
 from shapes.triangles.right_triangle import RightTriangle
 from pygeom import Axes, Point

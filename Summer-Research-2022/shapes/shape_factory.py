@@ -30,7 +30,6 @@ class ShapeFactory:
         each scenario
 
     """
-
     def __init__(self, edge_amount, predetermined_shape_types=['Equilateral', 'IsoscelesRight', 'NonIsoscelesRight', 'Square']):
 
         if edge_amount < 1:

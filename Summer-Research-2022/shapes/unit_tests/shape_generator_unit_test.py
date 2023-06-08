@@ -2,7 +2,7 @@ import unittest
 import sys
 import math
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
 
 from node import Node
 from shapes.shape_generator import ShapeGenerator

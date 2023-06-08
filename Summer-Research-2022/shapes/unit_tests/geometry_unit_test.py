@@ -2,7 +2,7 @@ import unittest
 import sys
 import math
 
-sys.path.insert(0, 'C:/Users/lilyb/Desktop/College Stuff/Summer Research (2022)/Summer-Research-2022-displaying-geometry-figures')
+sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
 
 from node import Node
 from shapely.geometry import Point
