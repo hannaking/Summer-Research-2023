@@ -9,16 +9,16 @@ import networkx  as nx
 SHAPE_LATTICE_LAYER     = 3
 EDGE_LATTICE_LAYER      = 2
 
-SEGMENT_TYPES = ["Segment"]
-TRIANGLE_TYPES = ["IsoscelesRight", "Right", "Equilateral", "Isosceles"]
+SEGMENT_TYPES       = ["Segment"]
+TRIANGLE_TYPES      = ["IsoscelesRight", "Right", "Equilateral", "Isosceles"]
 QUADRALATERAL_TYPES = ["Square", "Rectangle", "Rhombus", "Parallelogram", "Kite", "RightTrapezoid", "IsoscelesTrapezoid" "Dart"]
-PENTAGON_TYPES = ["RegularPentagon"]
-HEXAGON_TYPES = ["RegularHexagon"]
-SEPTAGON_TYPES = ["RegularSeptagon"]
-OCTOGON_TYPES = ["RegularOctogon"]
+PENTAGON_TYPES      = ["RegularPentagon"]
+HEXAGON_TYPES       = ["RegularHexagon"]
+SEPTAGON_TYPES      = ["RegularSeptagon"]
+OCTOGON_TYPES       = ["RegularOctogon"]
 
-SHAPE_NUMBER_MAP = {1: SEGMENT_TYPES, 3: TRIANGLE_TYPES, 4: QUADRALATERAL_TYPES,
-                    5: PENTAGON_TYPES, 6: HEXAGON_TYPES, 7: SEPTAGON_TYPES, 8: OCTOGON_TYPES}
+SIZE_SHAPE_MAP = {1: SEGMENT_TYPES,  3: TRIANGLE_TYPES, 4: QUADRALATERAL_TYPES,
+                  5: PENTAGON_TYPES, 6: HEXAGON_TYPES,  7: SEPTAGON_TYPES, 8: OCTOGON_TYPES}
 
 class FaceGraphGenerator:
     """
@@ -38,7 +38,7 @@ class FaceGraphGenerator:
         # get every combination of shape types
         combo_shapes = []
         for size in sizes:
-            combo_shapes.append(SHAPE_NUMBER_MAP[size])
+            combo_shapes.append(SIZE_SHAPE_MAP[size])
 
         # for every combination of shapes
         for combo in list(its.product(*combo_shapes)):
