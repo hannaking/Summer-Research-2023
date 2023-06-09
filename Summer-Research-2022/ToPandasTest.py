@@ -38,17 +38,17 @@ class TestToPandas_test(unittest.TestCase):
 
     def test_ConcaveTriangles(self):
         df = pd.DataFrame(
-            {"point 1" : ['A', 'B'],
-            "point 2" : ['A', 'C']},
+            {"point 1" : ['A', 'A'],
+            "point 2" : ['B', 'C']},
             index = [0, 1])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Isosceles Triangle','Equilateral Triangle','Equilateral Triangle' ],
+            {"shape" : ['Isosceles Triangle','Equilateral Triangle','Equilateral Triangle'],
             "sides" : [3, 3, 3]},
             index = ["A","B","C"])
         
         nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/ConcaveTriangles.json')
-
+        
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
 
