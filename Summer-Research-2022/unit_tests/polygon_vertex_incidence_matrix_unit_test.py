@@ -4,7 +4,7 @@
 import sys
 import unittest
 
-sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
+sys.path.insert(0, './Summer-Research-2022/')
  
 from polygon_vertex_incidence_matrix import PolygonVertexIncidenceMatrix
 from lattice_test import LatticeTest
