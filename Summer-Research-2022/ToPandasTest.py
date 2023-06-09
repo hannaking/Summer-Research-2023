@@ -11,11 +11,11 @@ class TestToPandas_test(unittest.TestCase):
             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Isosceles Triangle','Isosceles Triangle','Isosceles Triangle','Isosceles Triangle' ],
+            {"shape" : [13,13,13,13],
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/TestShape.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/TestShape.json')
 
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
@@ -27,28 +27,28 @@ class TestToPandas_test(unittest.TestCase):
             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Right Triangle','Right Triangle','Isosceles Triangle','Isosceles Triangle' ],
+            {"shape" : [11,11,13,13],
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/Kite.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Kite.json')
 
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
 
     def test_ConcaveTriangles(self):
         df = pd.DataFrame(
-            {"point 1" : ['A', 'B'],
-            "point 2" : ['A', 'C']},
+            {"point 1" : ['A', 'A'],
+            "point 2" : ['B', 'C']},
             index = [0, 1])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Isosceles Triangle','Equilateral Triangle','Equilateral Triangle' ],
+            {"shape" : [13,12,12],
             "sides" : [3, 3, 3]},
             index = ["A","B","C"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/ConcaveTriangles.json')
-
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022\Json shapes\ConcaveTriangles.json')
+        
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
 
