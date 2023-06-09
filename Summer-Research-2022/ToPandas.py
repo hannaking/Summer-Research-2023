@@ -30,8 +30,9 @@ class ToPandas():
 
         nodes = nodes.rename(nodes["ID"])
         nodes = nodes.drop("ID", axis=1)
-        nodes = nodes["shape"].replace(SHAPE_NUMBER_MAP)
-
+        nodes["shape"].replace(SHAPE_NUMBER_MAP, inplace=True)
+        if (~nodes["shape"].isin(SHAPE_NUMBER_MAP)).sum() != 0:
+            raise Exception("Invalid Shape")
 
         return edges, nodes
     
