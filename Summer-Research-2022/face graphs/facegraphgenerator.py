@@ -17,7 +17,7 @@ HEXAGON_TYPES       = ["RegularHexagon"]
 SEPTAGON_TYPES      = ["RegularSeptagon"]
 OCTOGON_TYPES       = ["RegularOctogon"]
 
-SIZE_SHAPE_MAP = {1: SEGMENT_TYPES,  3: TRIANGLE_TYPES, 4: QUADRALATERAL_TYPES,
+SIDES_SHAPE_MAP = {1: SEGMENT_TYPES,  3: TRIANGLE_TYPES, 4: QUADRALATERAL_TYPES,
                   5: PENTAGON_TYPES, 6: HEXAGON_TYPES,  7: SEPTAGON_TYPES, 8: OCTOGON_TYPES}
 
 class FaceGraphGenerator:
@@ -38,7 +38,7 @@ class FaceGraphGenerator:
         # get every combination of shape types
         combo_shapes = []
         for size in sizes:
-            combo_shapes.append(SIZE_SHAPE_MAP[size])
+            combo_shapes.append(SIDES_SHAPE_MAP[size])
 
         # for every combination of shapes
         for combo in list(its.product(*combo_shapes)):
