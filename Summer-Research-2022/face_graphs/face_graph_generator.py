@@ -41,11 +41,15 @@ import matplotlib.pyplot as plt
 SEGMENT_TYPES = ["Segment"]
 TRIANGLE_TYPES = ["IsoscelesRight", "Right", "Equilateral", "Isosceles"]
 QUADRILATERAL_TYPES = ["Square", "Rectangle", "Rhombus", "Parallelogram", "Kite", "RightTrapezoid", "IsoscelesTrapezoid", "Dart"]
-PENTAGON_TYPES = ["RegularPent"]
-HEXAGON_TYPES = ["RegularHex"]
-HEPTAGON_TYPES = ["RegularHept"]
-OCTAGON_TYPES = ["RegularOct"]
+PENTAGON_TYPES = ["RegularPentagon"]
+HEXAGON_TYPES = ["RegularHexagon"]
+HEPTAGON_TYPES = ["RegularHeptagon"]
+OCTAGON_TYPES = ["RegularOctagon"]
+
 ALL_TYPES = [SEGMENT_TYPES, TRIANGLE_TYPES, QUADRILATERAL_TYPES, PENTAGON_TYPES, HEXAGON_TYPES, HEPTAGON_TYPES, OCTAGON_TYPES]
+
+SIDES_SHAPE_MAP = {1: SEGMENT_TYPES,  3: TRIANGLE_TYPES, 4: QUADRILATERAL_TYPES,
+                   5: PENTAGON_TYPES, 6: HEXAGON_TYPES,  7: HEPTAGON_TYPES, 8: OCTAGON_TYPES}
 
 class FaceGraphGenerator:
     """
@@ -54,6 +58,7 @@ class FaceGraphGenerator:
     
     """
     def __init__(self, lattice  = None):
+        
         # to store networkX graphs you will generate
         self.graphs = []
 
@@ -67,20 +72,7 @@ class FaceGraphGenerator:
         # get every shape type possible for this figure
         combo_shapes = []
         for size in sizes:
-            if size == 1:
-                combo_shapes.extend(SEGMENT_TYPES)
-            if size == 3:
-                combo_shapes.extend(TRIANGLE_TYPES)
-            if size == 4:
-                combo_shapes.extend(QUADRILATERAL_TYPES)
-            if size == 5:
-                combo_shapes.extend(PENTAGON_TYPES)
-            if size == 6:
-                combo_shapes.extend(HEXAGON_TYPES)
-            if size == 7:
-                combo_shapes.extend(HEPTAGON_TYPES)
-            if size == 8:
-                combo_shapes.extend(OCTAGON_TYPES)
+            combo_shapes.extend(SIDES_SHAPE_MAP[size])
 
         # combine them in every way and
         # keep only the ones that line up with the shape sizes

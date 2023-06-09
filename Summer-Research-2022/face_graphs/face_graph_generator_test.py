@@ -2,7 +2,7 @@ import unittest
 import sys
 import networkx as nx
 
-sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
+sys.path.insert(0, './Summer-Research-2022/')
 
 from face_graph_generator import FaceGraphGenerator
 from lattice import Lattice
@@ -44,12 +44,12 @@ class TestFaceGraphGenerator(unittest.TestCase):
         oct = Lattice(8)
         gen = FaceGraphGenerator(oct)
         
-        graph = gen.build(oct, [8], ["RegularOct"])
+        graph = gen.build(oct, [8], ["RegularOctagon"])
 
         self.assertEqual(len(graph.nodes), 1)
         self.assertTrue(graph.has_node(0))
         self.assertEqual(nx.get_node_attributes(graph, "size"), {0: 8})
-        self.assertEqual(nx.get_node_attributes(graph, "type"), {0: "RegularOct"})
+        self.assertEqual(nx.get_node_attributes(graph, "type"), {0: "RegularOctagon"})
         self.assertEqual(len(graph.edges), 0)
 
     def test_build_edge_glue(self):
@@ -141,7 +141,7 @@ class TestFaceGraphGenerator(unittest.TestCase):
         fig = ShapeHelpers.goofy_shape()
         gen = FaceGraphGenerator(fig)
 
-        graph = gen.build(fig, [3, 4, 5, 4], ("Equilateral", "Square", "RegularPent", "Dart"))
+        graph = gen.build(fig, [3, 4, 5, 4], ("Equilateral", "Square", "RegularPentagon", "Dart"))
 
         self.assertEqual(len(graph.nodes), 4)
         self.assertTrue(graph.has_node(0))
@@ -151,7 +151,7 @@ class TestFaceGraphGenerator(unittest.TestCase):
         self.assertEqual(nx.get_node_attributes(graph, "size"), {0: 3, 1: 4, 2: 5, 3: 4})
         self.assertEqual(nx.get_node_attributes(graph, "type"), {0: "Equilateral",
                                                                  1: "Square",
-                                                                 2: "RegularPent",
+                                                                 2: "RegularPentagon",
                                                                  3: "Dart"})
         self.assertEqual(len(graph.edges), 4)
         self.assertEqual(graph.degree(0), 2)
