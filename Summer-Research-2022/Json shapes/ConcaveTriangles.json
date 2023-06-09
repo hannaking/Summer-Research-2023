@@ -1,0 +1,38 @@
+{
+    "source": "2-28936, 43-2",
+    "textbook": true,
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }  
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count"  :  1
+        }
+
+     ]
+
+}

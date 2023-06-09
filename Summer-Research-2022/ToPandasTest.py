@@ -15,7 +15,7 @@ class TestToPandas_test(unittest.TestCase):
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/TestShape.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/TestShape.json')
 
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
@@ -31,7 +31,7 @@ class TestToPandas_test(unittest.TestCase):
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/Kite.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Kite.json')
 
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
@@ -47,7 +47,7 @@ class TestToPandas_test(unittest.TestCase):
             "sides" : [3, 3, 3]},
             index = ["A","B","C"])
         
-        nodes, edges = ToPandas.ToPanda('C:/Users/awgar/Desktop/JsonShapes/ConcaveTriangles.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022\Json shapes\ConcaveTriangles.json')
         
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
