@@ -1,9 +1,10 @@
 import unittest
-from facegraphgenerator import FaceGraphGenerator
-from lattice import Lattice
 import sys
 
-sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
+sys.path.insert(0, './Summer-Research-2022/')
+
+from facegraphgenerator import FaceGraphGenerator
+from lattice import Lattice
 
 class unitTest(unittest.TestCase):
     # single shape lattice
@@ -23,5 +24,6 @@ class unitTest(unittest.TestCase):
         self.assertEquals(graph.get_node_attributes(0, "size"), 1)
         self.assertEquals(graph.get_node_attributes(0, "type"), "Segment")
         self.assertEquals(len(graph.edges), 0)
-
     
+    if __name__ == "__main__":
+        unittest.main()
