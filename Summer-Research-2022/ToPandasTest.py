@@ -7,13 +7,13 @@ class TestToPandas_test(unittest.TestCase):
     def test_simpleShape(self):
         df = pd.DataFrame(
             {"point 1" : ['A', 'A', 'B', 'C'],
-            "point 2" : ['B', 'D', 'C', 'D']},
-            index = [0, 1, 2, 3])
+             "point 2" : ['B', 'D', 'C', 'D']},
+             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
             {"shape" : [13,13,13,13],
-            "sides" : [3, 3, 3, 3]},
-            index = ["A","B","C","D"])
+             "sides" : [3, 3, 3, 3]},
+             index = ["A","B","C","D"])
         
         nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/TestShape.json')
 
@@ -23,13 +23,13 @@ class TestToPandas_test(unittest.TestCase):
     def test_Kite(self):
         df = pd.DataFrame(
             {"point 1" : ['A', 'A', 'C', 'B'],
-            "point 2" : ['B', 'C', 'D', 'D']},
-            index = [0, 1, 2, 3])
+             "point 2" : ['B', 'C', 'D', 'D']},
+             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
             {"shape" : [11,11,13,13],
-            "sides" : [3, 3, 3, 3]},
-            index = ["A","B","C","D"])
+             "sides" : [3, 3, 3, 3]},
+             index = ["A","B","C","D"])
         
         nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Kite.json')
 
@@ -39,13 +39,13 @@ class TestToPandas_test(unittest.TestCase):
     def test_ConcaveTriangles(self):
         df = pd.DataFrame(
             {"point 1" : ['A', 'A'],
-            "point 2" : ['B', 'C']},
-            index = [0, 1])
+             "point 2" : ['B', 'C']},
+             index = [0, 1])
 
         df2 = pd.DataFrame(
             {"shape" : [13,12,12],
-            "sides" : [3, 3, 3]},
-            index = ["A","B","C"])
+             "sides" : [3, 3, 3]},
+             index = ["A","B","C"])
         
         nodes, edges = ToPandas.ToPanda('Summer-Research-2022\Json shapes\ConcaveTriangles.json')
         
