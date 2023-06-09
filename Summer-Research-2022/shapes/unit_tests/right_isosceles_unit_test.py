@@ -3,9 +3,9 @@ import sys
 import numpy as np
 import math
 
-sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
+sys.path.insert(0, './Summer-Research-2022/')
 
-from shapes.triangles.right_isosceles import RightIsosceles
+from shapes.triangles.isosceles_right import RightIsosceles
 from pygeom import Axes, Point
 from lattice import Lattice
 

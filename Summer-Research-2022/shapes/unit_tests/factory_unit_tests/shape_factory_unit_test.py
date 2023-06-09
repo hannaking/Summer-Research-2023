@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-sys.path.insert(0, 'C:/Users/hgkin/OneDrive/Documents/GitHub/Summer-Research-2023/Summer-Research-2022/')
+sys.path.insert(0, './Summer-Research-2022/')
 
 from lattice                                import Lattice
 from shapes.triangles.triangle_factory      import TriangleFactory
