@@ -30,7 +30,7 @@ class ToPandas():
 
         nodes = nodes.rename(nodes["ID"])
         nodes = nodes.drop("ID", axis=1)
-        nodes = nodes["shape"].replace(SHAPE_NUMBER_MAP)
+        nodes["shape"].replace(SHAPE_NUMBER_MAP, inplace = True)
 
 
         return edges, nodes

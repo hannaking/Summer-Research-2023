@@ -11,7 +11,7 @@ class TestToPandas_test(unittest.TestCase):
             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Isosceles Triangle','Isosceles Triangle','Isosceles Triangle','Isosceles Triangle' ],
+            {"shape" : [13,13,13,13],
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
@@ -27,7 +27,7 @@ class TestToPandas_test(unittest.TestCase):
             index = [0, 1, 2, 3])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Right Triangle','Right Triangle','Isosceles Triangle','Isosceles Triangle' ],
+            {"shape" : [11,11,13,13],
             "sides" : [3, 3, 3, 3]},
             index = ["A","B","C","D"])
         
@@ -43,7 +43,7 @@ class TestToPandas_test(unittest.TestCase):
             index = [0, 1])
 
         df2 = pd.DataFrame(
-            {"shape" : ['Isosceles Triangle','Equilateral Triangle','Equilateral Triangle'],
+            {"shape" : [13,12,12],
             "sides" : [3, 3, 3]},
             index = ["A","B","C"])
         
