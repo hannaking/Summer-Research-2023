@@ -1,16 +1,16 @@
 {
-    "source": "0-395-43061-5, 171-3",
+    "source": "0-547-32411-1, 309-1",
     "textbook": true,
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Equilateral Triangle",
-            "sides": 3
+            "shape": "Kite",
+            "sides": 4
         },
         {
             "ID"   : "B",
-            "shape": "Rhombus",
+            "shape": "Dart",
             "sides": 4
         }
      ],

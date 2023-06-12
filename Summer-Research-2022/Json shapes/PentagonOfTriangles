@@ -1,50 +1,35 @@
 {
-    "source": "0-395-43061-5, 37-1",
+    "source": "0-547-32411-1, 243-9",
     "textbook": true,
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Right Triangle",
+            "shape": "Isosceles Triangle",
             "sides": 3
         },
         {
             "ID"   : "B",
-            "shape": "Right Triangle",
+            "shape": "Isosceles Triangle",
             "sides": 3
         },
         {
             "ID"   : "C",
             "shape": "Isosceles Triangle",
             "sides": 3
-        },
-        {
-            "ID"   : "D",
-            "shape": "Isosceles Triangle",
-            "sides": 3
-        }   
+        }  
      ],
 
      "edges" :
      [
         {
-            "point 1": "A",
+            "point 1": "C",
             "point 2": "B",
             "count"  :  1
         },
         {
-            "point 1": "A",
-            "point 2": "C",
-            "count"  :  1
-        },
-        {
             "point 1": "C",
-            "point 2": "D",
-            "count"  :  1
-        },
-        {
-            "point 1": "B",
-            "point 2": "D",
+            "point 2": "A",
             "count"  :  1
         }
 

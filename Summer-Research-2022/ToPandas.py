@@ -21,8 +21,11 @@ class ToPandas():
         with open(JsonFile,'r') as f:
             data = json.loads(f.read())
         try:
-            edges = pd.json_normalize(data, record_path=['edges'],errors='ignore')
-            nodes = pd.json_normalize(data, record_path=['nodes'],errors='ignore')
+            textbook = pd.json_normalize(data, record_path=['textbook'],errors='ignore')
+            edges    = pd.json_normalize(data, record_path=['edges'],errors='ignore')
+            nodes    = pd.json_normalize(data, record_path=['nodes'],errors='ignore')
+
+            
         except KeyError as e:
             print(f"Unable to normalize json: {json.dumps(data, indent=4)}")
 
@@ -41,4 +44,5 @@ class ToPandas():
         if (~nodes["shape"].isin(SHAPE_NUMBER_MAP.values())).sum() != 0:
             raise Exception("Invalid Shape")
 
-        return edges, nodes
+        return textbook, edges, nodes
+print(ToPandas.ToPanda('Summer-Research-2022/Json shapes/ConcaveTriangles.json'))

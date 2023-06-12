@@ -1,5 +1,5 @@
 {
-    "source": "0-395-43061-5, 150-6",
+    "source": "0-547-32411-1, 260-9",
     "textbook": true,
     "nodes" :
      [
@@ -10,8 +10,8 @@
         },
         {
             "ID"   : "B",
-            "shape": "Regular Pentagon",
-            "sides": 5
+            "shape": "Kite",
+            "sides": 4
         },
         {
             "ID"   : "C",
@@ -27,12 +27,7 @@
             "ID"   : "E",
             "shape": "Isosceles Triangle",
             "sides": 3
-        },
-        {
-            "ID"   : "F",
-            "shape": "Isosceles Triangle",
-            "sides": 3
-        }
+        } 
      ],
 
      "edges" :
@@ -49,17 +44,12 @@
         },
         {
             "point 1": "B",
-            "point 2": "D",
-            "count"  :  1
-        },
-        {
-            "point 1": "B",
             "point 2": "E",
             "count"  :  1
         },
         {
             "point 1": "B",
-            "point 2": "F",
+            "point 2": "D",
             "count"  :  1
         }
 

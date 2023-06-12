@@ -1,36 +1,31 @@
 {
-    "source": "0-395-43061-5, 150-6",
+    "source": "0-547-32411-1, 503-2",
     "textbook": true,
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
         },
         {
             "ID"   : "B",
-            "shape": "Regular Pentagon",
-            "sides": 5
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "C",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
         },
         {
             "ID"   : "D",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
         },
         {
             "ID"   : "E",
-            "shape": "Isosceles Triangle",
-            "sides": 3
-        },
-        {
-            "ID"   : "F",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
         }
      ],
@@ -43,26 +38,20 @@
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "A",
             "point 2": "C",
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "A",
             "point 2": "D",
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "A",
             "point 2": "E",
             "count"  :  1
-        },
-        {
-            "point 1": "B",
-            "point 2": "F",
-            "count"  :  1
         }
-
      ]
 
 }

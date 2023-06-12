@@ -1,0 +1,127 @@
+{
+    "source": "0-547-32411-1, 793-3",
+    "textbook": true,
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "B",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "C",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "D",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "E",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "F",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "G",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "H",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "I",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "J",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "K",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "L",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "L",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "K",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "I",
+            "count"  :  1
+        }
+     ]
+
+}

@@ -1,5 +1,5 @@
 {
-    "source": "0-395-43061-5, 37-1",
+    "source": "0-547-32411-1, 438-4",
     "textbook": true,
     "nodes" :
      [
@@ -15,14 +15,14 @@
         },
         {
             "ID"   : "C",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
         },
         {
             "ID"   : "D",
-            "shape": "Isosceles Triangle",
+            "shape": "Right Triangle",
             "sides": 3
-        }   
+        }
      ],
 
      "edges" :
@@ -38,16 +38,15 @@
             "count"  :  1
         },
         {
-            "point 1": "C",
-            "point 2": "D",
+            "point 1": "B",
+            "point 2": "C",
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "C",
             "point 2": "D",
             "count"  :  1
         }
-
      ]
 
 }

@@ -47,7 +47,7 @@ class TestToPandas_test(unittest.TestCase):
              "sides" : [3, 3, 3]},
              index = ["A","B","C"])
         
-        nodes, edges = ToPandas.ToPanda('Summer-Research-2022\Json shapes\ConcaveTriangles.json')
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/ConcaveTriangles.json')
         
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
