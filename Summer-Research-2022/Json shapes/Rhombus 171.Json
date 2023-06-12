@@ -1,0 +1,27 @@
+{
+    "source": "2-28936, 171-3",
+    "textbook": true,
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Rhombus",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        }
+     ]
+
+}

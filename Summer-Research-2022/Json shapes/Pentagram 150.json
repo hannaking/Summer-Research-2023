@@ -1,0 +1,68 @@
+{
+    "source": "2-28936, 150-6",
+    "textbook": true,
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "C",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "F",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        }
+
+     ]
+
+}
