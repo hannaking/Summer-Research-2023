@@ -1,7 +1,12 @@
 import json
+import sys
 import pandas as pd
-from ToPandas import ToPandas
 import unittest
+
+sys.path.insert(0, './Summer-Research-2022/')
+
+from ToPandas import ToPandas
+
 
 class TestToPandas_test(unittest.TestCase):
     def test_simpleShape(self):
