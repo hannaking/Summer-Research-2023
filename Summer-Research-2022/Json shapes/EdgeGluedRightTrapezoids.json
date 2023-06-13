@@ -1,0 +1,27 @@
+{
+    "source": "0-547-32411-1, 902-6",
+    "textbook": true,
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        }
+     ]
+
+}

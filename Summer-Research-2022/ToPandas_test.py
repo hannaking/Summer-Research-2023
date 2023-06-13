@@ -52,6 +52,22 @@ class TestToPandas_test(unittest.TestCase):
         self.assertTrue(df.equals(nodes))
         self.assertTrue(df2.equals(edges))
 
+    def test_OctoSquares(self):
+        df = pd.DataFrame(
+            {"point 1" : ['A','A','A','B','E','E','E','E','E','F','F','I','I','I','I','I','J','J'],
+             "point 2" : ['B','C','D','D','F','C','D','G','H','D','H','J','G','H','K','L','H','L']},
+             index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+
+        df2 = pd.DataFrame(
+            {"shape" : [60, 60, 20, 20, 60, 60, 20, 20, 60, 60 , 20, 20],
+             "sides" : [8, 8, 4, 4, 8, 8, 4, 4, 8, 8, 4, 4]},
+             index = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"])
+        
+        nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/OctoSquares 617-6.json')
+        
+        self.assertTrue(df.equals(nodes))
+        self.assertTrue(df2.equals(edges))
+
     
 if __name__ == '__main__':
     unittest.main()
