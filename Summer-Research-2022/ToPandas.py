@@ -45,4 +45,6 @@ class ToPandas():
         if (~nodes["shape"].isin(SHAPE_NUMBER_MAP.values())).sum() != 0:
             raise Exception("Invalid Shape")
         
+        edges = edges.rename(columns={'point 1': 'source', 'point 2': 'target'})
+
         return isTextbook, edges, nodes

@@ -14,8 +14,8 @@ class TestToPandas_test(unittest.TestCase):
             [1],
         )
         df2 = pd.DataFrame(
-            {"point 1" : ['A', 'A', 'B', 'C'],
-             "point 2" : ['B', 'D', 'C', 'D']},
+            {"source" : ['A', 'A', 'B', 'C'],
+             "target" : ['B', 'D', 'C', 'D']},
              index = [0, 1, 2, 3])
 
         df3 = pd.DataFrame(
@@ -34,8 +34,8 @@ class TestToPandas_test(unittest.TestCase):
             [1],
         )
         df2 = pd.DataFrame(
-            {"point 1" : ['A', 'A', 'C', 'B'],
-             "point 2" : ['B', 'C', 'D', 'D']},
+            {"source" : ['A', 'A', 'C', 'B'],
+             "target" : ['B', 'C', 'D', 'D']},
              index = [0, 1, 2, 3])
 
         df3 = pd.DataFrame(
@@ -54,8 +54,8 @@ class TestToPandas_test(unittest.TestCase):
             [1],
         )
         df2 = pd.DataFrame(
-            {"point 1" : ['A', 'A'],
-             "point 2" : ['B', 'C']},
+            {"source" : ['A', 'A'],
+             "target" : ['B', 'C']},
              index = [0, 1])
 
         df3 = pd.DataFrame(
@@ -75,8 +75,8 @@ class TestToPandas_test(unittest.TestCase):
         )
 
         df2 = pd.DataFrame(
-            {"point 1" : ['A','A','A','B','E','E','E','E','E','F','F','I','I','I','I','I','J','J'],
-             "point 2" : ['B','C','D','D','F','C','D','G','H','D','H','J','G','H','K','L','H','L']},
+            {"source" : ['A','A','A','B','E','E','E','E','E','F','F','I','I','I','I','I','J','J'],
+             "target" : ['B','C','D','D','F','C','D','G','H','D','H','J','G','H','K','L','H','L']},
              index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
 
         df3 = pd.DataFrame(
