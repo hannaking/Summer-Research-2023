@@ -1,6 +1,6 @@
 {
     "source": "0-395-43061-5, 37-1",
-    "textbook": true,
+    "textbook": [true],
     "nodes" :
      [
         {

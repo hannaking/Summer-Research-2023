@@ -21,12 +21,14 @@ class ToPandas():
         with open(JsonFile,'r') as f:
             data = json.loads(f.read())
         try:
+            textbook = pd.json_normalize(data, record_path=['textbook'],errors='ignore')
             edges    = pd.json_normalize(data, record_path=['edges'],errors='ignore')
             nodes    = pd.json_normalize(data, record_path=['nodes'],errors='ignore')
-
             
         except KeyError as e:
-            print(f"Unable to normalize json: {json.dumps(data, indent=4)}")
+            print(f"Unable to normalize json: {json.dumps(data, indent=4)}")  
+
+        isTextbook = textbook[0].replace({True:1, False:0})       
 
         # adds multiedges
         for i, num in enumerate(edges['count'].values):
@@ -42,5 +44,5 @@ class ToPandas():
         nodes["shape"].replace(SHAPE_NUMBER_MAP, inplace=True)
         if (~nodes["shape"].isin(SHAPE_NUMBER_MAP.values())).sum() != 0:
             raise Exception("Invalid Shape")
-
-        return edges, nodes
+        
+        return isTextbook, edges, nodes
