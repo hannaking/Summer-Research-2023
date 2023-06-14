@@ -28,8 +28,8 @@ class ToStellarGraph():
     # returns the corrisponding stellar graph
     @classmethod
     def from_json(self, jsonFile):
-        nodes, edges = ToPandas.ToPanda(jsonFile)
-        return ToStellarGraph.from_pandas(nodes, edges)
+        label, edges, nodes = ToPandas.ToPanda(jsonFile)
+        return ToStellarGraph._from_pandas(nodes, edges), label
     
     # converts a pandas dataframe with node and edge data into a corresponding stellar graph
     #
@@ -39,4 +39,4 @@ class ToStellarGraph():
     # returns the corrisponding stellar graph
     @classmethod
     def _from_pandas(self, nodes, edges):
-        sg.StellarGraph(nodes, edges)
+        return sg.StellarGraph(nodes, edges)

@@ -26,9 +26,8 @@ class GraphClassifier:
     graphs_labels - the label indicating, for each graph, whether the graph is from a textbook
     model - the model that predicts whether a graph is textbook-like or not.
     """
-    def __init__(self, stellar_graphs=None, graph_labels=None, model=None):
-        self.graphs = stellar_graphs
-        self.graph_labels = graph_labels
+    def __init__(self, stellar_graphs:StellarGraph, graph_labels:pd.Series=None, model=None):
+        self.set_graphs(stellar_graphs, graph_labels)
         self.model = model
         self.es = EarlyStopping()
         
@@ -41,18 +40,18 @@ class GraphClassifier:
     # index - the index of the graph / graph label
     #
     # returns the graph and corresponding graph label
-    def get_graph(self, index):
+    def get_graph(self, index:int):
         return self.graphs[index], self.graph_labels[index]
 
     # sets the list graphs to something else
     # 
     # stellar_graphs - the list of new graphs
     # graph_labels - the corresponding list of new graph labels
-    def set_graphs(self, stellar_graphs, graph_labels=None):
-        self.stellar_graphs = stellar_graphs
+    def set_graphs(self, stellar_graphs:StellarGraph, graph_labels:pd.Series=None):
+        self.graphs = stellar_graphs
         self.generator = PaddedGraphGenerator(graphs=self.graphs)
         
-        if graph_labels != None:
+        if graph_labels is not None:
             self.graph_labels = graph_labels
     
     # retrieves the graphs and graph labels
@@ -67,7 +66,7 @@ class GraphClassifier:
     def set_model(self, model):
         self.model = model
     
-    # retrieves the model
+    # retrieves the model that is used for prediction
     #
     # returns the model
     def get_model(self):
@@ -84,9 +83,9 @@ class GraphClassifier:
     # restore_best_weights(True) - whether to restore the best observed weights
     # test_size(0.2)             - proportion of the graphs that are used for testing
     # batch_size(30)             - the number of graphs that are evaluated as one
-    def set_parameters(self, epochs=None, folds=None, n_repeats=None, monitor=None,
-                       min_delta=None, patience=None, restore_best_weights=None,
-                       test_size=None, batch_size=None):
+    def set_parameters(self, epochs:int=None, folds:int=None, n_repeats:int=None, monitor:str=None,
+                       min_delta:int=None, patience:int=None, restore_best_weights:bool=None,
+                       test_size:float=None, batch_size:int=None):
         if epochs is not None:               self.epochs = epochs
         if folds is not None:                self.folds = folds
         if n_repeats is not None:            self.n_repeats = n_repeats
@@ -164,7 +163,7 @@ class GraphClassifier:
     # test_gen - the generator assocated with the testing graphs (used for validation)
     # 
     # returns the testing accuracy
-    def _train(self, train_gen, test_gen):
+    def _train_model(self, train_gen, test_gen):
         self.model.fit(
             train_gen, epochs=self.epochs, validation_data=test_gen, verbose=0, callbacks=[self.es],
         )
@@ -174,7 +173,7 @@ class GraphClassifier:
     # test_gen - the generator assocated with the testing graphs
     # 
     # returns the testing accuracy
-    def _test(self, test_gen):
+    def _test_model(self, test_gen):
         # calculate performance on the test data and return
         test_metrics = self.model.evaluate(test_gen, verbose=0)
         test_acc = test_metrics[self.model.metrics_names.index("acc")]
@@ -187,9 +186,9 @@ class GraphClassifier:
     # batch_size - the number of graphs that are evaluated as one
     # 
     # returns the generators
-    def _get_training_generator(self, train_index, batch_size):
+    def _get_training_generator(self, train_index):
         train_gen = self.generator.flow(
-            train_index, targets=self.graph_labels.iloc[train_index].values, batch_size=batch_size
+            train_index, targets=self.graph_labels.iloc[train_index].values, batch_size=self.batch_size
         )
 
         return train_gen
@@ -200,9 +199,9 @@ class GraphClassifier:
     # batch_size - the number of graphs that are evaluated as one
     # 
     # returns the generators
-    def _get_testing_generator(self, test_index, batch_size):
+    def _get_testing_generator(self, test_index):
         test_gen = self.generator.flow(
-            test_index, targets=self.graph_labels.iloc[test_index].values, batch_size=batch_size
+            test_index, targets=self.graph_labels.iloc[test_index].values, batch_size=self.batch_size
         )
 
         return test_gen
@@ -213,12 +212,12 @@ class GraphClassifier:
 
         train_index, test_index = train_test_split(graphs_i, test_size = self.test_size)
 
-        train_gen = self._get_training_generator(train_index, batch_size=self.batch_size)
-        test_gen = self._get_testing_generator(test_index, batch_size=self.batch_size)
+        train_gen = self._get_training_generator(train_index)
+        test_gen = self._get_testing_generator(test_index)
 
         self.model = self._create_graph_classification_model()
 
-        self._train(train_gen, test_gen)
+        self._train_model(train_gen, test_gen)
 
     # generates and evaluates the accuracy of a model at predicting graph labels using the graphs
     #
@@ -231,17 +230,17 @@ class GraphClassifier:
         ).split(self.graph_labels, self.graph_labels)
 
         for i, (train_index, test_index) in enumerate(stratified_folds):
-            test_gen = self._get_testing_generator(test_index, batch_size=self.batch_size)
+            test_gen = self._get_testing_generator(test_index)
 
-            acc = self._test(test_gen)
+            acc = self._test_model(test_gen)
 
             test_accs.append(acc)
         
-        return np.mean(test_accs), np.std(test_accs)
+        return float(np.mean(test_accs)), float(np.std(test_accs))
 
     # makes a prediction for the graphs using the model
     # 
     # returns the predictions for all graphs
     def predict(self):
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
-        return self.model.predict(x=gen)
+        return self.model.predict(x=gen, verbose=0)
