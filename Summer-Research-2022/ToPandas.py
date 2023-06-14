@@ -31,11 +31,14 @@ class ToPandas():
         isTextbook = textbook.replace({True:1, False:0})       
 
         # adds multiedges
-        for i, num in enumerate(edges['count'].values):
-            for j in range(num-1):
-                edges.loc[len(edges.index)] = edges.iloc[i]
-        edges = edges.drop("count", axis=1)
-
+        if not edges.empty:
+            for i, num in enumerate(edges['count'].values):
+                for j in range(num-1):
+                    edges.loc[len(edges.index)] = edges.iloc[i]
+            edges = edges.drop("count", axis=1)
+        else:
+            edges = pd.DataFrame({'point 1':[], 'point 2':[]})
+        
         # converts the shape IDs to row labels
         nodes = nodes.rename(nodes["ID"])
         nodes = nodes.drop("ID", axis=1)
