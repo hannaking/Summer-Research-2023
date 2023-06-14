@@ -10,7 +10,7 @@ from ToPandas import ToPandas
 
 class TestToPandas_test(unittest.TestCase):
     def test_simpleShape(self):
-        df1 = pd.Series(
+        df1 = pd.DataFrame(
             [1],
         )
         df2 = pd.DataFrame(
@@ -30,7 +30,7 @@ class TestToPandas_test(unittest.TestCase):
         self.assertTrue(df3.equals(edges))
 
     def test_Kite(self):
-        df1 = pd.Series(
+        df1 = pd.DataFrame(
             [1],
         )
         df2 = pd.DataFrame(
@@ -43,14 +43,14 @@ class TestToPandas_test(unittest.TestCase):
              "sides" : [3, 3, 3, 3]},
              index = ["A","B","C","D"])
         
-        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Kite.json')
+        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Quadrilaterals/Kite.json')
 
         self.assertTrue(df1.equals(textbook))
         self.assertTrue(df2.equals(nodes))
         self.assertTrue(df3.equals(edges))
 
     def test_ConcaveTriangles(self):
-        df1 = pd.Series(
+        df1 = pd.DataFrame(
             [1],
         )
         df2 = pd.DataFrame(
@@ -63,14 +63,14 @@ class TestToPandas_test(unittest.TestCase):
              "sides" : [3, 3, 3]},
              index = ["A","B","C"])
         
-        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/ConcaveTriangles.json')
+        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Triangles/ConcaveTriangles.json')
         
         self.assertTrue(df1.equals(textbook))
         self.assertTrue(df2.equals(nodes))
         self.assertTrue(df3.equals(edges))
 
     def test_OctoSquares(self):
-        df1 = pd.Series(
+        df1 = pd.DataFrame(
             [1],
         )
 
@@ -84,7 +84,7 @@ class TestToPandas_test(unittest.TestCase):
              "sides" : [8, 8, 4, 4, 8, 8, 4, 4, 8, 8, 4, 4]},
              index = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"])
         
-        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/OctoSquares 617-6.json')
+        textbook, nodes, edges = ToPandas.ToPanda('Summer-Research-2022/Json shapes/Polygons/OctoSquares 617-6.json')
         
         self.assertTrue(df1.equals(textbook))
         self.assertTrue(df2.equals(nodes))
