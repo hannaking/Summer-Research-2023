@@ -1,0 +1,22 @@
+{
+    "source": "1-57837-433-2, 211-7",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        }
+     ],
+
+    "edges" :
+     [
+
+     ]
+}

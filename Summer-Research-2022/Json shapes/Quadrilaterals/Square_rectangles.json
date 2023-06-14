@@ -1,0 +1,57 @@
+{
+    "source": "1-57837-433-2, 585-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Rectangle",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        }
+     ]
+
+}
