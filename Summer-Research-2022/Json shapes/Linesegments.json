@@ -6,23 +6,27 @@
         {
             "ID"   : "A",
             "shape": "Line Segment",
-            "sides": 2
+            "sides": 1
         },
         {
             "ID"   : "B",
             "shape": "Line Segment",
-            "sides": 2
+            "sides": 1
         },
         {
             "ID"   : "C",
             "shape": "Line Segment",
-            "sides": 2
+            "sides": 1
         },
         {
             "ID"   : "D",
             "shape": "Line Segment",
-            "sides": 2
+            "sides": 1
         }
+     ],
+     "edges" :
+     [
+
      ]
 
 }

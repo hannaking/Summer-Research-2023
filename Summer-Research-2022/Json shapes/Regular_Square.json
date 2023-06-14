@@ -8,5 +8,10 @@
             "shape": "Square",
             "sides": 4
         }
+     ],
+
+    "edges" :
+     [
+
      ]
 }

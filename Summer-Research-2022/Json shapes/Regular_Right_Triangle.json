@@ -8,6 +8,10 @@
             "shape": "Right Triangle",
             "sides": 3
         }
-     ]
+     ],
 
+    "edges" :
+     [
+
+     ]
 }
