@@ -1,26 +1,25 @@
 {
-    "source": "0-547-32411-1, 309-1",
+    "source": "1-57837-433-2, 461-1",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Kite",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "B",
-            "shape": "Dart",
+            "shape": "Right Trapezoid",
             "sides": 4
         }
      ],
-
      "edges" :
      [
         {
             "point 1": "A",
             "point 2": "B",
-            "count"  :  2
+            "count"  :  1
         }
      ]
 

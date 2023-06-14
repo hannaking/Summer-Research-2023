@@ -1,0 +1,28 @@
+{
+    "source": "0-395-43061-5, 43-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Line Segment",
+            "sides": 2
+        },
+        {
+            "ID"   : "B",
+            "shape": "Line Segment",
+            "sides": 2
+        },
+        {
+            "ID"   : "C",
+            "shape": "Line Segment",
+            "sides": 2
+        },
+        {
+            "ID"   : "D",
+            "shape": "Line Segment",
+            "sides": 2
+        }
+     ]
+
+}
