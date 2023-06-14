@@ -28,7 +28,7 @@ class ToPandas():
         except KeyError as e:
             print(f"Unable to normalize json: {json.dumps(data, indent=4)}")  
 
-        isTextbook = textbook[0].replace({True:1, False:0})       
+        isTextbook = textbook.replace({True:1, False:0})       
 
         # adds multiedges
         for i, num in enumerate(edges['count'].values):
