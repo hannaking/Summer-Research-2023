@@ -76,6 +76,35 @@ class TestToStellarGraph(unittest.TestCase):
 
     """
 
+    Unknown Tests
+    
+    """
+    
+    #
+    # checks that a model is made without a label
+    #
+    def test_create_graph_classification_model_unknown(self):
+        classifier = self.create_unknown_classifier()
+
+        model = classifier._create_graph_classification_model()
+        self.assertIsNotNone(model)
+
+     #
+    # tests that a prediction is made without a label
+    #
+    def test_predict_unknown(self):
+        classifier = self.create_unknown_classifier()
+
+        classifier.model = classifier._create_graph_classification_model()
+        predictions = classifier.predict()
+
+        self.assertEqual(type(predictions), np.ndarray)
+        self.assertEqual(type(predictions[0][0]), np.float32)
+        self.assertTrue(predictions[0][0] >= 0 and predictions[0][0] <= 1)
+
+    
+    """
+
     Simple Tests
     
     """
