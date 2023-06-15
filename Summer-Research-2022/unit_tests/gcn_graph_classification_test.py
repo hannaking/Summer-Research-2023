@@ -23,7 +23,7 @@ class TestToStellarGraph(unittest.TestCase):
     # creates a classifier containing a graph without a label
     #
     def create_unknown_classifier(self):
-        graph, label = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/TestShape.json')
+        graph, label = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/TestShape.json')
         graphs = [graph]
         classifier = GraphClassifier(graphs)
         return classifier
@@ -32,7 +32,7 @@ class TestToStellarGraph(unittest.TestCase):
     # creates a classifier containing a graph and its associated label
     #
     def create_simple_classifier(self):
-        graph, label = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/TestShape.json')
+        graph, label = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/TestShape.json')
         graphs = [graph]
         labels = label
         classifier = GraphClassifier(graphs, labels)
@@ -42,11 +42,11 @@ class TestToStellarGraph(unittest.TestCase):
     # creates a classifier containing 5 graphs and their associated labels
     #
     def create_small_classifier(self):
-        graph1, label1 = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/TestShape.json')
-        graph2, label2 = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/Triangles/ConcaveTringlesWithRight.json')
-        graph3, label3 = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/Polygons/Pentagram 150.json')
-        graph4, label4 = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/Triangles/KiteOfTriangles.json')
-        graph5, label5 = ToStellarGraph().from_json('Summer-Research-2022/Json shapes/503.json')
+        graph1, label1 = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/TestShape.json')
+        graph2, label2 = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/Triangles/ConcaveTringlesWithRight.json')
+        graph3, label3 = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/Polygons/Pentagram 150.json')
+        graph4, label4 = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/Triangles/KiteOfTriangles.json')
+        graph5, label5 = ToStellarGraph.from_json('Summer-Research-2022/Json shapes/Quadrilaterals/KiteAndDart.json')
         graphs = [graph1, graph2, graph3, graph4, graph5]
         labels = pd.concat([label1, label2, label3, label4, label5])
         classifier = GraphClassifier(graphs, labels)
@@ -65,7 +65,7 @@ class TestToStellarGraph(unittest.TestCase):
                 for filename in filenames:
                     if filename.endswith('.json'):
                         with open(os.path.join(dirpath, filename)) as f:
-                            graph, label = ToStellarGraph().from_json(f.name)
+                            graph, label = ToStellarGraph.from_json(f.name)
                             graphs.append(graph)
                             labels = pd.concat([labels, label])
         else:

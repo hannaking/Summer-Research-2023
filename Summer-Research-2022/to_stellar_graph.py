@@ -18,7 +18,11 @@ class ToStellarGraph():
     #
     # returns the corrisponding stellar graph
     @classmethod
-    def from_networkx(self, graph, features):
+    def from_networkx(self, graph:(nx.MultiGraph | nx.Graph), features:str) -> sg.StellarGraph:
+        if not bool(graph.edges):
+            nodes = pd.DataFrame(nx.get_node_attributes(graph, features)).transpose()
+            edges = nx.to_pandas_edgelist(graph)
+            return ToStellarGraph._from_pandas(nodes, edges)
         return StellarGraph.from_networkx(graph, node_features=features)
 
     # converts a properly formatted JSON file into a corresponding stellar graph
@@ -27,7 +31,7 @@ class ToStellarGraph():
     #
     # returns the corrisponding stellar graph
     @classmethod
-    def from_json(self, jsonFile):
+    def from_json(self, jsonFile:str):
         label, edges, nodes = ToPandas.ToPanda(jsonFile)
         return ToStellarGraph._from_pandas(nodes, edges), label
     
@@ -38,5 +42,5 @@ class ToStellarGraph():
     #
     # returns the corrisponding stellar graph
     @classmethod
-    def _from_pandas(self, nodes, edges):
+    def _from_pandas(self, nodes:pd.DataFrame, edges:pd.DataFrame):
         return sg.StellarGraph(nodes, edges)
