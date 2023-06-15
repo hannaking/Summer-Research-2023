@@ -1,0 +1,72 @@
+{
+    "source": "0-547-32411-1, 644-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Isosceles Trapezoid",
+            "sides": 8
+        },
+        {
+            "ID"   : "B",
+            "shape": "Isosceles Trapezoid",
+            "sides": 8
+        },
+        {
+            "ID"   : "C",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Isosceles Trapezoid",
+            "sides": 8
+        },
+        {
+            "ID"   : "F",
+            "shape": "Isosceles Trapezoid",
+            "sides": 8
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
+            "count"  :  1
+        }
+     ]
+
+}

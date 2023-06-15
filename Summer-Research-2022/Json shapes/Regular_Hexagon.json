@@ -1,0 +1,17 @@
+{
+    "source": "1-57837-433-2, 501-6",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        }
+     ],
+
+    "edges" :
+     [
+
+     ]
+}

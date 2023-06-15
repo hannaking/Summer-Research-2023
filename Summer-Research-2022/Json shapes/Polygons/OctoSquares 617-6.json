@@ -5,12 +5,12 @@
      [
         {
             "ID"   : "A",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {
             "ID"   : "B",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {
@@ -25,12 +25,12 @@
         },
         {
             "ID"   : "E",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {
             "ID"   : "F",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {
@@ -45,12 +45,12 @@
         },
         {
             "ID"   : "I",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {
             "ID"   : "J",
-            "shape": "Regular Octogon",
+            "shape": "Regular Octagon",
             "sides": 8
         },
         {

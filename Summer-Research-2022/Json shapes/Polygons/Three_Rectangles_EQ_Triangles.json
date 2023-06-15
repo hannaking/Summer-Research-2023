@@ -1,0 +1,57 @@
+{
+    "source": "0-547-32411-1, 806-3",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count"  :  1
+        }
+     ]
+
+}

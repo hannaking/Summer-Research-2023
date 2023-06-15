@@ -15,7 +15,7 @@ class ToPandas():
                             "Regular Pentagon" : 30,
                             "Regular Hexagon" : 40,
                             "Regular Septagon" : 50,
-                            "Regular Octogon" : 60}
+                            "Regular Octagon" : 60}
         
         # reads the edge and node data from the JSON into Pandas
         with open(JsonFile,'r') as f:
