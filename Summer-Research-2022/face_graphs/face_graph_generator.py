@@ -31,6 +31,7 @@
 
 
 from lattice import Lattice
+from lattice_test import LatticeTest
 from node import Node
 
 import itertools as its
@@ -98,8 +99,14 @@ class FaceGraphGenerator:
             # add the newly created graphs
             self.graphs.append(self.build(lattice, sizes, combo))        
 
+    # transforms a properly formatted list of lattices into face graphs
+    # 
+    # format: list containining lists of lattice types that are paired in a tuple
+    #         with its input
+    #
+    # returns a set of face graphs
     @staticmethod
-    def from_lattices(lattices):
+    def from_lattices(lattices:(list[list[tuple[Lattice]]] | list[list[tuple[LatticeTest]]])):
         face_graphs = set()
 
         for lattice_types in lattices:
