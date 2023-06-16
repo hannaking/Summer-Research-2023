@@ -98,6 +98,18 @@ class FaceGraphGenerator:
             # add the newly created graphs
             self.graphs.append(self.build(lattice, sizes, combo))        
 
+    @staticmethod
+    def from_lattices(lattices):
+        face_graphs = set()
+
+        for lattice_types in lattices:
+            for lattice_pair in lattice_types:
+                faceGenerator = FaceGraphGenerator(lattice_pair[0])
+                for face_graph in faceGenerator.graphs:
+                    face_graphs.add(face_graph)
+
+        return face_graphs
+
     # Creates one face graph
     # 
     # lattice - Lattice object to build the face graph from

@@ -1,7 +1,9 @@
 # Main file for the project.
 # This file is responsible for the main flow of the program.
 from lattice_generator import LatticeGenerator
+from face_graphs.face_graph_generator import FaceGraphGenerator
 from shapes.shape_generator import ShapeGenerator
+
 
 if __name__ == '__main__':
 
@@ -22,17 +24,21 @@ if __name__ == '__main__':
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
-
+    
     # Generate the lattices.
     lattices = lattice_generator.glue_shapes()._lattice_matrix
-
+    
     # Show lattices.
     if show_lattices:
 
         for layer in lattices:
             for lattice, _ in layer:
-
+                
                 lattice.show()
+
+    face_graphs = FaceGraphGenerator.from_lattices(lattices)
+    
+    print(face_graphs)
 
     # Determine shape types to use. Value of 'None' will include all shape types.
     shape_types = ['Equilateral', 'IsoscelesRight', 'Square']

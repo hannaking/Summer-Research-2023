@@ -28,6 +28,42 @@ class TestFaceGraphGenerator(unittest.TestCase):
         self.assertEqual(nx.get_node_attributes(graph, "type"), {0: "Segment"})
         self.assertEqual(len(graph.edges), 0)
     
+    def test_from_lattices_single(self):
+        lattice = Lattice(2)
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 1)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 1)
+
+    def test_from_lattices_single(self):
+        lattice = Lattice(3)
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 4)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 1)
+
+    def test_from_lattice_large(self):
+        lattice = ShapeHelpers.seesaw()
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 2048)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 4)
+
+    def test_from_lattices_list(self):
+        lattices = []
+        lattices.append([ShapeHelpers.seesaw()])
+        lattices.append([ShapeHelpers.bowtie()])
+        lattices.append([Lattice(2)])
+        lattices.append([Lattice(3)])
+        lattices.append([Lattice(4)])
+        face_graphs = FaceGraphGenerator.from_lattices([lattices])
+
+        self.assertEqual(len(face_graphs), 2077)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+
     def test_build_single_quadrilateral(self):
         quad = Lattice(4)
         gen = FaceGraphGenerator(quad)
