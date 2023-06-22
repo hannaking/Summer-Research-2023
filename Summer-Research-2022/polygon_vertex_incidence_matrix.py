@@ -33,7 +33,6 @@ class PolygonVertexIncidenceMatrix:
         for v_node in node_list[VERTEX_LATTICE_LAYER]:
             self._matrix.append(self._get_row(v_node, node_list))
 
-
     # get matrix row for a vertex node
     # matrix row contains True if that vertex is present in the shape for that column and False otherwise
     # indexes of the polygon columns are in the same order as the shapes are in the nodes list
