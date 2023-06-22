@@ -126,12 +126,22 @@ class ShapeGenerator:
 
         # we stop when the index is has reached the number of shapes in the lattice
         while i < len(shape_layer):
-            # we have to make the Polygons in draw order in order to avoid "twisting"
+            # we want the points in the order in which you would walk around the perimeter of the shape
+            # we have to build the Polygons from in-order Points to avoid "twisting"
+            # twisting is when the points in the shape are drawn in the wrong order,
+            # making it twist in the middle with an X
+            # ex   a rectangle, twisted
+            #      A----B
+            #       \  /
+            #        \/       This has been drawn like A B D C
+            #        /\        instead of A B C D so it twists
+            #       /  \
+            #      D----C
             draw_order_points = []
 
             shape_draw_order_indices = self._draw_order_indices[i]
             for index in shape_draw_order_indices:
-
+                # i think this is the other point on the edge?
                 corresponding_point = scenario[index]
                 draw_order_points.append(corresponding_point)
 
@@ -167,12 +177,12 @@ class ShapeGenerator:
         6. return the coordinate_figures list
     """
     def generate_by_lattice_traversal(self, lattice):
-
         # list that will hold the indices of the shape's coordinates in the scenario
         # in the order that they should be drawn (i.e. the order in which you would walk around the perimeter of the shape)
         self._draw_order_indices = [None] * len(lattice._nodes_list[SHAPE_LATTICE_LAYER])
 
-        # list with length of lattice node amount, each vertex will need coordinates
+        # list with length of lattice vertex node amount, bc each vertex will need coordinates
+        # we have to start somewhere, so the first vertex is always the origin
         coords = [Point(0,0)] + [None] * (len(lattice._nodes_list[VERTEX_LATTICE_LAYER]) - 1)
 
         # pass through the lattice and the initial list of scenarios
@@ -185,22 +195,18 @@ class ShapeGenerator:
         overlapping_scenarios = []
         # loop through each scenario and check if it has any overlapping shapes
         for scenario in coordinate_figures:
-            # if somehow we have a None, skip it
+            # if we have a None scenario (empty), skip it
             if None in scenario:
                 continue
 
             # keep track of overlapping scenarios by adding them to the list.
             # the reason it doesn't remove the scenarios here is because it had caused
-            # problems by missing some overlapping scenarios somehow
+            # problems by missing some overlapping scenarios bc loop
             if self.has_overlap(scenario, lattice):
                 overlapping_scenarios.append(scenario)
 
-        # now we can remove the overlapping scenarios from the coordinate_figures list.
-        # we remove them one by one
-        for overlapping_scenario in overlapping_scenarios:
-            coordinate_figures.remove(overlapping_scenario)
-
-        return coordinate_figures
+        # now we can remove the overlapping scenarios from the coordinate_figures list and return
+        return [i for i in coordinate_figures if i not in overlapping_scenarios]
 
     """ 
         The recursive function that does the parsing 
@@ -210,7 +216,7 @@ class ShapeGenerator:
         coordinate_figures: the list of scenarios that have been found so far
         sl_index: the current index in the shape lattice layer list
 
-        returns: nothing, but adds completed scenarios to the coordinate_figures list,
+        returns: nothing, but adds completed scenarios to the class's coordinate_figures list,
         which will be returned in generate_by_lattice_traversal
         base case: when None is not in coords, we have found all the coordinates for a scenario
 
@@ -218,7 +224,8 @@ class ShapeGenerator:
     """
     def lattice_traversal_helper(self, lattice, coords, coordinate_figures, sl_index):
         # if there are no more empty spots in the list, then all the coordinates have been calculated
-        if None not in coords and not sl_index < len(lattice._nodes_list[SHAPE_LATTICE_LAYER]):
+        # base case
+        if None not in coords and sl_index >= len(lattice._nodes_list[SHAPE_LATTICE_LAYER]):
             coordinate_figures.append(coords)
             return
 
