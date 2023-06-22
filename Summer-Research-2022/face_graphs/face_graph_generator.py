@@ -111,11 +111,27 @@ class FaceGraphGenerator:
 
         for lattice_types in lattices:
             for lattice_pair in lattice_types:
-                faceGenerator = FaceGraphGenerator(lattice_pair[0])
-                for face_graph in faceGenerator.graphs:
-                    face_graphs.add(face_graph)
+                if(lattice_pair[1] == [0, 0, 0, 0, 0, 0, 0]):
+                    faceGenerator = FaceGraphGenerator(lattice_pair[0])
+                    for face_graph in faceGenerator.graphs:
+                        # for graph in face_graphs:
+                            # if not FaceGraphGenerator.is_same(face_graph, graph):
+                        face_graphs.add(face_graph)
 
         return face_graphs
+    
+    # @staticmethod
+    # def is_same(graph1, graph2):
+    #     GM = nx.isomorphism.GraphMatcher(graph1, graph2)
+    #     if not GM.is_isomorphic():
+    #         return False
+    #     GM.mapping
+        
+    #     for n1, n2 in GM.mapping.items():
+    #         if graph1.nodes()[n1] != graph2.nodes()[n2]:
+    #             return False
+        
+    #     return True
 
     # Creates one face graph
     # 
