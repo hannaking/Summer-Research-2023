@@ -27,7 +27,7 @@ class TestFaceGraphGenerator(unittest.TestCase):
         self.assertEqual(nx.get_node_attributes(graph, "size"), {0: 1})
         self.assertEqual(nx.get_node_attributes(graph, "type"), {0: "Segment"})
         self.assertEqual(len(graph.edges), 0)
-    
+
     def test_build_single_quadrilateral(self):
         quad = Lattice(4)
         gen = FaceGraphGenerator(quad)
@@ -181,6 +181,48 @@ class TestFaceGraphGenerator(unittest.TestCase):
                                                                  1: "Right",
                                                                  2: "Isosceles"})
         self.assertEqual(len(graph.edges), 0)
+
+    # test the generation of face graphs from a properly formatted list of lattices
+    # line segment (expected: 1 graph)
+    # triangle (expected: 4 graphs)
+    # seesaw (expected: 2048 graphs)
+    # list of line segment, triangle, quadralateral, seesaw, bowtie (expected: 2077 graphs)
+
+    def test_from_lattices_single(self):
+        lattice = Lattice(2)
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 1)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 1)
+
+    def test_from_lattices_single(self):
+        lattice = Lattice(3)
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 4)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 1)
+
+    def test_from_lattice_large(self):
+        lattice = ShapeHelpers.seesaw()
+        face_graphs = FaceGraphGenerator.from_lattices([[[lattice]]])
+
+        self.assertEqual(len(face_graphs), 2048)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
+        self.assertEqual(len(list(face_graphs)[0].nodes), 4)
+
+    def test_from_lattices_list(self):
+        lattices = []
+        lattices.append([ShapeHelpers.seesaw()])
+        lattices.append([ShapeHelpers.bowtie()])
+        lattices.append([Lattice(2)])
+        lattices.append([Lattice(3)])
+        lattices.append([Lattice(4)])
+        face_graphs = FaceGraphGenerator.from_lattices([lattices])
+
+        self.assertEqual(len(face_graphs), 2077)
+        self.assertEqual(type(list(face_graphs)[0]), nx.MultiGraph)
 
     # testing for number of graphs generated (constructor)
     # single shape 1 (1), 3 (4), 4 (8), 5 (1), 6 (1), 7 (1), 8 (1)

@@ -151,9 +151,11 @@ class LatticeGenerator:
                     continue
                 
                 #look at shortest path of the current pair and append to pairs if it is shorter than shape_length
-                if len(nx.shortest_path(perimeter, vertex_u, vertex_v)) <= item_length:
-                    pairs.append([vertex_u, vertex_v])
-
+                try:
+                    if len(nx.shortest_path(perimeter, vertex_u, vertex_v)) <= item_length:
+                        pairs.append([vertex_u, vertex_v])
+                except:
+                    continue
         #remove all pairs that are repeats, but in a different order
         no_duplicate_pairs = []
         for pair in pairs:
