@@ -1,47 +1,37 @@
 {
-    "source": "0-547-32411-1, 806-4",
+    "source": "1-57837-433-2, 314-2",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Rectangle",
+            "shape": "Square",
             "sides": 4
         },
         {
             "ID"   : "B",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "C",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "D",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "E",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "F",
-            "shape": "Rectangle",
+            "shape": "Square",
             "sides": 4
-        },
-        {
-            "ID"   : "G",
-            "shape": "Regular Hexagon",
-            "sides": 6
-        },
-        {
-            "ID"   : "H",
-            "shape": "Regular Hexagon",
-            "sides": 6
         }
      ],
 
@@ -53,28 +43,18 @@
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "A",
             "point 2": "C",
             "count"  :  1
         },
         {
-            "point 1": "B",
-            "point 2": "G",
-            "count"  :  1
-        },
-        {
-            "point 1": "C",
+            "point 1": "A",
             "point 2": "D",
             "count"  :  1
         },
         {
-            "point 1": "D",
+            "point 1": "A",
             "point 2": "E",
-            "count"  :  1
-        },
-        {
-            "point 1": "D",
-            "point 2": "H",
             "count"  :  1
         },
         {

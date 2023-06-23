@@ -1,0 +1,212 @@
+{
+    "source": "1-57837-433-2, 314-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "F",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "G",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "H",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "I",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "J",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "K",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "L",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "M",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "N",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "O",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "P",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "Q",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "R",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "S",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "T",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "U",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "V",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "W",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "X",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        }
+     ]
+
+}

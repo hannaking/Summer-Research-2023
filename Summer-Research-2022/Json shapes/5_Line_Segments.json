@@ -1,0 +1,37 @@
+{
+    "source": "1-57837-433-2, 139-1",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "B",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "C",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "D",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "E",
+            "shape": "Line Segment",
+            "sides": 1
+        }
+     ],
+     "edges" :
+     [
+
+     ]
+
+}

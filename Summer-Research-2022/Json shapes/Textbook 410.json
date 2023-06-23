@@ -1,12 +1,12 @@
 {
-    "source": "0-547-32411-1, 806-4",
+    "source": "1-57837-433-2, 314-2",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "B",
@@ -15,8 +15,8 @@
         },
         {
             "ID"   : "C",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "D",
@@ -25,7 +25,7 @@
         },
         {
             "ID"   : "E",
-            "shape": "Rectangle",
+            "shape": "Square",
             "sides": 4
         },
         {
@@ -35,13 +35,18 @@
         },
         {
             "ID"   : "G",
-            "shape": "Regular Hexagon",
-            "sides": 6
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "H",
-            "shape": "Regular Hexagon",
-            "sides": 6
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "I",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
         }
      ],
 
@@ -53,18 +58,23 @@
             "count"  :  1
         },
         {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
             "point 1": "B",
             "point 2": "C",
             "count"  :  1
         },
         {
-            "point 1": "B",
-            "point 2": "G",
-            "count"  :  1
-        },
-        {
             "point 1": "C",
-            "point 2": "D",
+            "point 2": "F",
             "count"  :  1
         },
         {
@@ -74,12 +84,32 @@
         },
         {
             "point 1": "D",
-            "point 2": "H",
+            "point 2": "G",
             "count"  :  1
         },
         {
             "point 1": "E",
             "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "I",
+            "count"  :  1
+        },
+        {
+            "point 1": "G",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "H",
+            "point 2": "I",
             "count"  :  1
         }
      ]

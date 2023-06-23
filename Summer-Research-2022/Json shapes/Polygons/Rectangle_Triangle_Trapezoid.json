@@ -1,0 +1,56 @@
+{
+    "source": "1-57837-433-2, 731-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        }
+     ]
+    }

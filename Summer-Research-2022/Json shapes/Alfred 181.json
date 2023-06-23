@@ -1,47 +1,37 @@
 {
-    "source": "0-547-32411-1, 806-4",
+    "source": "1-57837-433-2, 314-2",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "B",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "C",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "D",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "E",
-            "shape": "Rectangle",
-            "sides": 4
+            "shape": "Right Triangle",
+            "sides": 3
         },
         {
             "ID"   : "F",
-            "shape": "Rectangle",
-            "sides": 4
-        },
-        {
-            "ID"   : "G",
-            "shape": "Regular Hexagon",
-            "sides": 6
-        },
-        {
-            "ID"   : "H",
-            "shape": "Regular Hexagon",
-            "sides": 6
+            "shape": "Right Triangle",
+            "sides": 3
         }
      ],
 
@@ -53,28 +43,23 @@
             "count"  :  1
         },
         {
-            "point 1": "B",
+            "point 1": "A",
             "point 2": "C",
             "count"  :  1
         },
         {
             "point 1": "B",
-            "point 2": "G",
-            "count"  :  1
-        },
-        {
-            "point 1": "C",
             "point 2": "D",
             "count"  :  1
         },
         {
-            "point 1": "D",
+            "point 1": "C",
             "point 2": "E",
             "count"  :  1
         },
         {
             "point 1": "D",
-            "point 2": "H",
+            "point 2": "F",
             "count"  :  1
         },
         {

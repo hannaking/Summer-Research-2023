@@ -1,0 +1,27 @@
+{
+    "source": "1-57837-433-2, 314-2",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  2
+        }
+     ]
+
+}
