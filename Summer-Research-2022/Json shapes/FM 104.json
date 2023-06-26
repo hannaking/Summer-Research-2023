@@ -1,0 +1,92 @@
+{
+    "source": "1-55953-459-1, 104",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "F",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "G",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count"  :  1
+        }
+     ]
+
+}

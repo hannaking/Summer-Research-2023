@@ -1,5 +1,5 @@
 {
-    "source": "0-547-32411-1, 902-6",
+    "source": "0-86609-965-4, 353",
     "textbook": [true],
     "nodes" :
      [
@@ -12,6 +12,11 @@
             "ID"   : "B",
             "shape": "Right Trapezoid",
             "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Right Trapezoid",
+            "sides": 4
         }
      ],
 
@@ -20,6 +25,11 @@
         {
             "point 1": "A",
             "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
             "count"  :  1
         }
      ]

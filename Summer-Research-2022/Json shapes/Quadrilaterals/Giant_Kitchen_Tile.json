@@ -1,0 +1,313 @@
+{
+    "source": "1-57837-433-2, 273-1",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "G",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "H",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "I",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "J",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "K",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "L",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "M",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "N",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "O",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "P",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "Q",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "R",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "S",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "T",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "U",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "V",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "W",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "X",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "I",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "I",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "J",
+            "count"  :  1
+        },
+        {
+            "point 1": "G",
+            "point 2": "J",
+            "count"  :  1
+        },
+        {
+            "point 1": "H",
+            "point 2": "K",
+            "count"  :  1
+        },
+        {
+            "point 1": "H",
+            "point 2": "L",
+            "count"  :  1
+        },
+        {
+            "point 1": "I",
+            "point 2": "L",
+            "count"  :  1
+        },
+        {
+            "point 1": "I",
+            "point 2": "M",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "M",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "N",
+            "count"  :  1
+        },
+        {
+            "point 1": "K",
+            "point 2": "O",
+            "count"  :  1
+        },
+        {
+            "point 1": "L",
+            "point 2": "O",
+            "count"  :  1
+        },
+        {
+            "point 1": "L",
+            "point 2": "P",
+            "count"  :  1
+        },
+        {
+            "point 1": "M",
+            "point 2": "P",
+            "count"  :  1
+        },
+        {
+            "point 1": "M",
+            "point 2": "Q",
+            "count"  :  1
+        },
+        {
+            "point 1": "N",
+            "point 2": "Q",
+            "count"  :  1
+        },
+        {
+            "point 1": "O",
+            "point 2": "R",
+            "count"  :  1
+        },
+        {
+            "point 1": "O",
+            "point 2": "S",
+            "count"  :  1
+        },
+        {
+            "point 1": "P",
+            "point 2": "S",
+            "count"  :  1
+        },
+        {
+            "point 1": "P",
+            "point 2": "T",
+            "count"  :  1
+        },
+        {
+            "point 1": "Q",
+            "point 2": "T",
+            "count"  :  1
+        },
+        {
+            "point 1": "Q",
+            "point 2": "U",
+            "count"  :  1
+        },
+        {
+            "point 1": "R",
+            "point 2": "V",
+            "count"  :  1
+        },
+        {
+            "point 1": "S",
+            "point 2": "V",
+            "count"  :  1
+        },
+        {
+            "point 1": "S",
+            "point 2": "W",
+            "count"  :  1
+        },
+        {
+            "point 1": "T",
+            "point 2": "W",
+            "count"  :  1
+        },
+        {
+            "point 1": "T",
+            "point 2": "X",
+            "count"  :  1
+        },
+        {
+            "point 1": "U",
+            "point 2": "X",
+            "count"  :  1
+        }
+
+     ]
+
+}

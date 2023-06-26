@@ -1,5 +1,5 @@
 {
-    "source": "1-57837-433-2, 585-2",
+    "source": "1-55953-459-1, 146",
     "textbook": [true],
     "nodes" :
      [
@@ -10,22 +10,27 @@
         },
         {
             "ID"   : "B",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "C",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "D",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
             "sides": 4
         },
         {
             "ID"   : "E",
-            "shape": "Rectangle",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Square",
             "sides": 4
         }
      ],
@@ -50,6 +55,11 @@
         {
             "point 1": "A",
             "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
             "count"  :  1
         }
      ]

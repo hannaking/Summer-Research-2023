@@ -1,0 +1,18 @@
+{
+    "source": "978-1-62399-075-6, 298-1",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Dart",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        
+     ]
+
+}

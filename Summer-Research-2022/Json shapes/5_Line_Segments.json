@@ -1,5 +1,5 @@
 {
-    "source": "0-547-32411-1, 627-1",
+    "source": "1-57837-433-2, 139-1",
     "textbook": [true],
     "nodes" :
      [
@@ -15,6 +15,16 @@
         },
         {
             "ID"   : "C",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "D",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "E",
             "shape": "Line Segment",
             "sides": 1
         }

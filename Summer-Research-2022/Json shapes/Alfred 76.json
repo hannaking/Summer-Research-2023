@@ -1,11 +1,11 @@
 {
-    "source": "1-57837-433-2, 221-1",
+    "source": "978-0486691541, 76", 
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Right Triangle",
+            "shape": "Isosceles Triangle",
             "sides": 3
         },
         {
@@ -20,6 +20,16 @@
         },
         {
             "ID"   : "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "F",
             "shape": "Right Triangle",
             "sides": 3
         }
@@ -39,15 +49,24 @@
         },
         {
             "point 1": "B",
-            "point 2": "D",
+            "point 2": "E",
             "count"  :  1
         },
         {
             "point 1": "C",
-            "point 2": "D",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "F",
             "count"  :  1
         }
-
      ]
 
 }

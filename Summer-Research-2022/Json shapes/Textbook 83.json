@@ -1,16 +1,16 @@
 {
-    "source": "0-547-32411-1, 775-1",
+    "source": "0-86609-965-4, 83",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Right Trapezoid",
+            "shape": "Dart",
             "sides": 4
         },
         {
             "ID"   : "B",
-            "shape": "Right Triangle",
+            "shape": "Isosceles Triangle",
             "sides": 3
         }
      ],
@@ -20,7 +20,7 @@
         {
             "point 1": "A",
             "point 2": "B",
-            "count"  :  1
+            "count"  :  2
         }
      ]
 

@@ -1,16 +1,16 @@
 {
-    "source": "0-547-32411-1, 723-1",
+    "source": "1-55953-459-1, 257",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Right Trapezoid",
-            "sides": 4
+            "shape": "Regular Pentagon",
+            "sides": 5
         },
         {
             "ID"   : "B",
-            "shape": "Right Triangle",
+            "shape": "Isosceles Triangle",
             "sides": 3
         }
      ],

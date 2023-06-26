@@ -1,0 +1,18 @@
+{
+    "source": "978-0486691541, 171",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        }
+     ],
+
+     "edges" :
+     [
+        
+     ]
+
+}

@@ -1,26 +1,26 @@
 {
-    "source": "0-547-32411-1, 646-8",
+    "source": "978-0486691541, 116",
     "textbook": [true],
     "nodes" :
      [
         {
             "ID"   : "A",
-            "shape": "Isosceles Triangle",
+            "shape": "Equilateral Triangle",
             "sides": 3
         },
         {
             "ID"   : "B",
-            "shape": "Isosceles Triangle",
-            "sides": 3
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
         },
         {
             "ID"   : "C",
-            "shape": "Isosceles Triangle",
-            "sides": 3
+            "shape": "Parallelogram",
+            "sides": 4
         },
         {
             "ID"   : "D",
-            "shape": "Isosceles Triangle",
+            "shape": "Equilateral Triangle",
             "sides": 3
         }
      ],
@@ -30,11 +30,6 @@
         {
             "point 1": "A",
             "point 2": "B",
-            "count"  :  1
-        },
-        {
-            "point 1": "A",
-            "point 2": "D",
             "count"  :  1
         },
         {

@@ -1,0 +1,72 @@
+{
+    "source": "1-55953-459-1, 113",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Kite",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
+            "count"  :  1
+        }
+     ]
+
+}
