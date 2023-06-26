@@ -1,4 +1,3 @@
-# #! header needs to be updated post-new-step-5.     when is step 5 ever not changing??
 # collection of functions used in checking isomorphism and processing matrices in order to check isomorphism
 #
 # to check, lattices are turned into their associated polygon vertex incidence matrix (pvim) and then manipulated and compared
@@ -7,9 +6,6 @@
 #
 # these functions were moved out of lattice_generator.py to make things easier to read
 #
-# if I were you, I wouldn't even bother trying to read the code if you don't have to.
-# just get the general idea of it from the comments.
-#
 # future improvements: replace the concept of a column vector with enumerate to save space?
 #                      move compare_vectors functionality to ColumnVectors class
 #
@@ -17,7 +13,6 @@
 # management
 #   - isomorph in list
 #   - check isomorphism (for two individual pvims)
-#   - process all matrices
 #   - process matrix
 # step 1
 #   - sort rows
@@ -34,7 +29,7 @@
 #   - get max length
 #   - sort group
 #   - compare vectors
-# step 5 - still in flux
+# step 5
 #   - similarity col sort
 #   - get col sum ties
 #   - get col vector ties
@@ -47,8 +42,6 @@
 # step 6
 #   - get row index vector
 #   - check row index vectors
-
-import collections
 
 #local imports
 from column_vector                      import ColumnVector
@@ -74,8 +67,7 @@ class Isomorphism():
         target_pvim = PolygonVertexIncidenceMatrix(target._nodes_list)
 
         for item in lattices:
-            if Isomorphism._check_isomorphism(PolygonVertexIncidenceMatrix(item._nodes_list), 
-                                              target_pvim):
+            if Isomorphism._check_isomorphism(PolygonVertexIncidenceMatrix(item._nodes_list), target_pvim):
                 return True
 
         return False
@@ -86,7 +78,7 @@ class Isomorphism():
     # pvim1 - a PolygonVertexIncidenceMatrix to be compared
     # pvim2 - a PolygonVertexIncidenceMatrix to be compared
     #
-    # returns False if pvim1 and pvim2 are not the same size or not equivalent after processing
+    # returns False if pvim1 and pvim2 are not the same size or are not equivalent after processing
     # returns True if the matrices are the same after processing (represent the same figure)
     @staticmethod
     def _check_isomorphism(pvim1, pvim2):
@@ -111,24 +103,6 @@ class Isomorphism():
     #@----- Matrix Processing -----@#
     #@-----------------------------@#
     
-    # takes a list of candidate pvims, processes each one and appends the processed pvim to a list
-    # 
-    # candidates - a list of PolygonVertexIncidenceMatrix objects
-    #
-    # returns a list of processed pvims.
-    # if candidates is empty, returns an empty list
-    @staticmethod
-    def process_all_matrices(candidates):
-        matrices = []
-
-        for candidate in candidates:
-            matrix = PolygonVertexIncidenceMatrix(candidate._nodes_list)
-            matrix = Isomorphism._process_matrix(matrix)
-
-            matrices.append(matrix)
-
-        return matrices
-
     # processes a pvim in six steps, summarized below:
     #    1. sort rows in descending order of their row-sums
     #    2. sort cols in descending order of their col-sums
@@ -136,13 +110,8 @@ class Isomorphism():
     #        - can also be described as "a vector of the size of each polygon in which the vertex for that row is involved"
     #    4. break ties in the col-sum sort by sorting by col vectors, which contain the row-sum of every row the col is True
     #        - can also be described as " a vector of the number of shapes each vertex in the shape for this column is involved in"
-    #    5. 
-    #
-    #    The step 5
-    #    goal is to do a final col sort by similarity - a measure of how many shared True rows two cols have
-    # 
-    #     algorithm: changing :/
-    #
+    #    5. do a final col sort by similarity - a measure of how many shared True rows two cols have
+    #        - see method section for more detailed explanation
     #    6. sort the rows once more by ascending row index vectors, which contain the col-index of each True in the row
     #        - can also be described as "a vector of the index of each shape the vertex for that row is involved in"
     #
@@ -156,46 +125,25 @@ class Isomorphism():
     # returns the processed pvim
     @staticmethod
     def _process_matrix(pvim):
-        #print("Before Step 1 / Initial State")
-        #print(pvim)
-
         # step 1: sort rows
         pvim = Isomorphism._sort_rows(pvim)
 
-        #print("Post Step 1")
-        #print(pvim)
-
         # step 2: sort cols
         pvim = Isomorphism._sort_cols(pvim)
-
-        #print("Post Step 2")
-        #print(pvim)
 
         # step 3: row tie-breaking
         # swap rows to be in order within their row vector length groups
         pvim = Isomorphism._break_row_ties(pvim)
 
-        #print("Post Step 3")
-        #print(pvim)
-
         # step 4: col tie-breaking
         # swap cols to be in order within their vertex_vector length groups
         pvim = Isomorphism._break_col_ties(pvim)
 
-        #print("Post Step 4")
-        #print(pvim)
-
-        #step 5: 
+        #step 5: put columns in final position by similarity
         pvim = Isomorphism._similarity_col_sort(pvim)
-
-        #print("Post Step 5")
-        #print(pvim)
 
         #step 6: final fix of row order after columns have been set to final spots in step 5
         pvim = Isomorphism._check_row_index_vectors(pvim)
-
-        #print("Post Step 6 / Final State")
-        #print(pvim)
 
         return pvim
 
@@ -230,13 +178,10 @@ class Isomorphism():
     def _sort_cols(pvim):
         # bubble sort
         n = len(pvim._matrix[0])
-
-        # traverse the array from 0 to n-i-1,
         for i in range(n):
             for j in range(0, n-i-1):
                 # swap adjacent elements if they are in decreasing order
-                if pvim.col_sum(j) < pvim.col_sum(j+1):
-                    pvim.col_swap(j, j+1)
+                if pvim.col_sum(j) < pvim.col_sum(j+1): pvim.col_swap(j, j+1)
         
         return pvim       
         
@@ -253,15 +198,15 @@ class Isomorphism():
     # returns the vector associated with this row
     @staticmethod
     def _get_row_vector(row, pvim):
-        poly_vector = []
+        polygon_vector = []
         # go along the row and
         for i in range(len(row)):
             # if it is True,
             if row[i] is True:
                 # add the size of the polygon (the col_sum) to the vector
-                poly_vector.append(pvim.col_sum(i))
+                polygon_vector.append(pvim.col_sum(i))
 
-        return poly_vector
+        return polygon_vector
 
     # step 3: row tie-breaking
     # take the row vectors of each row and sort them (and their rows) in descending order
@@ -289,29 +234,16 @@ class Isomorphism():
             single_row_vector = Isomorphism._get_row_vector(row, pvim)
             row_vectors.append(single_row_vector)
             pairs.append([single_row_vector, row])
-        
-        #print(row_vectors)
-        #print(pairs)
 
-
-        #pairs = sorted(sorted(pairs, key = lambda pair: len(pair[0]), reverse = True), key = lambda pair: pair[0], reverse = True) 
         # sort by length of row vectors and by values
         # sort is stable, which is why this works
-        # i fucking cried over this and all i had to do was reverse the sort order 
-        # yay coding
         pairs.sort(key = lambda pair: pair[0], reverse = True)
         pairs.sort(key = lambda pair: len(pair[0]), reverse = True)
-        #print(pairs)
-
-        # sort by values in row vectors
-        #pairs.sort(key = lambda pair: pair[0], reverse = True)
-        #print(pairs)
 
         # extract the now-sorted rows
         rows = []
         for pair in pairs:
             rows.append(pair[1])
-        #print(rows)
         
         pvim._matrix = rows
 
@@ -501,14 +433,12 @@ class Isomorphism():
     #               for every tied group you identified above,
     #                   get the similarity vectors with every column in S
     #                   sort the similarity vectors and pvim columns simultaneously by descending sim vector
-    #                   if the first column in the group is in its definite, final position
-    #                       (meaning its sim vector does not tie with the next column's, which would mean the cols are tied)
-    #                   then add that column to #
-    #                   and update the limits of the group to exclude the column you just added to S
-    #           # this is how we tie-break columns with tied sim-vectors
-    #           # choosing is fine, but it must be after the normal step 5 sort has done as much as it can
-    #           if not all cols are in S, choose a column to become "sorted"
-    #               choose the first column in the leftmost remaining group
+    #                   add all columns in the group to S moving, left to right until you hit a tie (don't add the tie)
+    #                       so you are only adding columns before a tie, if there is one
+    #                   and update the limits of the group to exclude the column(s) you just added to S
+    #           # choosing is how we tie-break columns with tied sim vectors
+    #           # it must be after the normal step 5 sort has done as much as it can
+    #           if not all cols are in S, choose the first column in the left-most remaining group to become "sorted"
     #       done!
     #
     # pvim - PolygonVertexIncidenceMatrix object to be sorted
@@ -518,42 +448,64 @@ class Isomorphism():
     def _similarity_col_sort(pvim):
         # get groups
         tied_groups = Isomorphism._get_col_vector_ties(Isomorphism._get_col_sum_ties(pvim), pvim)
-        # possible efficiency improvement by removing single column groups
+        # remove single column groups
+        tied_groups = [group for group in tied_groups if group[0] != group[1]]
 
         # put all indices not included in a tied group in s
-        s = []
-        for i in range(0, pvim.dimensions()[1]):
-            for group in tied_groups:
-                if i not in range(group[0], group[1] + 1):
-                    s.append(i)
+        # by putting all indices in S and then removing those in a group
+        s = list(range(0, pvim.dimensions()[1]))
+        for group in tied_groups:
+            s = [i for i in s if i not in range(group[0], group[1] + 1)]
         s = list(set(s))
+
         # for tracking if changes occured. needs to start as True so inner while starts
         added_to_s = True
+        # while not all columns are in S
         while len(s) != pvim.dimensions()[1]:
-            print("enter while A")
-            while added_to_s:
-                print("enter while B")
+            # while the last iteration produced a change
+            while added_to_s == True:
                 added_to_s = False
-                for group in tied_groups:
-                    print("for", group)
+                for i in range(0, len(tied_groups)):
+                    # can't remove tied groups during the loop or it messes up the iteration,
+                    # so I make them None and remove after the for loop
+                    # a None tie is actually a removed tie, it just hasn't actually been removed yet
+                    # no need to look at it
+                    if tied_groups[i] is None: continue
+
                     # get sim vectors
                     sim_vectors = []
-                    colI = group[0]
-                    while colI <= group[1]:
+                    colI = tied_groups[i][0]
+                    while colI <= tied_groups[i][1]:
                         sim_vectors.append(Isomorphism._get_similarity_vector(colI, pvim, s))
                         colI = colI + 1
-                    print("got sim_vectors")
-                    print("sorting...")
+
                     # do the sort
-                    new_s = Isomorphism._step_5_sort(group, pvim, sim_vectors)
-                    print("sort complete")
-                    if new_s != None:
-                        s.append(new_s)
+                    pvim, sim_vectors = Isomorphism._step_5_sort(tied_groups[i], pvim, sim_vectors)
+
+                    # move columns in final position to S
+                    for j in range(1, len(sim_vectors)):
+                        if sim_vectors[j - 1][1] == sim_vectors[j][1]:
+                            break
+                        s.append(tied_groups[i][0] + j - 1)
                         added_to_s = True
-                        if Isomorphism._update_group(group) != None: group = Isomorphism._update_group(tied_groups[0])
-                        else: tied_groups.remove(group)
+                    
+                    # and update the group
+                    # group reduces to nothing
+                    if Isomorphism._update_group(tied_groups[i], s) is None:
+                        tied_groups[i] = None
+                    # group reduces to one column
+                    elif Isomorphism._update_group(tied_groups[i], s)[0] == Isomorphism._update_group(tied_groups[i], s)[1]:
+                        s.append(tied_groups[i][1])
+                        added_to_s = True
+                        tied_groups[i] = None
+                    # normal operations (>1 col remaining in group)
+                    else:
+                        tied_groups[i] = Isomorphism._update_group(tied_groups[i], s)
                     # force the order to match matrix
                     s.sort()
+                # fine to remove from the list because I'm outside of the iterator
+                tied_groups = [group for group in tied_groups if group is not None]
+            # choosing
             if len(s) != pvim.dimensions()[1]:
                 # choose first from left-most group, add it to s
                 s.append(tied_groups[0][0])
@@ -561,8 +513,19 @@ class Isomorphism():
                 # force the order
                 s.sort()
                 # and update the group
-                if Isomorphism._update_group(tied_groups[0]) != None: tied_groups[0] = Isomorphism._update_group(tied_groups[0])
-                else: tied_groups = tied_groups[1:]
+                # group reduces to nothing
+                if Isomorphism._update_group(tied_groups[0], s) is None:
+                    # fine to remove from the tied_groups list because I'm outside of the iterator
+                    tied_groups.remove(tied_groups[0])
+                # group reduces to one column
+                elif Isomorphism._update_group(tied_groups[0], s)[0] == Isomorphism._update_group(tied_groups[0], s)[1]:
+                    s.append(tied_groups[0][1])
+                    added_to_s = True
+                    # fine to remove from the tied_groups list because I'm outside of the iterator
+                    tied_groups.remove(tied_groups[0])
+                # normal operations (>1 col remaining in group)
+                else:
+                    tied_groups[0] = Isomorphism._update_group(tied_groups[0], s)
         return pvim
 
 
@@ -630,39 +593,37 @@ class Isomorphism():
 
         return ties
     
-    # shrinks a group by eliminating the leftmost column
-    # I only "sort" one column at a time so I can hard-code it being the single leftmost column
+    # shrinks a group by eliminating columns which have been sorted into S
     # 
     # group - a list of length 2, containing the start and end (inclusive) indices of the group to shrink
+    # s - the list of indices of fixed columns
     # 
     # returns group, a list of length 2, containing the start and end (inclusive) indices of the group
     #         or None, if the group has shrunk to nothing (start > end) or was None in the first place
     @staticmethod
-    def _update_group(group):
-        if group == None: return None
-        group[0] = group[0] + 1
-        if group[0] > group[1]:
-            return None
-        return group
-
-    # I suspect this doesn't actually move anything in the pvim without reassignment in similarity_col_sort
-    # check that
-    # 
+    def _update_group(group, s):
+        # need that for [4,4]
+        if group is None or group[0] == group[1]: return None
+        group = list(range(group[0], group[1] + 1))
+        group = [x for x in group if x not in s]
+        # need that for group cleared
+        if len(group) == 0: return None
+        return [group[0], group[-1]]
+ 
     # the actual sorting for step 5
     # sorts the columns in a group by descending similarity vectors
     # selection sort
     #
-    # returns an index if a definite max was sorted and identified, 
-    #         None if no single max could be identified from the post-sort cols
+    # returns the sorted pvim and the enumerated, sorted sim vectors (i need that for update_group)
     @staticmethod    
     def _step_5_sort(group, pvim, sim_vectors):
-        # if only one col, it's already in sorted order
-        if group[0] == group[1]: return group[0]
-        # otherwise,
-        start_i = group[0]
 
+        start_i = group[0]
         # now a list of tuples, the pvim index and the sim_vector for the column at that index
         sims_e = [tuple(pair) for pair in enumerate(sim_vectors, start = start_i)]
+
+        # if only one col, it's already in sorted order
+        if group[0] == group[1]: return pvim, sims_e        
 
         # sort cols in group by sim vector
         # i need all this crazy +start_i and -start_i because i'm working in
@@ -681,16 +642,8 @@ class Isomorphism():
             sims_e[i-start_i], sims_e[max_idx-start_i] = sims_e[max_idx-start_i], sims_e[i-start_i]
             pvim.col_swap(i, max_idx)
 
-        # move whatever has been sorted to s
-        # only one column can be "sorted" at a time and must not have a tie
-        # tied? return None
-        if sims_e[0][1] == sims_e[1][1]:
-            return None
-        
-        # return the pvim index of the now-sorted-into-place first column
-        return sims_e[0][0]
+        return pvim, sims_e
 
-    # passed
     # helper for restricting step 5 working area
     # identifies groups of col-sum ties
     # modeled closely off of step 4 get_groups
@@ -708,7 +661,6 @@ class Isomorphism():
 
         return groups
 
-    # passed
     # helper for _col_sum_get_groups
     # given an index, get the group of col_sums that match the value at that index
     # identifies a group of tied col sums by index
@@ -734,7 +686,7 @@ class Isomorphism():
 
     # get the similarity vector of one column as compared to the columns in set S
     #
-    # a similarity vector is how many of the column's rows are both true
+    # a similarity vector is how many of the columns' rows are both true
     # ex.    True  True    the first col has a similarity vector of [2] because the cols share two True rows
     #        True  True    
     #        False True    s = [1]
@@ -763,6 +715,7 @@ class Isomorphism():
     def _get_similarity_vector(col, pvim, s):
         if col < 0 or col >= pvim.dimensions()[1]: raise ValueError("col index out of bounds")
         if len(s) == 0: return []
+        if len(s) == 1 and s[0] == col: return []
 
         sim_vector = []
 
@@ -829,7 +782,7 @@ class Isomorphism():
     # uses the same logic as step 3: 
     #     Gather the row index vectors and their matrices into two lists.
     #     Loop through and isolate each group of vectors with the same size.
-    #     Then, sort the vectors in descending order of their size, while sorting the matrices in parallel.
+    #     Then, sort the vectors in ascending order of their size, while sorting the matrices in parallel.
     #
     # pvim - a PolygonVertexIncidenceMatrix
     #
@@ -845,24 +798,17 @@ class Isomorphism():
             single_row_vector = Isomorphism._get_row_index_vector(row)
             row_index_vectors.append(single_row_vector)
             pairs.append([single_row_vector, row])
-
-        #print(row_index_vectors)
-        #print(pairs)
         
-        # sort by length of row vectors and value
-        pairs.sort(key = lambda pair: pair[0], reverse = True)
+        # ik it seems out of order but this is how it's meant to be
+        # sort by values in row vectors and value
+        pairs.sort(key = lambda pair: pair[0], reverse = False)
+        # sort by len of row vectors
         pairs.sort(key = lambda pair: len(pair[0]), reverse = True)
-        #print(pairs)
-
-        # sort by values in row vectors
-        
-        #print(pairs)
 
         # extract the now-sorted rows
         rows = []
         for pair in pairs:
             rows.append(pair[1])
-        #print(rows)
         
         pvim._matrix = rows
 

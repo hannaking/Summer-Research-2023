@@ -29,13 +29,16 @@ if __name__ == '__main__':
     lattices = lattice_generator.glue_shapes()._lattice_matrix
     
     # Show lattices.
-    if show_lattices:
+    # if show_lattices:
 
-        for layer in lattices:
-            for lattice, _ in layer:
+    #     for layer in lattices:
+    #         for lattice, _ in layer:
                 
-                lattice.show()
+    #             lattice.show()
 
+    # face graphs is a list of lists, each list containing the face graphs for one lattice
+    # the lists are stored in the same order as their lattices are in lattices
+    # so they are associated, bc I need the lattice for the face graph later when graphing to the plane.
     face_graphs = FaceGraphGenerator.from_lattices(lattices)
     
     print(face_graphs)
