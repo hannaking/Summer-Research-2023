@@ -1,0 +1,77 @@
+{
+    "source": "0-618-25022-0, 232",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID"   : "G",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "G",
+            "count"  :  1
+        }
+     ]
+
+}

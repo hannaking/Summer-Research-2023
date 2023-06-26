@@ -1,0 +1,37 @@
+{
+    "source": "0-618-25022-0, 232",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Parallelogram",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        }
+     ]
+
+}

@@ -1,0 +1,37 @@
+{
+    "source": "1-55953-459-1, 540",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Right Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        }
+     ]
+
+}

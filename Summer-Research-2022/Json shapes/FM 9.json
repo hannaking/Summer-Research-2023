@@ -1,0 +1,82 @@
+{
+    "source": "0-618-25022-0, 9",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "C",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "E",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "G",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count"  :  1
+        }
+     ]
+
+}
