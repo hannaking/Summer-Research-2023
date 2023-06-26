@@ -8,6 +8,7 @@ import unittest
 sys.path.insert(0, './Summer-Research-2022/')
 
 from node                               import Node
+from lattice                            import Lattice
 from lattice_test                       import LatticeTest
 from isomorphism                        import Isomorphism
 from lattice_generator                  import LatticeGenerator
@@ -20,8 +21,2502 @@ SHAPE_LATTICE_LAYER     = 3
 EDGE_LATTICE_LAYER      = 2
 VERTEX_LATTICE_LAYER    = 1
 BOTTOM_LATTICE_LAYER    = 0
+CTrue = True
 
 class TestLatticeIsomorphism(unittest.TestCase):
+    #@------------------------@
+    #@--------Managers--------@
+    #@------------------------@
+    #------------------------------------------- Isomorph In List ---------------------------------------------
+    #empty list                                    x
+    #one item in list, isomorphic                  x
+    #one item in list, not isomorphic              x
+    #normal size list, something in is isomorphic  x
+    #normal size list, not isomorphic              x
+    #try with a glued shape as well                x
+    def test_isomorph_in_list_empty_list(self):
+        self.assertFalse(Isomorphism.isomorph_in_list([], LatticeTest(3)))
+
+    def test_isomorph_in_list_one_item_isomorphic(self):
+        l1 = LatticeTest(3)
+        tl = LatticeTest(3)
+
+        self.assertTrue(Isomorphism.isomorph_in_list([l1], tl))
+    
+    def test_isomorph_in_list_one_item_not_isomorphic(self):
+        l1 = LatticeTest(4)
+        tl = LatticeTest(3)
+
+        self.assertFalse(Isomorphism.isomorph_in_list([l1], tl))
+
+    def test_isomorph_in_list_normal_size_list_isomorphic(self):
+        l1_list = [
+            LatticeTest(2),
+            LatticeTest(3),
+            LatticeTest(4),
+            LatticeTest(5),
+            LatticeTest(6),
+            LatticeTest(7)
+        ]
+        tl = LatticeTest(6)
+
+        self.assertTrue(Isomorphism.isomorph_in_list(l1_list, tl))
+
+    def test_isomorph_in_list_normal_size_list_not_isomorphic(self):
+        l1_list = [
+            LatticeTest(2),
+            LatticeTest(3),
+            LatticeTest(4),
+            LatticeTest(5),
+            LatticeTest(6),
+            LatticeTest(7)
+        ]
+        tl = LatticeTest(8)
+        
+        self.assertFalse(Isomorphism.isomorph_in_list(l1_list, tl))
+
+    def test_isomorph_in_list_post_glued_in(self):
+        l1_list = [
+            LatticeTest(2),
+            LatticeTest(3),
+            ShapeHelpers.bowtie(),
+            LatticeTest(5),
+            LatticeTest(6)
+        ]
+        tl = ShapeHelpers.bowtie()
+
+        self.assertTrue(Isomorphism.isomorph_in_list(l1_list, tl))
+
+    def test_isomorph_in_list_post_glued_not_isomorphic(self):
+        l1_list = [
+            LatticeTest(2),
+            LatticeTest(3),
+            ShapeHelpers.bowtie(),
+            LatticeTest(5),
+            LatticeTest(6)
+        ]
+        tl = ShapeHelpers.pentagram()
+
+        self.assertFalse(Isomorphism.isomorph_in_list(l1_list, tl))
+
+    #----------------------------------------------- Check Isomorphism -----------------------------------------------------
+    #  different dimensions                   x
+    #  simple shapes isomorphic               x
+    #  simple shapes not isomorphic           x
+    #  post-vertex glue isomorphic            x
+    #  post-vertex-glue not isomorphic        x
+    #  post edge glue isomorphic              x
+    #  post edge glue not isomorphic          x
+    #  post fill isomorphic                   x
+    #  post fill not isomorphic               x
+    # ? special case ismorphism                x
+
+    def test_check_isomorphism_triangle_segment(self):
+        triangle = LatticeTest(3) #matrix is 3x1
+        segment  = LatticeTest(2) #matrix is 2x1
+
+        pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(segment._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+    
+    def test_check_isomorphism_triangle_triangle(self):
+        triangle1 = LatticeTest(3)
+        triangle2 = LatticeTest(3)
+
+        pvim1 = PolygonVertexIncidenceMatrix(triangle1._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(triangle2._nodes_list)
+
+        self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    def test_check_isomorphism_triangle_quad(self):
+        triangle    = LatticeTest(3)
+        quad        = LatticeTest(4)
+
+        pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(quad._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    def test_check_isomorphism_triangle_hex(self):
+        triangle    = LatticeTest(3)
+        hex         = LatticeTest(6)
+
+        pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(hex._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    def test_check_isomorphism_bowtie_bowtie(self):
+        bowtie1 = ShapeHelpers.bowtie()
+        bowtie2 = ShapeHelpers.bowtie()
+
+        pvim1 = PolygonVertexIncidenceMatrix(bowtie1._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(bowtie2._nodes_list)
+
+        self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+
+    def test_check_isomorphism_bowtie_quad(self):
+        bowtie  = ShapeHelpers.bowtie()
+        quad    = LatticeTest(4)
+
+        pvim1 = PolygonVertexIncidenceMatrix(bowtie._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(quad._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    
+    def test_check_isomorphism_post_glued_edge_quad_tri_tri(self):
+        shape1  = ShapeHelpers.glued_edge_quad_tri()
+        tri     = LatticeTest(3)
+
+        pvim1 = PolygonVertexIncidenceMatrix(shape1._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(tri._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+
+    def test_check_isomorphism_post_glued_edge_quad_tri_true(self):
+        shape1 = ShapeHelpers.glued_edge_quad_tri()
+        shape2 = ShapeHelpers.glued_edge_quad_tri()
+
+        pvim1 = PolygonVertexIncidenceMatrix(shape1._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(shape2._nodes_list)
+
+        self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+
+    def test_check_isomorphism_filled_bowtie_bowtie(self):
+        filled_bowtie = ShapeHelpers.filled_bowtie()
+        bowtie        = ShapeHelpers.bowtie()
+
+        pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(bowtie._nodes_list)
+        
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+
+    def test_check_isomorphism_filled_bowtie_bowtie_true(self):
+        filled_bowtie1 = ShapeHelpers.filled_bowtie()
+        filled_bowtie2 = ShapeHelpers.filled_bowtie()
+
+        pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie1._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(filled_bowtie2._nodes_list)
+
+        self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    def test_check_isomorphism_filled_bowtie_fish(self):
+        filled_bowtie = ShapeHelpers.filled_bowtie()
+        fish          = ShapeHelpers.glued_edge_tri_tri_glued_vertex_tri()
+
+        pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(fish._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    def test_check_isomorphism_snake_tri_tri_tri(self):
+        snake = ShapeHelpers.snake()
+        tris  = ShapeHelpers.glue_one_vertex_tri_tri_tri()
+
+        pvim1 = PolygonVertexIncidenceMatrix(snake._nodes_list)
+        pvim2 = PolygonVertexIncidenceMatrix(tris._nodes_list)
+
+        self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
+
+    #--------------------------------------process matrix--------------------------------------#
+    # check at each step
+    # need to print and check because I can't rely on any certain order to start / in ties
+    # what prints is how i know what to expect. I hand-checked them all
+    #
+    # all single shapes
+    # all shape helper shapes
+    # + 4 test shapes from working on s5 June 2023
+    def test_process_segment(self):
+        # build shape
+        lattice = Lattice(2)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_triangle(self):
+        # build shape
+        lattice = Lattice(3)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_quadrilateral(self):
+        # build shape
+        lattice = Lattice(4)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_pentagon(self):
+        # build shape
+        lattice = Lattice(5)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+    def test_process_hexagon(self):
+        # build shape
+        lattice = Lattice(6)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_heptagon(self):
+        # build shape
+        lattice = Lattice(7)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+    
+    def test_process_octagon(self):
+        # build shape
+        lattice = Lattice(8)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        pvim = Isomorphism._sort_rows(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._sort_cols(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_row_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._break_col_ties(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        expected = [[True], [True], [True], [True], [True], [True], [True], [True]]
+        self.assertEqual(expected, pvim._matrix)
+    
+    def test_process_seesaw(self):
+        # get matrix
+        lattice = ShapeHelpers.seesaw()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False, True]
+        # [True, True, False, False]
+        # [True, False, True, False]
+        # [True, False, True, True]
+        # [False, True, False, False]
+        # [False, True, False, False]
+        # [False, False, True, False]
+        # [False, False, True, False]
+        # [False, False, False, True]
+        
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, False, True, True],
+            [True, True, False, False],
+            [True, False, True, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_blimp(self):
+        # get matrix
+        lattice = ShapeHelpers.blimp()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True, False]
+        # [True, True, False, False]
+        # [True, False, False, False]
+        # [False, True, False, True]
+        # [False, True, True, True]
+        # [False, False, True, False]
+        # [False, False, True, False]
+        # [False, False, False, True]
+        # [False, False, False, True]
+
+        expected = [
+            [True, True, True, False],
+            [False, True, True, True],
+            [True, True, False, False],
+            [False, True, False, True],
+            [True, False, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True],
+            [False, False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True],
+            [True, True, True, False],
+            [True, False, False, True],
+            [True, False, True, False],
+            [False, False, False, True],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True, False],
+            [True, True, False, True],
+            [True, False, True, False],
+            [True, False, False, True],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, False],
+            [True, True, False, True],
+            [True, False, True, False],
+            [True, False, False, True],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, False],
+            [True, True, False, True],
+            [True, False, True, False],
+            [True, False, False, True],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, False],
+            [True, True, False, True],
+            [True, False, True, False],
+            [True, False, False, True],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_bowtie(self):
+        # get matrix
+        lattice = ShapeHelpers.bowtie()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True]
+        # [True, False]
+        # [True, False]
+        # [False, True]
+        # [False, True]
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True],
+            [False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+    
+    def test_process_filled_bowtie(self):
+        # get matrix
+        lattice = ShapeHelpers.filled_bowtie()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True]
+        # [True, False, True]
+        # [True, False, False]
+        # [False, True, True]
+        # [False, True, False]
+
+        expected = [
+            [True, True, True],
+            [True, False, True],
+            [False, True, True],
+            [True, False, False],
+            [False, True, False]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, True],
+            [False, True, True],
+            [True, False, False],
+            [False, True, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True],
+            [True, False, True],
+            [False, True, True],
+            [True, False, False],
+            [False, True, False]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_glued_edge_quad_tri(self):
+        # get matrix
+        lattice = ShapeHelpers.glued_edge_quad_tri()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True]
+        # [True, True]
+        # [True, False]
+        # [False, True]
+        # [False, True]
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True],
+            [False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [False, True],
+            [True, False],
+            [True, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_glued_vertex_segment_quad(self):
+        # get matrix
+        lattice = ShapeHelpers.glued_vertex_segment_quad()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True]
+        # [True, False]
+        # [True, False]
+        # [True, False]
+        # [False, True]
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, False],
+            [True, False],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_glued_edge_tri_tri(self):
+        # get matrix
+        lattice = ShapeHelpers.glued_edge_tri_tri()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True]
+        # [True, True]
+        # [True, False]
+        # [False, True]
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, False],
+            [False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_process_glued_vertex_tri_tri_quad(self):
+        # get matrix
+        lattice = ShapeHelpers.glued_vertex_tri_tri_quad()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True]
+        # [True, False, False]
+        # [True, False, False]
+        # [True, False, False]
+        # [False, True, False]
+        # [False, True, False]
+        # [False, False, True]
+        # [False, False, True]
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+
+    def test_process_glue_one_vertex_tri_tri_tri(self):
+        # get matrix
+        lattice = ShapeHelpers.glue_one_vertex_tri_tri_tri()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True]
+        # [True, False, False]
+        # [True, False, False]
+        # [False, True, False]
+        # [False, True, False]
+        # [False, False, True]
+        # [False, False, True]
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, False, False],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_glue_one_vertex_tri_tri_seg_seg(self):
+        # get matrix
+        lattice = ShapeHelpers.glue_one_vertex_tri_tri_seg_seg()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True, True]
+        # [True, False, False, False]
+        # [True, False, False, False]
+        # [False, True, False, False]
+        # [False, True, False, False]
+        # [False, False, True, False]
+        # [False, False, False, True]
+
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, True],
+            [True, False, False, False],
+            [True, False, False, False],
+            [False, True, False, False],
+            [False, True, False, False],
+            [False, False, True, False],
+            [False, False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_star(self):
+        # get matrix
+        lattice = ShapeHelpers.pentagram()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False, False, True, False]
+        # [True, True, True, False, False, False]
+        # [True, False, True, True, False, False]
+        # [True, False, False, True, False, True]
+        # [True, False, False, False, True, True]
+        # [False, True, False, False, False, False]
+        # [False, False, True, False, False, False]
+        # [False, False, False, True, False, False]
+        # [False, False, False, False, True, False]
+        # [False, False, False, False, False, True]
+
+        expected = [
+            [True, True, False, False, True, False],
+            [True, True, True, False, False, False],
+            [True, False, True, True, False, False],
+            [True, False, False, True, False, True],
+            [True, False, False, False, True, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, False, True, False],
+            [True, True, True, False, False, False],
+            [True, False, True, True, False, False],
+            [True, False, False, True, False, True],
+            [True, False, False, False, True, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, False, False, True, False],
+            [True, True, True, False, False, False],
+            [True, False, True, True, False, False],
+            [True, False, False, True, False, True],
+            [True, False, False, False, True, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, False, True, False],
+            [True, True, True, False, False, False],
+            [True, False, True, True, False, False],
+            [True, False, False, True, False, True],
+            [True, False, False, False, True, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False, True, False, False],
+            [True, True, True, False, False, False],
+            [True, False, True, False, True, False],
+            [True, False, False, False, True, True],
+            [True, False, False, True, False, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True, False, False, False],
+            [True, True, False, True, False, False],
+            [True, False, True, False, True, False],
+            [True, False, False, True, False, True],
+            [True, False, False, False, True, True],
+            [False, True, False, False, False, False],
+            [False, False, True, False, False, False],
+            [False, False, False, True, False, False],
+            [False, False, False, False, True, False],
+            [False, False, False, False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_funky_shape(self):
+        # get matrix
+        lattice = ShapeHelpers.funky_shape()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True, False, False, False, False]
+        # [True, True, False, False, True, False, True]
+        # [True, False, False, False, True, False, False]
+        # [False, True, True, True, False, False, True]
+        # [False, False, True, True, False, True, False]
+        # [False, False, False, True, False, True, True]
+        # [False, False, False, False, True, False, True]
+        # [False, False, False, False, False, True, False]
+
+        expected = [
+            [CTrue, CTrue, False, False, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue, False, False, CTrue],
+            [CTrue, CTrue, CTrue, False, False, False, False],
+            [False, False, CTrue, CTrue, False, CTrue, False],
+            [False, False, False, CTrue, False, CTrue, CTrue],
+            [CTrue, False, False, False, CTrue, False, False],
+            [False, False, False, False, CTrue, False, CTrue],
+            [False, False, False, False, False, CTrue, False]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, CTrue, CTrue, False, False],
+            [False, CTrue, CTrue, CTrue, False, False, False],
+            [False, False, False, CTrue, CTrue, False, CTrue],
+            [CTrue, False, False, False, CTrue, False, CTrue],
+            [False, CTrue, False, False, False, CTrue, False],
+            [CTrue, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, CTrue]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, CTrue, CTrue, False, False],
+            [CTrue, False, False, False, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue, False, False, False],
+            [False, False, False, CTrue, CTrue, False, CTrue],
+            [CTrue, False, False, False, False, CTrue, False],
+            [False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, CTrue]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, False, CTrue, CTrue, False],
+            [CTrue, CTrue, CTrue, CTrue, False, False, False],
+            [CTrue, False, False, CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, CTrue],
+            [CTrue, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, False, False, CTrue]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, False, CTrue, CTrue, False],
+            [CTrue, CTrue, CTrue, CTrue, False, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue],
+            [False, CTrue, False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, CTrue],
+            [CTrue, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, False, False, CTrue]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, CTrue, False],
+            [CTrue, False, CTrue, False, False, False, CTrue],
+            [False, CTrue, False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, CTrue],
+            [CTrue, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, False, False, CTrue]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_filled_glued_edge_quad_quad_quad(self):
+        # get matrix
+        lattice = ShapeHelpers.filled_glued_edge_quad_quad_quad()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False, True]
+        # [True, True, False, False]
+        # [True, False, True, False]
+        # [True, False, True, True]
+        # [False, True, False, False]
+        # [False, True, False, True]
+        # [False, False, True, True]
+        # [False, False, True, False]
+
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, False],
+            [CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, False],
+            [False, False, False, CTrue]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, False],
+            [CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, False],
+            [False, False, False, CTrue]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, False],
+            [CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, False],
+            [False, False, False, CTrue]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_pizza(self):
+        # get matrix
+        lattice = ShapeHelpers.pizza()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True, True, True, True]
+        # [True, True, False, False, False, False]
+        # [True, False, False, True, False, False]
+        # [False, True, True, False, False, False]
+        # [False, False, True, False, False, True]
+        # [False, False, False, True, True, False]
+        # [False, False, False, False, True, True]
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, False, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, False, False, CTrue],
+            [False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, False, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, False, False, CTrue],
+            [False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, False, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, False, False, CTrue],
+            [False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, False, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, False, False, CTrue],
+            [False, False, False, CTrue, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False, False],
+            [False, False, False, CTrue, False, CTrue],
+            [False, False, CTrue, False, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False, False],
+            [False, False, CTrue, False, CTrue, False],
+            [False, False, False, CTrue, False, CTrue],
+            [False, False, False, False, CTrue, CTrue]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_goofy_shape(self):
+        # get matrix
+        lattice = ShapeHelpers.goofy_shape()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False, False]
+        # [True, True, False, True]
+        # [True, False, False, True]
+        # [False, True, True, True]
+        # [False, True, True, False]
+        # [False, False, True, False]
+        # [False, False, True, False]
+        # [False, False, True, False]
+        # [False, False, False, True]
+
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False],
+            [CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False],
+            [False, False, False, CTrue]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, CTrue, False],
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [CTrue, CTrue, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False],       
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False],       
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False],       
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False],       
+            [False, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_filled_quad(self):
+        # get matrix
+        lattice = ShapeHelpers.filled_quad()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True]
+        # [True, True]
+        # [True, True]
+        # [True, False]
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True],
+            [True, True],
+            [True, True],
+            [True, False]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_glued_edge_tri_tri_glued_vertex_tri(self):
+        # get matrix
+        lattice = ShapeHelpers.glued_edge_tri_tri_glued_vertex_tri()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False]
+        # [True, True, False]
+        # [True, False, True]
+        # [False, True, False]
+        # [False, False, True]
+        # [False, False, True]
+
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, True, False],
+            [True, False, True],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_complex_fish(self):
+        # get matrix
+        lattice = ShapeHelpers.complex_fish()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, True]
+        # [True, True, False]
+        # [True, False, False]
+        # [False, True, False]
+        # [False, False, True]
+        # [False, False, True]
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, True],
+            [True, True, False],
+            [True, False, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_snake(self):
+        # get matrix
+        lattice = ShapeHelpers.snake()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False]
+        # [True, False, True]
+        # [True, False, False]
+        # [False, True, False]
+        # [False, True, False]
+        # [False, False, True]
+        # [False, False, True]
+
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [True, True, False],
+            [True, False, True],
+            [True, False, False],
+            [False, True, False],
+            [False, True, False],
+            [False, False, True],
+            [False, False, True]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    def test_full_process_tri_with_quad_on_each_edge(self):
+        # get matrix
+        lattice = ShapeHelpers.tri_with_quad_on_each_edge()
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+
+        # original
+        # [True, True, False, True]
+        # [True, True, True, False]
+        # [True, False, True, True]
+        # [False, True, False, False]
+        # [False, True, False, False]
+        # [False, False, True, False]
+        # [False, False, True, False]
+        # [False, False, False, True]
+        # [False, False, False, True]
+
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, CTrue, CTrue, False],
+            [CTrue, False, CTrue, CTrue],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False],
+            [False, False, False, CTrue],
+            [False, False, False, CTrue]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, False, CTrue, CTrue],
+            [CTrue, CTrue, False, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, CTrue],
+            [CTrue, False, CTrue, CTrue],
+            [False, CTrue, CTrue, CTrue],
+            [CTrue, False, False, False],
+            [CTrue, False, False, False],
+            [False, CTrue, False, False],
+            [False, CTrue, False, False],
+            [False, False, CTrue, False],
+            [False, False, CTrue, False]]
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    #   /\
+    #  *--*--*\
+    #  |  |  |/
+    # /*--*--*
+    # \|  |  |
+    #  *--*--*
+    #      \/
+    def test_full_process_four_quad_four_tri_symm(self):
+        # get matrix. i have to overwrite this matrix so it doesn't matter
+        lattice = Lattice(2)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+        # original
+        pvim._matrix = [
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [CTrue, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, CTrue, False],]
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, CTrue, False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, False, False, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [CTrue, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, False, False, CTrue, False],]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, CTrue, False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, False, False, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [CTrue, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, False, False, CTrue, False],]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, CTrue, False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, False, False, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [CTrue, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, False, False, CTrue, False],]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, CTrue, False, CTrue, CTrue, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, False, False, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [CTrue, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, False, False, CTrue, False],]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [False, CTrue, False, CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, False, False, CTrue, False, False],
+            [CTrue, CTrue, False, False, CTrue, False, False, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [False, False, CTrue, False, False, CTrue, False, False],
+            [False, CTrue, False, False, False, False, CTrue, False],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, False, False, False],
+            [CTrue, False, CTrue, False, False, CTrue, False, False],
+            [False, CTrue, False, CTrue, False, False, CTrue, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [False, CTrue, False, False, False, False, CTrue, False],
+            [False, False, CTrue, False, False, CTrue, False, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, False, CTrue]]
+            
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    # /*--*--*\
+    # \|  |  |/
+    # /*--*--*
+    # \|  |  |
+    #  *--*--*
+    #      \/
+    def test_full_process_four_quad_four_tri_not_symm(self):
+        # get matrix. i have to overwrite this matrix so it doesn't matter
+        lattice = Lattice(2)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+        # original
+        pvim._matrix = [
+            [CTrue, False, False, False, False, False, False, False],
+            [CTrue, CTrue, False, False, False, False, False, False],
+            [False, CTrue, CTrue, False, False, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, False],
+            [False, False, False, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, CTrue, CTrue, False],
+            [False, False, CTrue, CTrue, False, False, CTrue, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, CTrue, CTrue, False, False],
+            [False, False, False, False, False, CTrue, CTrue, CTrue],
+            [False, False, False, False, False, False, CTrue, CTrue],
+            [False, False, False, False, False, False, False, CTrue],]
+
+        expected = [
+            [CTrue, CTrue, False, False, CTrue, CTrue, False, False],
+            [False, CTrue, CTrue, False, False, CTrue, CTrue, False],
+            [False, False, CTrue, CTrue, False, False, CTrue, False],
+            [False, False, False, False, False, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False, False, False],
+            [False, CTrue, CTrue, False, False, False, False, False],
+            [False, False, CTrue, CTrue, False, False, False, False],
+            [False, False, False, False, CTrue, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, CTrue],
+            [CTrue, False, False, False, False, False, False, False],
+            [False, False, False, CTrue, False, False, False, False],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, False, False, CTrue],]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, False, CTrue, False, CTrue, False, CTrue, False],
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [False, CTrue, False, CTrue, False, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [CTrue, CTrue, False, False, False, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, False, CTrue],]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, False, CTrue, False, CTrue, False, CTrue, False],
+            [False, CTrue, False, CTrue, False, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, CTrue, False, False, False, False, False, False],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, False, CTrue],]
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, False, False, False, False, CTrue],
+            [False, CTrue, False, CTrue, False, False, False, False],
+            [False, CTrue, False, False, CTrue, False, False, False],
+            [False, False, False, CTrue, False, False, CTrue, False],
+            [CTrue, False, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, CTrue, False, CTrue, False, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [False, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],
+            [False, False, False, False, False, False, CTrue, False],]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False, False, False, CTrue, False],
+            [False, False, CTrue, CTrue, False, False, False, CTrue],
+            [CTrue, False, False, False, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False, False, False, False],
+            [False, CTrue, False, False, False, CTrue, False, False],
+            [False, False, CTrue, False, False, False, CTrue, False],
+            [False, False, False, CTrue, False, False, False, CTrue],
+            [False, False, False, False, CTrue, False, False, False],            
+            [False, False, False, False, False, CTrue, False, False],
+            [False, False, False, False, False, False, CTrue, False],
+            [False, False, False, False, False, False, False, CTrue]]
+                    
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    # *--*
+    #  \/
+    #  /\
+    # *--*
+    # |  |
+    # *--*
+    #  \/
+    #  /\
+    # *--*
+    def test_full_process_candy(self):
+        # get matrix. i have to overwrite this matrix so it doesn't matter
+        lattice = Lattice(2)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+        # original
+        pvim._matrix = [
+            [CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, False],
+            [False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False],
+            [False, False, False, CTrue, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [False, CTrue, CTrue, False, False],
+            [CTrue, False, False, False, False]]
+
+        expected = [
+            [CTrue, CTrue, False, False, False],
+            [False, CTrue, CTrue, False, False],
+            [False, False, CTrue, CTrue, False],
+            [False, False, False, CTrue, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [False, CTrue, CTrue, False, False],
+            [CTrue, False, False, False, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [CTrue, False, False, False, False]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [False, CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, False, CTrue, False],
+            [False, False, False, CTrue, CTrue],
+            [CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, False, False],
+            [False, CTrue, False, False, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, CTrue, False, False, False]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, False, CTrue, False],
+            [CTrue, False, False, CTrue, False],
+            [CTrue, False, CTrue, False, False],
+            [False, CTrue, CTrue, False, False],
+            [False, False, False, CTrue, CTrue],
+            [False, CTrue, False, False, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, CTrue, False, False, False]]
+        
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False],
+            [False, False, CTrue, False, CTrue],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, False, CTrue, False]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False],
+            [False, False, CTrue, False, CTrue],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, False, CTrue, False]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, False, False, False],
+            [CTrue, CTrue, False, False, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, CTrue, False, False],
+            [False, CTrue, False, CTrue, False],
+            [False, False, CTrue, False, CTrue],
+            [False, False, False, CTrue, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue]]
+                    
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+    #  /\
+    # *--*
+    # |  |\/|
+    # |  |/\|
+    # *--*
+    #  \/
+    def test_full_process_elder_guardian(self):
+        # get matrix. i have to overwrite this matrix so it doesn't matter
+        lattice = Lattice(2)
+        pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
+        # original
+        pvim._matrix = [
+            [CTrue, False, False, False, False],
+            [CTrue, CTrue, False, False, False],
+            [CTrue, CTrue, CTrue, False, False],
+            [False, False, False, CTrue, False],
+            [False, CTrue, False, False, CTrue],
+            [False, CTrue, CTrue, False, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue]]
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [False, CTrue, CTrue, False, CTrue],
+            [CTrue, CTrue, False, False, False],
+            [False, CTrue, False, False, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [CTrue, False, False, False, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue]]
+        
+        pvim = Isomorphism._sort_rows(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False, CTrue],
+            [CTrue, CTrue, False, False, False],
+            [CTrue, False, False, False, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [False, CTrue, False, False, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue]]
+        pvim = Isomorphism._sort_cols(pvim)
+        self.assertEqual(expected, pvim._matrix)
+        
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [CTrue, False, CTrue, False, CTrue],
+            [CTrue, CTrue, False, False, False],
+            [CTrue, False, False, False, CTrue],
+            [False, False, CTrue, CTrue, False],
+            [False, CTrue, False, False, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue]]
+        
+        pvim = Isomorphism._break_row_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [CTrue, CTrue, False, CTrue, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, False, CTrue, False],
+            [False, CTrue, False, False, CTrue],
+            [False, False, CTrue, False, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, False, CTrue, False]]
+        pvim = Isomorphism._break_col_ties(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [CTrue, CTrue, False, CTrue, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, False, CTrue, False],
+            [False, CTrue, False, False, CTrue],
+            [False, False, CTrue, False, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue],
+            [False, False, False, CTrue, False]]
+        pvim = Isomorphism._similarity_col_sort(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
+        expected = [
+            [CTrue, CTrue, CTrue, False, False],
+            [CTrue, CTrue, False, CTrue, False],
+            [CTrue, False, CTrue, False, False],
+            [CTrue, False, False, CTrue, False],
+            [False, CTrue, False, False, CTrue],
+            [False, False, CTrue, False, False],
+            [False, False, False, CTrue, False],
+            [False, False, False, False, CTrue],
+            [False, False, False, False, CTrue]]
+                    
+        pvim = Isomorphism._check_row_index_vectors(pvim)
+        self.assertEqual(expected, pvim._matrix)
+
     #@------------------@#
     #@----- Step 1 -----@#
     #@------------------@#
@@ -1647,16 +4142,15 @@ class TestLatticeIsomorphism(unittest.TestCase):
         triangle = LatticeTest(3)
         triangle_pvim = PolygonVertexIncidenceMatrix(triangle._nodes_list)
 
-        Isomorphism._sort_rows(triangle_pvim)
-        Isomorphism._sort_cols(triangle_pvim)
-        Isomorphism._break_row_ties(triangle_pvim)
-        Isomorphism._break_col_ties(triangle_pvim)
-        Isomorphism._similarity_col_sort(triangle_pvim)
+        triangle_pvim = Isomorphism._sort_rows(triangle_pvim)
+        triangle_pvim = Isomorphism._sort_cols(triangle_pvim)
+        triangle_pvim = Isomorphism._break_row_ties(triangle_pvim)
+        triangle_pvim = Isomorphism._break_col_ties(triangle_pvim)
+        triangle_pvim = Isomorphism._similarity_col_sort(triangle_pvim)
 
         # [True],
         # [True],
         # [True]
-        # []
 
         expected = [
             [True],
@@ -1674,14 +4168,7 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._sort_cols(bowtie_pvim)
         Isomorphism._break_row_ties(bowtie_pvim)
         Isomorphism._break_col_ties(bowtie_pvim)
-
-        print("----------------------BEFORE-------------------------")
-        print(bowtie_pvim)
-
         Isomorphism._similarity_col_sort(bowtie_pvim)
-
-        print("----------------------AFTER-------------------------")
-        print(bowtie_pvim)
 
         expected = [
             [True, True],
@@ -1701,16 +4188,21 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._sort_cols(star_pvim)
         Isomorphism._break_row_ties(star_pvim)
         Isomorphism._break_col_ties(star_pvim)
-
-        print("------------------------BEFORE--------------------")
-        print(star_pvim)
-
         Isomorphism._similarity_col_sort(star_pvim)
 
-        print("----------------------AFTER-------------------------")
-        print(star_pvim)
+        expected = [[CTrue, CTrue, False, CTrue, False, False],
+                    [CTrue, CTrue, CTrue, False, False, False],
+                    [CTrue, False, CTrue, False, CTrue, False],
+                    [CTrue, False, False, False, CTrue, CTrue],
+                    [CTrue, False, False, CTrue, False, CTrue],
+                    [False, CTrue, False, False, False, False],
+                    [False, False, CTrue, False, False, False],
+                    [False, False, False, False, CTrue, False],
+                    [False, False, False, CTrue, False, False],
+                    [False, False, False, False, False, CTrue]]
+        
 
-        #self.assertEqual(expected, star_pvim._matrix)
+        self.assertEqual(expected, star_pvim._matrix)
 
     def test_similarity_col_sort_pizza(self):
         pizza = ShapeHelpers.pizza()
@@ -1721,16 +4213,19 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_row_ties(pizza_pvim)
         Isomorphism._break_col_ties(pizza_pvim)
         
-        print("------------------------BEFORE--------------------")
-        print(pizza_pvim)
-
         Isomorphism._similarity_col_sort(pizza_pvim)
 
-        print("----------------------AFTER-------------------------")
-        print(pizza_pvim)
+        expected = [
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False, False],
+            [False, False, False, CTrue, False, CTrue],
+            [False, False, CTrue, False, CTrue, False],
+            [False, False, False, False, CTrue, CTrue]]
 
 
-        #self.assertEqual(expected, pizza_pvim._matrix)
+        self.assertEqual(expected, pizza_pvim._matrix)
 
     # --------------------------------------- get_col_sum_ties ---------------------------------------
     # no ties (all singles)
@@ -1881,30 +4376,34 @@ class TestLatticeIsomorphism(unittest.TestCase):
 
     # --------------------------------------- update group ---------------------------------------
     # None group
-    # normal group
-    # size 2 group
+    # some sorted group
+    # clear group
     # size 1 group
     def test_update_group_none(self):
         group = None
+        s = [0,1,2]
         expected = None
-        self.assertEqual(expected, Isomorphism._update_group(group))
+        self.assertEqual(expected, Isomorphism._update_group(group,s))
     def test_update_group_normal(self):
         group = [3,6]
-        expected = [4,6]
-        self.assertEqual(expected, Isomorphism._update_group(group))
-    def test_update_group_size_2(self):
+        s = [0,1,2,7,3,4]
+        expected = [5,6]
+        self.assertEqual(expected, Isomorphism._update_group(group,s))
+    def test_update_group_clear(self):
         group = [3,4]
-        expected = [4,4]
-        self.assertEqual(expected, Isomorphism._update_group(group))
+        s  = [0,1,2,3,4,5]
+        expected = None
+        self.assertEqual(expected, Isomorphism._update_group(group,s))
     def test_update_group_size_1(self):
         group = [4,4]
+        s = [0,1,2,3,4]
         expected = None
-        self.assertEqual(expected, Isomorphism._update_group(group))
+        self.assertEqual(expected, Isomorphism._update_group(group,s))
 
     # --------------------------------------- step 5 sort ---------------------------------------
     # single entry group
+    # no movement
     # normal group and normal sim vectors (normal sort)
-    # tied max in group (gives back None)
     # all empty sim vectors (gives back None)
     def test_step_5_sort_single(self):
         # just a random node list to make the object, I'll be writing over it in a sec
@@ -1929,10 +4428,20 @@ class TestLatticeIsomorphism(unittest.TestCase):
                          [False, False, False, True, False]]
         sim_vectors = [[2,1,0,0]]
         group = [3,3]
-        expected = 3
-        self.assertEqual(expected, Isomorphism._step_5_sort(group, pvim, sim_vectors))
+        expectedmatrix = [ [True, True, True, False, False],
+                         [True, True, False, True, False],
+                         [True, False, True, False, False],
+                         [True, False, False, True, False],
+                         [False, True, False, False, True],
+                         [False, False, True, False, False],
+                         [False, False, False, False, True],
+                         [False, False, False, False, True],
+                         [False, False, False, True, False]]
+        expectedsimse = [(3,[2,1,0,0])]
+        self.assertEqual(expectedmatrix, Isomorphism._step_5_sort(group, pvim, sim_vectors)[0]._matrix)
+        self.assertEqual(expectedsimse, Isomorphism._step_5_sort(group, pvim, sim_vectors)[1])
 
-    def test_step_5_sort_normal(self):
+    def test_step_5_sort_no_movement(self):
         # just a random node list to make the object, I'll be writing over it in a sec
         lattice = LatticeTest(2)
         pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
@@ -1957,36 +4466,71 @@ class TestLatticeIsomorphism(unittest.TestCase):
                          [False, False, False, True, False],
                          [False, False, False, False, True],
                          [False, False, False, False, True] ]
+        # s = indexes 0, 1, 2
         sim_vectors = [[0,1,0], [0,0,1]]
         group = [3,4]
-        expected = 3
-        self.assertEqual(expected, Isomorphism._step_5_sort(group, pvim, sim_vectors))
+        expectedmatrix = [ [True, True, False, False, False],
+                         [True, True, False, False, False],
+                         [True, False, True, False, False],
+                         [True, False, True, False, False],
+                         [False, True, False, True, False],
+                         [False, False, True, False, True],
+                         [False, False, False, True, False],
+                         [False, False, False, True, False],
+                         [False, False, False, False, True],
+                         [False, False, False, False, True] ]
+        expectedsims = [(3,[0,1,0]), (4,[0,0,1])]
+        outputmatrix, outputsims = Isomorphism._step_5_sort(group, pvim, sim_vectors)
+        outputmatrix = outputmatrix._matrix
+        self.assertEqual(expectedmatrix, outputmatrix)
+        self.assertEqual(expectedsims, outputsims)
         
-    def test_step_5_sort_tied_max(self):
+    def test_step_5_sort_movement(self):
         # just a random node list to make the object, I'll be writing over it in a sec
         lattice = LatticeTest(2)
         pvim = PolygonVertexIncidenceMatrix(lattice._nodes_list)
-        #  /\
-        # /__\
-        # |  |\  .
-        # |  | \/|
-        # |  | /\|
-        # |__|/  '
-        # \  /
-        #  \/
-        pvim._matrix = [ [True, True, True, False, False],
-                         [True, True, False, True, False],
-                         [True, False, True, False, False],
-                         [True, False, False, True, False],
-                         [False, True, False, False, True],
-                         [False, False, True, False, False],
-                         [False, False, False, False, True],
-                         [False, False, False, False, True],
-                         [False, False, False, True, False]]
-        sim_vectors = [[2,1,0], [2,1,0]]
-        group = [2,3]
-        expected = None
-        self.assertEqual(expected, Isomorphism._step_5_sort(group, pvim, sim_vectors))
+        #     /\
+        #    *--*--*
+        #   /|  |  |\
+        #   \|  |  |/
+        #    *--*--*
+        #    |  |  |
+        #    |  |  |
+        #    *--*--*
+        #        \/
+        pvim._matrix = [ [CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+                         [CTrue, False, False, False, CTrue, CTrue, False, False],
+                         [CTrue, CTrue, False, False, False, CTrue, False, False],
+                         [CTrue, False, False, CTrue, CTrue, False, False, False],
+                         [False, CTrue, CTrue, False, False, False, False, CTrue],
+                         [False, False, CTrue, CTrue, False, False, CTrue, False],
+                         [False, CTrue, False, False, False, False, False, CTrue],
+                         [False, False, CTrue, False, False, False, CTrue, False],
+                         [False, False, False, CTrue, False, False, False, False],
+                         [False, False, False, False, False, CTrue, False, False],
+                         [False, False, False, False, CTrue, False, False, False],
+                         [False, False, False, False,False, False, False, CTrue],
+                         [False, False, False, False, False, False, CTrue, False]]
+        sim_vectors = [[2,0,0,1], [2,1,0,0]]
+        group = [4,5]
+        expectedmatrix = [[CTrue, CTrue, CTrue, CTrue, False, False, False, False],
+                         [CTrue, False, False, False, CTrue, CTrue, False, False],
+                         [CTrue, CTrue, False, False, CTrue, False, False, False],
+                         [CTrue, False, False, CTrue, False, CTrue, False, False],
+                         [False, CTrue, CTrue, False, False, False, False, CTrue],
+                         [False, False, CTrue, CTrue, False, False, CTrue, False],
+                         [False, CTrue, False, False, False, False, False, CTrue],
+                         [False, False, CTrue, False, False, False, CTrue, False],
+                         [False, False, False, CTrue, False, False, False, False],
+                         [False, False, False, False, CTrue, False, False, False],
+                         [False, False, False, False, False, CTrue, False, False],
+                         [False, False, False, False,False, False, False, CTrue],
+                         [False, False, False, False, False, False, CTrue, False]]
+        expectedsims = [(5,[2,1,0,0]), (4,[2,0,0,1])]
+        outputmatrix, outputsims = Isomorphism._step_5_sort(group, pvim, sim_vectors)
+        outputmatrix = outputmatrix._matrix
+        self.assertEqual(expectedmatrix, outputmatrix)
+        self.assertEqual(expectedsims, outputsims)
 
     def test_step_5_sort_empty_sims(self):
         # just a random node list to make the object, I'll be writing over it in a sec
@@ -2010,8 +4554,18 @@ class TestLatticeIsomorphism(unittest.TestCase):
                          [False, False, False, False, True] ]
         sim_vectors = [[],[],[]]
         group = [0,2]
-        expected = None
-        self.assertEqual(expected, Isomorphism._step_5_sort(group, pvim, sim_vectors))
+        expectedmatrix = [ [True, True, True, False, False],
+                         [True, True, False, True, False],
+                         [True, False, True, False, False],
+                         [True, False, False, True, False],
+                         [False, True, False, False, True],
+                         [False, False, True, False, False],
+                         [False, False, False, False, True] ]
+        expectedsims = [(0,[]), (1,[]), (2,[])]
+        outputmatrix, outputsims = Isomorphism._step_5_sort(group, pvim, sim_vectors)
+        outputmatrix = outputmatrix._matrix
+        self.assertEqual(expectedmatrix, outputmatrix)
+        self.assertEqual(expectedsims, outputsims)
 
     # --------------------------------------- col_sum_get_groups ---------------------------------------
     # no ties (all singles)
@@ -2064,11 +4618,9 @@ class TestLatticeIsomorphism(unittest.TestCase):
         self.assertEqual(expected, group)
 
     #-------------------------------- get similarity vector ---------------------------------
-    # simple shape
-    # bowtie
-    # glued edge
-    # filled bowtie
-    # pizza
+    # simple shape (s is len 1 and is the col index you want the sime vector for)
+    # bowtie (s = [])
+    # filled bowtie 
     # star
     # empty s
     # one col in s (matching and not)
@@ -2086,7 +4638,8 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_col_ties(tri_pvim)
 
         expected = []
-        vector = Isomorphism._get_similarity_vector(0, tri_pvim)
+        s = [0]
+        vector = Isomorphism._get_similarity_vector(0, tri_pvim, s)
 
         self.assertEqual(expected, vector)
 
@@ -2099,43 +4652,10 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_row_ties(bowtie_pvim)
         Isomorphism._break_col_ties(bowtie_pvim)
 
-        expected = [1]
-        vector = Isomorphism._get_similarity_vector(0, bowtie_pvim)
-
-        self.assertEqual(expected, vector)
-
-    def test_get_similarity_vector_bowtie_second_col(self):
-        bowtie = ShapeHelpers.bowtie()
-        bowtie_pvim = PolygonVertexIncidenceMatrix(bowtie._nodes_list)
-
-        Isomorphism._sort_rows(bowtie_pvim)
-        Isomorphism._sort_cols(bowtie_pvim)
-        Isomorphism._break_row_ties(bowtie_pvim)
-        Isomorphism._break_col_ties(bowtie_pvim)
+        s = []
 
         expected = []
-        vector = Isomorphism._get_similarity_vector(1, bowtie_pvim)
-
-        self.assertEqual(expected, vector)
-
-    def test_get_similarity_vector_glued_edge_quad_tri(self):
-        glued_edge = ShapeHelpers.glued_edge_quad_tri()
-        glued_edge_pvim = PolygonVertexIncidenceMatrix(glued_edge._nodes_list)
-
-        Isomorphism._sort_rows(glued_edge_pvim)
-        Isomorphism._sort_cols(glued_edge_pvim)
-        Isomorphism._break_row_ties(glued_edge_pvim)
-        Isomorphism._break_col_ties(glued_edge_pvim)
-
-        # col 0
-        expected = [2]
-        vector = Isomorphism._get_similarity_vector(0, glued_edge_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 1
-        expected = []
-        vector = Isomorphism._get_similarity_vector(1, glued_edge_pvim)
+        vector = Isomorphism._get_similarity_vector(0, bowtie_pvim, s)
 
         self.assertEqual(expected, vector)
 
@@ -2148,66 +4668,34 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_row_ties(filled_bowtie_pvim)
         Isomorphism._break_col_ties(filled_bowtie_pvim)
 
+        s = [0]
+
         # col 0
-        expected = [2, 2]
-        vector = Isomorphism._get_similarity_vector(0, filled_bowtie_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 1
-        expected = [1]
-        vector = Isomorphism._get_similarity_vector(1, filled_bowtie_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 2
         expected = []
-        vector = Isomorphism._get_similarity_vector(2, filled_bowtie_pvim)
-
-        self.assertEqual(expected, vector)
-
-    def test_get_similarity_vector_pizza(self):
-        pizza = ShapeHelpers.pizza()
-        pizza_pvim = PolygonVertexIncidenceMatrix(pizza._nodes_list)
-
-        Isomorphism._sort_rows(pizza_pvim)
-        Isomorphism._sort_cols(pizza_pvim)
-        Isomorphism._break_row_ties(pizza_pvim)
-        Isomorphism._break_col_ties(pizza_pvim)
-
-        # col 0
-        expected = [2, 1, 2, 1, 1]
-        vector = Isomorphism._get_similarity_vector(0, pizza_pvim)
+        vector = Isomorphism._get_similarity_vector(0, filled_bowtie_pvim, s)
 
         self.assertEqual(expected, vector)
 
         # col 1
-        expected = [2, 1, 1, 1]
-        vector = Isomorphism._get_similarity_vector(1, pizza_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 2
-        expected = [1, 1, 2]
-        vector = Isomorphism._get_similarity_vector(2, pizza_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 3
-        expected = [2, 1]
-        vector = Isomorphism._get_similarity_vector(3, pizza_pvim)
-
-        self.assertEqual(expected, vector)
-
-        # col 4
         expected = [2]
-        vector = Isomorphism._get_similarity_vector(4, pizza_pvim)
+        vector = Isomorphism._get_similarity_vector(1, filled_bowtie_pvim, s)
 
         self.assertEqual(expected, vector)
 
-        # col 5
-        expected = []
-        vector = Isomorphism._get_similarity_vector(5, pizza_pvim)
+        # col 2
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(2, filled_bowtie_pvim, s)
+
+        self.assertEqual(expected, vector)
+
+        # chose 1
+        s = [0, 1]
+
+        # col 2
+        expected = [2, 1]
+        vector = Isomorphism._get_similarity_vector(2, filled_bowtie_pvim, s)
+
+        self.assertEqual(expected, vector)
 
     def test_get_similarity_vector_star(self):
         star = ShapeHelpers.pentagram()
@@ -2218,39 +4706,41 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_row_ties(star_pvim)
         Isomorphism._break_col_ties(star_pvim)
 
+        s = [0]
+
         # col 0
-        expected = [2, 2, 2, 2, 2]
-        vector = Isomorphism._get_similarity_vector(0, star_pvim)
+        expected = []
+        vector = Isomorphism._get_similarity_vector(0, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
         # col 1
-        expected = [1, 0, 1, 0]
-        vector = Isomorphism._get_similarity_vector(1, star_pvim)
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(1, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
         # col 2
-        expected = [1, 0, 0]
-        vector = Isomorphism._get_similarity_vector(2, star_pvim)
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(2, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
         #col 3
-        expected = [0, 1]
-        vector = Isomorphism._get_similarity_vector(3, star_pvim)
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(3, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
         # col 4
-        expected = [1]
-        vector = Isomorphism._get_similarity_vector(4, star_pvim)
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(4, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
         # col 5
-        expected = []
-        vector = Isomorphism._get_similarity_vector(5, star_pvim)
+        expected = [2]
+        vector = Isomorphism._get_similarity_vector(5, star_pvim, s)
 
         self.assertEqual(expected, vector)
 
@@ -2902,7 +5392,6 @@ class TestLatticeIsomorphism(unittest.TestCase):
 
         Isomorphism._check_row_index_vectors(pvim)
 
-        CTrue = True
         expected = [
             [CTrue, CTrue],
             [CTrue, CTrue],
@@ -2913,7 +5402,7 @@ class TestLatticeIsomorphism(unittest.TestCase):
 
         self.assertEqual(expected, pvim._matrix)
 
-    def test_check_row_vectors_pizza(self):
+    def test_check_row_index_vectors_pizza(self):
         pizza = ShapeHelpers.pizza()
         pizza_pvim = PolygonVertexIncidenceMatrix(pizza._nodes_list)
         
@@ -2921,25 +5410,19 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._sort_cols(pizza_pvim)
         Isomorphism._break_row_ties(pizza_pvim)
         Isomorphism._break_col_ties(pizza_pvim)
-
         Isomorphism._similarity_col_sort(pizza_pvim)
-        Isomorphism._check_row_index_vectors(pizza_pvim)
 
-        print(pizza_pvim)
+        Isomorphism._check_row_index_vectors(pizza_pvim)
 
         CTrue = True
         expected = [
-            [CTrue, CTrue, CTrue, False, False, False],
-            [CTrue, CTrue, False, CTrue, False, False],
-            [CTrue, False, CTrue, False, CTrue, False],
-            [CTrue, False, False, CTrue, False, CTrue],
-            [CTrue, False, False, False, CTrue, CTrue],
-            [False, CTrue, False, False, False, False],
-            [False, False, CTrue, False, False, False],
-            [False, False, False, CTrue, False, False],
-            [False, False, False, False, CTrue, False],
-            [False, False, False, False, False, CTrue],
-        ]
+            [CTrue, CTrue, CTrue, CTrue, CTrue, CTrue],
+            [CTrue, CTrue, False, False, False, False],
+            [CTrue, False, CTrue, False, False, False],
+            [False, CTrue, False, CTrue, False, False],
+            [False, False, CTrue, False, CTrue, False],
+            [False, False, False, CTrue, False, CTrue],
+            [False, False, False, False, CTrue, CTrue] ]
 
         self.assertEqual(expected, pizza_pvim._matrix)
 
@@ -2953,7 +5436,7 @@ class TestLatticeIsomorphism(unittest.TestCase):
         Isomorphism._break_row_ties(lace_bow_pvim)
         Isomorphism._break_col_ties(lace_bow_pvim)
         Isomorphism._similarity_col_sort(lace_bow_pvim)
-
+        
         Isomorphism._check_row_index_vectors(lace_bow_pvim)
 
         CTrue = True
@@ -2993,219 +5476,6 @@ class TestLatticeIsomorphism(unittest.TestCase):
         ]
 
         self.assertEqual(expected, snake_pvim._matrix)
-
-# #----------------------------------------------- Check Isomorphism -----------------------------------------------------
-    #  different dimensions                   x
-    #  simple shapes isomorphic               x
-    #  simple shapes not isomorphic           x
-    #  post-vertex glue isomorphic            x
-    #  post-vertex-glue not isomorphic        x
-    #  post edge glue isomorphic              x
-    #  post edge glue not isomorphic          x
-    #  post fill isomorphic                   x
-    #  post fill not isomorphic               x
-    #? special case ismorphism                x
-
-
-    # def test_check_isomorphism_triangle_segment(self):
-    #     triangle = LatticeTest(3) #matrix is 3x1
-    #     segment  = LatticeTest(2) #matrix is 2x1
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(segment._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-    
-    # def test_check_isomorphism_triangle_triangle(self):
-    #     triangle1 = LatticeTest(3)
-    #     triangle2 = LatticeTest(3)
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(triangle1._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(triangle2._nodes_list)
-
-    #     self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    # def test_check_isomorphism_triangle_quad(self):
-    #     triangle    = LatticeTest(3)
-    #     quad        = LatticeTest(4)
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(quad._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    # def test_check_isomorphism_triangle_hex(self):
-    #     triangle    = LatticeTest(3)
-    #     hex         = LatticeTest(6)
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(triangle._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(hex._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    # def test_check_isomorphism_bowtie_bowtie(self):
-    #     bowtie1 = ShapeHelpers.bowtie()
-    #     bowtie2 = ShapeHelpers.bowtie()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(bowtie1._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(bowtie2._nodes_list)
-
-    #     self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-
-    # def test_check_isomorphism_bowtie_quad(self):
-    #     bowtie  = ShapeHelpers.bowtie()
-    #     quad    = LatticeTest(4)
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(bowtie._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(quad._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    
-    # def test_check_isomorphism_post_glued_edge_quad_tri_tri(self):
-    #     shape1  = ShapeHelpers.glued_edge_quad_tri()
-    #     tri     = LatticeTest(3)
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(shape1._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(tri._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-
-    # def test_check_isomorphism_post_glued_edge_quad_tri_true(self):
-    #     shape1 = ShapeHelpers.glued_edge_quad_tri()
-    #     shape2 = ShapeHelpers.glued_edge_quad_tri()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(shape1._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(shape2._nodes_list)
-
-    #     self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-
-    # def test_check_isomorphism_filled_bowtie_bowtie(self):
-    #     filled_bowtie = ShapeHelpers.filled_bowtie()
-    #     bowtie        = ShapeHelpers.bowtie()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(bowtie._nodes_list)
-        
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-
-    # def test_check_isomorphism_filled_bowtie_bowtie_true(self):
-    #     filled_bowtie1 = ShapeHelpers.filled_bowtie()
-    #     filled_bowtie2 = ShapeHelpers.filled_bowtie()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie1._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(filled_bowtie2._nodes_list)
-
-    #     self.assertTrue(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    # def test_check_isomorphism_filled_bowtie_fish(self):
-    #     filled_bowtie = ShapeHelpers.filled_bowtie()
-    #     fish          = ShapeHelpers.glued_edge_tri_tri_glued_vertex_tri()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(filled_bowtie._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(fish._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-    # def test_check_isomorphism_snake_tri_tri_tri(self):
-    #     snake = ShapeHelpers.snake()
-    #     tris  = ShapeHelpers.glue_one_vertex_tri_tri_tri()
-
-    #     pvim1 = PolygonVertexIncidenceMatrix(snake._nodes_list)
-    #     pvim2 = PolygonVertexIncidenceMatrix(tris._nodes_list)
-
-    #     self.assertFalse(Isomorphism._check_isomorphism(pvim1, pvim2))
-
-
-
-
-
-
-
-
-
-
-
-
-#     #------------------------------------------- Isomorph In List ---------------------------------------------
-#     #empty list                                    x
-#     #one item in list, isomorphic                  x
-#     #one item in list, not isomorphic              x
-#     #normal size list, something in is isomorphic  x
-#     #normal size list, not isomorphic              x
-#     #try with a glued shape as well                x
-#     def test_isomorph_in_list_empty_list(self):
-#         self.assertFalse(Isomorphism.isomorph_in_list([], LatticeTest(3)))
-
-#     def test_isomorph_in_list_one_item_isomorphic(self):
-#         l1 = LatticeTest(3)
-#         tl = LatticeTest(3)
-
-#         self.assertTrue(Isomorphism.isomorph_in_list([l1], tl))
-    
-#     def test_isomorph_in_list_one_item_not_isomorphic(self):
-#         l1 = LatticeTest(4)
-#         tl = LatticeTest(3)
-
-#         self.assertFalse(Isomorphism.isomorph_in_list([l1], tl))
-
-#     def test_isomorph_in_list_normal_size_list_isomorphic(self):
-#         l1_list = [
-#             LatticeTest(2),
-#             LatticeTest(3),
-#             LatticeTest(4),
-#             LatticeTest(5),
-#             LatticeTest(6),
-#             LatticeTest(7)
-#         ]
-#         tl = LatticeTest(6)
-
-#         self.assertTrue(Isomorphism.isomorph_in_list(l1_list, tl))
-
-#     def test_isomorph_in_list_normal_size_list_not_isomorphic(self):
-#         l1_list = [
-#             LatticeTest(2),
-#             LatticeTest(3),
-#             LatticeTest(4),
-#             LatticeTest(5),
-#             LatticeTest(6),
-#             LatticeTest(7)
-#         ]
-#         tl = LatticeTest(8)
-        
-#         self.assertFalse(Isomorphism.isomorph_in_list(l1_list, tl))
-
-#     def test_isomorph_in_list_post_glued_in(self):
-#         l1_list = [
-#             LatticeTest(2),
-#             LatticeTest(3),
-#             ShapeHelpers.bowtie(),
-#             LatticeTest(5),
-#             LatticeTest(6)
-#         ]
-#         tl = ShapeHelpers.bowtie()
-
-#         self.assertTrue(Isomorphism.isomorph_in_list(l1_list, tl))
-
-#     def test_isomorph_in_list_post_glued_not_isomorphic(self):
-#         l1_list = [
-#             LatticeTest(2),
-#             LatticeTest(3),
-#             ShapeHelpers.bowtie(),
-#             LatticeTest(5),
-#             LatticeTest(6)
-#         ]
-#         tl = ShapeHelpers.pentagram()
-
-#         self.assertFalse(Isomorphism.isomorph_in_list(l1_list, tl))
-
-
-
-
 
     # 
     # want to see something? uncomment it here.

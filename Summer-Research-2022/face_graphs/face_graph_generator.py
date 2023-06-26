@@ -107,16 +107,19 @@ class FaceGraphGenerator:
     # returns a set of face graphs
     @staticmethod
     def from_lattices(lattices:(list[list[tuple[Lattice]]] | list[list[tuple[LatticeTest]]])):
-        face_graphs = set()
+        face_graphs = []
 
         for lattice_types in lattices:
             for lattice_pair in lattice_types:
                 if(lattice_pair[1] == [0, 0, 0, 0, 0, 0, 0]):
                     faceGenerator = FaceGraphGenerator(lattice_pair[0])
+                    # keep the face graphs in a parallel array with their lattice
+                    one_lattice_graphs = []
                     for face_graph in faceGenerator.graphs:
                         # for graph in face_graphs:
                             # if not FaceGraphGenerator.is_same(face_graph, graph):
-                        face_graphs.add(face_graph)
+                        one_lattice_graphs.add(face_graph)
+                    face_graphs.append(one_lattice_graphs)
 
         return face_graphs
     
