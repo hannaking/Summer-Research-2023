@@ -14,7 +14,7 @@ DEFAULT_SIDE_LENGTH = 1
 
 # sides of equal length, all angles are 60 degrees
 class Equilateral(): 
-    # coming from Triangle (?) based on the lattice (not anymore)
+    # coming from Triangle (?) based on the lattice
     def __init__(self, known_coords):
         self._points = known_coords
         self._draw_order_indices = []
@@ -24,7 +24,7 @@ class Equilateral():
         # i need to see which index(es) in the list is/are not None, I can't assume it gois Point None None or Point Point None like I did before
         # then that index in _points is the jumping off point for the rest of the points
         #
-        # if you start with one point, you need to get every other point for the possible angles (just do pos and neg angles because I will filter it after)
+        # if you start with one point, you need to get every second point for the possible angles (just do pos and neg angles because I will filter it after)
         # then do the same as you would if you got two points for every second point you got above
 
         # if you start with two, you have the length of the desired segment and you have only two options for the third point - on one side of the segment or on the other

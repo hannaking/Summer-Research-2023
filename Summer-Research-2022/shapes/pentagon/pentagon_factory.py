@@ -8,12 +8,14 @@ class PentagonFactory:
     def __init__(self):
         self._types = [Pentagon]
 
+    def _empty_types(self):
+        self._types = []
+
     def _coordinatize(self, coords):
         scenarios = []
-        for quadrilateral_type in self._types:
-
-            quad = quadrilateral_type(coords)
-            scenario = quad.coordinatize()
-            scenarios.extend(scenario)
+        
+        pent = Pentagon(coords)
+        scenario = pent.coordinatize()
+        scenarios.extend(scenario)
 
         return scenarios
