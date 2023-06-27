@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # face graphs is a list of lists, each list containing the face graphs for one lattice
     # the lists are stored in the same order as their lattices are in lattices
     # so they are associated, bc I need the lattice for the face graph later when graphing to the plane.
-    face_graphs = FaceGraphGenerator.from_lattices(lattices)
+    #face_graphs = FaceGraphGenerator.from_lattices(lattices)
     
     # print(face_graphs)
 

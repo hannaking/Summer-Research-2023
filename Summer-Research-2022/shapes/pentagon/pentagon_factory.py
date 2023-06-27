@@ -11,6 +11,14 @@ class PentagonFactory:
     def _empty_types(self):
         self._types = []
 
+    def _include_type(self, type):
+
+        if type == 'RegularPent':
+            self._types.append(Pentagon)
+            return True
+
+        return False
+
     def _coordinatize(self, coords):
         scenarios = []
         
