@@ -1,10 +1,11 @@
 import os
 import random
-from to_stellar_graph import ToStellarGraph
 import networkx as nx
 import networkx.algorithms.isomorphism as iso
 
+from to_stellar_graph import ToStellarGraph
 from to_json import ToJson
+from random_face_graph_creator import RandomFaceGraphCreator
 
 # association between number of sides and shape codes
 SIDES_FOR_SHAPES = {1: [00],
@@ -15,7 +16,10 @@ SIDES_FOR_SHAPES = {1: [00],
                     7: [50],
                     8: [60]}
 
-# how many itterations it will wait for an improvement
+# index of the attributes that contains the number of sides
+SIDES = 1
+
+# how many iterations it will wait for an improvement
 PATIENCE = 200
 
 class NegativeExampleGen():
@@ -34,18 +38,83 @@ class NegativeExampleGen():
         # list of all figures that are isomorphically unique textbook examples
         positive_graphs = NegativeExampleGen.read_all_positive_graphs()
         # list, as long as the number of textbook figures, that is split as evenly as possible
-        # with the extras scattered randomly
         counts = NegativeExampleGen.split_evenly(total, len(positive_graphs))
         # list of all generated negative figures
         negative_graphs = NegativeExampleGen.generate_all_negative_graphs(positive_graphs, counts)
+
         if creates_files:
-            for i, negative_graph in enumerate(negative_graphs):
-                json = ToJson.from_networkx(negative_graph, 'default')
-                # names are: 0.json, 1.json, 2.json, 3.json, ...
-                ToJson.create_json_file('Summer-Research-2022/Negative shapes/', str(i), json)
-        print(len(positive_graphs), len(negative_graphs))
-        return negative_graphs
+            NegativeExampleGen.create_json_file(negative_graphs, 'Negative Example Generator')
         
+        return negative_graphs
+    
+    # generates a number of figures that unrelated to the texbook examples.
+    # The figures are created a networkx and can be stored as json files.
+    # (in the Negative shapes folder)
+    # 
+    # total -  the total number of figures that should be made
+    # max_size(26) - maximum number of nodes that can exist
+    # creates_files(True) - whether or not to create json files
+    # 
+    # returns the figures as networkx graphs 
+    @staticmethod
+    def generate_original(total, max_size=26, creates_files=True):
+        # list of all figures that are textbook examples
+        positive_graphs = NegativeExampleGen.read_all_positive_graphs(True)
+        # list of all generated negative figures
+        negative_graphs = NegativeExampleGen.create_all_filtered_graphs(positive_graphs, total, max_size)
+        
+        if creates_files:
+            NegativeExampleGen.create_json_file(negative_graphs, 'Negative Example Generator')
+        
+        return negative_graphs
+    
+    # creates unique figures that are different from the set of known textbook figures.
+    # The figures are generatable using the lattice generator.
+    #
+    # filter_graphs - textbook figures that are not allowed to be generated
+    # total - total number of graphs to generate
+    # max_size(26) - maximum number of nodes in a graph
+    #
+    # returns the list of negative examples
+    @staticmethod
+    def create_all_filtered_graphs(filter_graphs, total, max_size=26):
+        filtered_graphs = []
+        current = 0
+
+        while current < total:
+            # always attempts to create remaining number of graphs
+            generated_graphs = RandomFaceGraphCreator.create_random_face_graphs(total - current, max_size)
+            filtered_graphs.extend(NegativeExampleGen.filter_graphs(generated_graphs, filter_graphs))
+
+            current = len(filtered_graphs)
+        
+        return filtered_graphs
+
+    # filters a list of graphs from another list of graphs
+    #
+    # in_graphs - graphs that are being filtered from
+    # filter_graphs - graph that are filtering the in_graphs
+    #
+    # returns the list of filtered graphs
+    @staticmethod
+    def filter_graphs(in_graphs, filter_graphs):
+        filtered_graphs = []
+        for graph in in_graphs:
+            if not NegativeExampleGen.is_in(graph, filter_graphs):
+                filtered_graphs.append(graph)
+        return filtered_graphs
+
+    # creates the formatted json files in the Negative Shapes folder
+    #
+    # negative graphs - list of negative graphs that are getting json
+    #
+    @staticmethod
+    def create_json_file(negative_graphs, source):
+        for i, negative_graph in enumerate(negative_graphs):
+            json = ToJson.from_networkx(negative_graph, 'default', source, False)
+            # names are: 0.json, 1.json, 2.json, 3.json, ...
+            ToJson.create_json_file('Summer-Research-2022/negative_shapes/', str(i), json)
+
     # creates a list of groups that is num_of_splits long that adds up to total_count such that
     # the difference from the smallest group to the highest group is 0 or 1.
     #
@@ -59,11 +128,9 @@ class NegativeExampleGen():
         per_split = int(total_count / num_of_splits)
         # amount left over after placing minimum amount into each cell
         remainder = total_count % num_of_splits
-        # indices that will recieve an extra one
-        extras = random.sample([i for i in range(0, num_of_splits)], remainder)
 
         split_counts = [per_split for i in range(0, num_of_splits)]
-        for i in extras:
+        for i in range(0, remainder):
             split_counts[i] += 1
         return split_counts
 
@@ -77,6 +144,7 @@ class NegativeExampleGen():
     @staticmethod
     def generate_all_negative_graphs(positive_graphs, desired_counts):
         negative_graphs = []
+        
         # goes until there the number of negative graphs reaches the desired total
         while len(negative_graphs) < sum(desired_counts):
             # shuffles the textbook graphs to reduce bias
@@ -144,15 +212,15 @@ class NegativeExampleGen():
     # returns the new attribute [new shape, same sides]
     @staticmethod
     def random_shape_shift(attribute):
-        shape = random.choice(SIDES_FOR_SHAPES[attribute[1]])
-        return [shape, attribute[1]]
+        shape = random.choice(SIDES_FOR_SHAPES[attribute[SIDES]])
+        return [shape, attribute[SIDES]]
     
     # reads all JSON files contained in Summer-Research-2022/Json shapes.
-    # *only save graphs that are not isomorphic to prior ones
+    # *option to only save graphs that are not isomorphic to prior ones
     # 
     # returns all of the contents as networkx graphs
     @staticmethod
-    def read_all_positive_graphs():
+    def read_all_positive_graphs(allows_iso_match=False):
         graphs = []
 
         directory = 'Summer-Research-2022/Json shapes'
@@ -164,12 +232,14 @@ class NegativeExampleGen():
                             graph, label = ToStellarGraph.from_json(f.name)
                             graph = graph.to_networkx(feature_attr='default')
                             # only aquires new isomorphs
-                            if not NegativeExampleGen.has_isomorphic_match(graph, graphs):
+                            if allows_iso_match or not NegativeExampleGen.has_isomorphic_match(graph, graphs):
                                 graphs.append(graph)
         else:
             print("File does not exist.")
         return graphs
     
+    # *Not for this class. Transfer to new home later.
+    #
     # reads all JSON files contained in Summer-Research-2022/Json shapes.
     # reports all that have been seen before as print output
     @staticmethod
@@ -184,7 +254,6 @@ class NegativeExampleGen():
                         with open(os.path.join(dirpath, filename)) as f:
                             graph, label = ToStellarGraph.from_json(f.name)
                             graph = graph.to_networkx(feature_attr='default')
-                            # only aquires new isomorphs
                             if not NegativeExampleGen.is_in(graph, graphs):
                                 print(filename)
                                 graphs.append(graph)
@@ -201,9 +270,20 @@ class NegativeExampleGen():
     @staticmethod
     def has_isomorphic_match(example_graph, graphs):
         for graph in graphs:
-            if nx.is_isomorphic(example_graph, graph):
+            if NegativeExampleGen.is_isomorphic(example_graph, graph):
                 return True
         return False
+
+    # determines whether or not two graphs are identical ignoring the names of points
+    #
+    # graph1 - graph being compared to graph2
+    # graph2 - graph being compared to graph1
+    #
+    # returns whether the graph has an match
+    @staticmethod
+    def is_isomorphic(graph1, graph2):
+        GM = iso.GraphMatcher(graph1, graph2, node_match=lambda n1, n2 : list(n1['default'])[SIDES] == list(n2['default'])[SIDES])
+        return GM.is_isomorphic()
 
     # determines whether or not a graph has an identical graph from a list
     # ignoring the names of points
@@ -260,4 +340,4 @@ class NegativeExampleGen():
     #         graphs.append(NegativeExampleGen.create_with_altered_node(graph.copy(), node, [shape, attribute[1]]))
     #     return graphs
 
-NegativeExampleGen.generate(101, False)
+#NegativeExampleGen.generate_original(111, creates_files=True)
