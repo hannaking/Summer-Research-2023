@@ -3,6 +3,7 @@ sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
 from shapes.triangles.triangle_factory              import TriangleFactory
 from shapes.quadrilaterals.quadrilateral_factory    import QuadrilateralFactory
+from shapes.pentagon.pentagon_factory              import PentagonFactory
 from shapes.line_segment.segment_factory            import SegmentFactory
 
 #temp
@@ -27,10 +28,10 @@ class ShapeFactory:
         once coordinartize() is run, you will have all figures that have every form of the given shape attached to it (according to your known coords) in the form
         of a list of scenarios.
 
-        each scenario
+        each scenario is a possible figure (?)
 
     """
-    def __init__(self, edge_amount, predetermined_shape_types=['Equilateral', 'IsoscelesRight', 'NonIsoscelesRight', 'Square']):
+    def __init__(self, edge_amount, predetermined_shape_types=['Segment', 'Equilateral', 'IsoscelesRight', 'NonIsoscelesRight', 'Square', 'RegularPent']):
 
         if edge_amount < 1:
             raise ValueError('Shape must have at least 1 edge')
@@ -40,6 +41,8 @@ class ShapeFactory:
         if predetermined_shape_types is not None:
 
             shape_types = [None, PLACEHOLDER, None, None, None, None, None, None]
+
+            #TODO pop this stuff out into a method / reduce repeated code
 
             # If any triangle types are in the list of predetermined shape types, append to the triangle factory,
             # and use the triangle factory.
@@ -58,6 +61,14 @@ class ShapeFactory:
 
                 if quad_factory._include_type(type):
                     shape_types[3] = quad_factory
+
+            # If any pentagon types are in the list of predetermined shape types, append to the quadrilateral factory,
+            # and use the quadrilateral factory.
+            pent_factory = PentagonFactory()
+            pent_factory._empty_types()
+            for type in predetermined_shape_types:
+                if pent_factory._include_type(type):
+                    shape_types[4] = pent_factory
 
         # -1 to shift values to 0-indexed
         self._shape_type_factory = shape_types[edge_amount - 1]

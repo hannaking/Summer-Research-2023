@@ -1,6 +1,5 @@
-import sys
 import math
-import collections
+import sys
 
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
@@ -11,23 +10,24 @@ from shapes.vector import Vector
 ANGLE = math.radians(108)
 DEFAULT_SIDE_LENGTH = 1
 
-# _points = a list of Point objects that represent the starting position for the equilateral triangle
-
 # 5 sides of equal length, all angles are 108 degrees
-#TODO: unfinished. the Pentagon class must be able to take anywhere between 0-5 points inclusive and generate a valid Pentagon from them.
 
 class Pentagon(): 
-
+    # take a list of 1-5 Points, the unknown Points being None
+    # known information about the starting position of the pentagon
     def __init__(self, known_coords):
         self._points = known_coords
 
+    # Get Points to make up the Pentagon
+    #
+    # returns a list of lists of Points, each list is one coordinatization of the pentagon
     def coordinatize(self):
+        scenarios = [] # list of lists of Points
 
-        scenarios = []  # list of lists of Points
-
+        # start with anywhere from 1 to 5 points
+        # if all Points are given (5 points), just return that one scenario
         if None not in self._points:
-            scenarios.append(self._points)
-            return scenarios
+            return scenarios.append(self._points)
 
         # I need to sort the coords , dragging along a list of indices.
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
@@ -35,48 +35,75 @@ class Pentagon():
         # but this does get a sorted points list
         sorted_points = [b[1] for b in first_sort]
 
-        # to make it easier to understand what sorted points are
-        point1 = sorted_points[0]
-        point2 = sorted_points[1]
-        point3 = sorted_points[2]
-        point4 = sorted_points[3]
+        side_length = DEFAULT_SIDE_LENGTH
+        # has to be a list for get_next_points
+        second_points = sorted_points[1]
+        third_points = sorted_points[2]
+        fourth_points = sorted_points[3]
+        fifth_points = sorted_points[4]
 
-        # boolean that tells whether this square is vertex glued or not. default to False.
-        vertex_gluing = False
+        # get all possible next point for the given single point
+        if (sorted_points[1] == None): # one known point
+            second_points = []
+            # 10 possible second points
+            second_points.extend(Geometry.get_second_points([sorted_points[0]]))
 
-        if point2 == None:
-            vertex_gluing = True
+        # now have at least 2 points, so side length can be determined
+        side_length = Geometry.distance(sorted_points[0], second_points[0])
 
-        # we have two scenarios at 0 degrees: above the x axis and below the x axis
-        scenarios.append([point1, point2, third_points[0], fourth_points[0]])
-        scenarios.append([point1, point2, third_points[1], fourth_points[1]])
+        # then continue to the next
+        if  (sorted_points[2] == None): # two known points
+            # this line might be unnecessary?
+            side_length = Geometry.distance(sorted_points[0], sorted_points[1])
+            third_points = []
+            # each second point has 2 possible third points
+            # now 20 scenarios
+            third_points.extend(self._get_next_points(second_points, sorted_points[0], side_length))
+            third_points.extend(self._get_next_points(second_points, sorted_points[0], side_length, 0 - ANGLE))
+            
+        # then continue to the next
+        if  (sorted_points[3] == None): # three known points
+            # each third point has one possible fourth point
+            fourth_points = []
+            fourth_points.extend(self._get_next_points(third_points, second_points, side_length))
 
-        # you would only ever want to rotate your shape if you are vertex glued.
-        # if you are already given two or three points, there is no point in rotating your shape.
-        if vertex_gluing == True:
-            # now we will rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
-            # creating a new scenario, and add it to the list of scenarios
-            # 2 scenarios * 9 angles = 18 new scenarios
-            # 20 scenarios in total
-            # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex we are glued to.
-            angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
-            original_scenario_len = len(scenarios)
-            for i in range(original_scenario_len):
-                for angle in angles:
-                    new_scenario = Geometry.rotate(scenarios[i], math.radians(angle))
-                    scenarios.append(new_scenario)
+        # then continue to the next
+        if (sorted_points[4] == None): # four known points
+            # each fourth point has one possible fifth point
+            fifth_points = []
+            fifth_points.extend(self._get_next_points(fourth_points, third_points, side_length))
+
+        # all five points known handled above
+        
+        # build the scenarios - should total 20 for one in, 2 for 2 in, and 1 for the others
+        for i in range(0, len(fifth_points)):
+            scenario = []
+            scenario.append(sorted_points[0])
+            scenario.append(second_points[i])
+            scenario.append(third_points[i])
+            scenario.append(fourth_points[i])
+            scenario.append(fifth_points[i])
+            scenarios.append(scenario)
 
         # unsort all scenarios
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
 
-        # a list of lists of 4 Points
+        # a list of lists of 5 Points
         return scenarios
-
-    # returns a Point object. there is only one option: 1 unit to the right of the start point.
-    def get_second_point(self, point1):
-        return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
-
-    def get_all_points(self, existing_points, side_length):
-        pass
+    
+    # get the next round of points. Pentagons have the same interior angles and side lengths,
+    # so getting the next Point is the same for all points (second, third, etc)
+    #
+    # points - the list of Points for which you want the next Point
+    # reference_points - list of Points one step back. so if i'm looking for the 3rd points,
+    #                    points is the second points and reference the first
+    # length - int, the length of the side of the pentagon
+    #
+    # returns a list of Points
+    def _get_next_points(self, points, reference_points, length = DEFAULT_SIDE_LENGTH, angle = ANGLE):
+        new_points = []
+        for i in range(0, len(points)):
+            new_points.extend(Geometry.calculate_point_from_angle(angle, points[i], reference_points[i], length))
+        return new_points

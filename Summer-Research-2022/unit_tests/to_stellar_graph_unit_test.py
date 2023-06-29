@@ -11,7 +11,6 @@ import unittest
 sys.path.insert(0, './Summer-Research-2022/')
 
 from to_stellar_graph import ToStellarGraph
-from ToPandas import ToPandas
 
 class TestToStellarGraph(unittest.TestCase):
     

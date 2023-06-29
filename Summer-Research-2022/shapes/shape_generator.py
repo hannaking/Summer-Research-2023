@@ -134,7 +134,7 @@ class ShapeGenerator:
             #      A----B
             #       \  /
             #        \/       This has been drawn like A B D C
-            #        /\        instead of A B C D so it twists
+            #        /\        instead of A B C D so it crosses
             #       /  \
             #      D----C
             draw_order_points = []

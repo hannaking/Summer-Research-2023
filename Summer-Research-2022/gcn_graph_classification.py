@@ -1,3 +1,5 @@
+import os
+from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -15,6 +17,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.losses import binary_crossentropy
 from tensorflow.keras.callbacks import EarlyStopping
 
+from to_stellar_graph import ToStellarGraph
 
 class GraphClassifier:
 
@@ -60,11 +63,27 @@ class GraphClassifier:
     def get_graphs(self):
         return self.graphs, self.graph_labels
 
+    # loads the model from a save at a given path
+    #
+    # path - the path to the saved model
+    #
+    # model - the model that can determine labels
+    def load_model(self, path):
+        self.model = Model.load_model(path)
+    
     # sets the model to something else
     #
     # model - the model that can determine labels
     def set_model(self, model):
         self.model = model
+
+    # saves the model as files at a given path
+    # 
+    # path - path the model is saved to
+    #
+    # returns the model
+    def save_model(self, path):
+        self.model.save(path, False)
     
     # retrieves the model that is used for prediction
     #
@@ -131,6 +150,28 @@ class GraphClassifier:
     # returns the batch size
     def get_batch_size(self):
         return self.batch_size
+
+    # reads all JSON files contained in a given path.
+    # 
+    # directory - directory the json files are located in
+    # 
+    # saves all of the contents as stellar graphs
+    def read_json_graphs(self, directory):
+        graphs = []
+        graph_labels = pd.DataFrame()
+
+        if os.path.exists(directory):
+            for dirpath, dirnames, filenames in os.walk(directory):
+                for filename in filenames:
+                    if filename.endswith('.json'):
+                        with open(os.path.join(dirpath, filename)) as f:
+                            graph, label = ToStellarGraph.from_json(f.name)
+                            graphs.append(graph)
+                            graph_labels = pd.concat([graph_labels, label])
+        else:
+            print("File does not exist.")
+        
+        self.set_graphs(graphs, graph_labels)
     
     # creates the classification model
     # the model is composed of:
@@ -145,15 +186,15 @@ class GraphClassifier:
             layer_sizes=[64, 64],
             activations=["relu", "relu"],
             generator=self.generator,
-            dropout=0.5
+            dropout=0
         )
         x_inp, x_out = gc_model.in_out_tensors()
-        predictions = Dense(units=32, activation="relu")(x_out)
-        predictions = Dense(units=16, activation="relu")(predictions)
+        predictions = Dense(units=64, activation="relu")(x_out)
+        predictions = Dense(units=64, activation="relu")(predictions)
         predictions = Dense(units=1, activation="sigmoid")(predictions)
 
         model = Model(inputs=x_inp, outputs=predictions)
-        model.compile(optimizer=Adam(0.005), loss=binary_crossentropy, metrics=["acc"])
+        model.compile(optimizer=Adam(0.01), loss=binary_crossentropy, metrics=["acc"])
 
         return model
     
@@ -236,6 +277,11 @@ class GraphClassifier:
 
             test_accs.append(acc)
         
+        plt.figure(figsize=(8, 6))
+        plt.hist(test_accs)
+        plt.xlabel("Accuracy")
+        plt.ylabel("Count")
+        plt.show()
         return float(np.mean(test_accs)), float(np.std(test_accs))
 
     # makes a prediction for the graphs using the model
@@ -244,3 +290,10 @@ class GraphClassifier:
     def predict(self):
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
         return self.model.predict(x=gen, verbose=0)
+
+classifier = GraphClassifier([], pd.Series())
+classifier.read_json_graphs("Summer-Research-2022")
+print(len(classifier.graphs))
+print(len(classifier.graph_labels))
+classifier.train()
+print(classifier.evaluate())
