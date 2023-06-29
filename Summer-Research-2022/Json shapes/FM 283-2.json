@@ -1,0 +1,87 @@
+{
+    "source": "1-55953-459-1, 259",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID"   : "B",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID"   : "C",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID"   : "D",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Square",
+            "sides": 4
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count"  :  1
+        }
+     ]
+
+}
