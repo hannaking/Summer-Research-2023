@@ -160,7 +160,7 @@ class Isomorphism():
     @staticmethod
     def _sort_rows(pvim):
         # sorted is a built-in Python function
-        pvim._matrix = sorted(pvim._matrix, key=sum, reverse=True)
+        pvim._matrix.sort(key=sum, reverse=True)
 
         return pvim               
 
@@ -219,10 +219,6 @@ class Isomorphism():
     # pvim - a PolygonVertexIncidenceMatrix
     #
     # returns the post-step-3 pvim
-    #
-    # this is ruining me (negative) but i think i need to add indices limits?
-    # so when it swaps the things it does it in the middle if needed and not the beginning all the time
-    # aaaaaa
     @staticmethod
     def _break_row_ties(pvim):
         #get row vectors
