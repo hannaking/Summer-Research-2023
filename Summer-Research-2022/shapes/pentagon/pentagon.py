@@ -38,6 +38,8 @@ class Pentagon():
 
         side_length = DEFAULT_SIDE_LENGTH
         # has to be a list for get_next_points
+        # plural to indicate it is a list, it has length 1 always
+        first_points = list(sorted_points[0])
         second_points = sorted_points[1]
         third_points = sorted_points[2]
         fourth_points = sorted_points[3]
@@ -47,20 +49,20 @@ class Pentagon():
         if (sorted_points[1] == None): # one known point
             second_points = []
             # 10 possible second points
-            second_points.extend(Geometry.get_second_points([sorted_points[0]]))
+            second_points.extend(Geometry.get_second_points(first_points))
 
         # now have at least 2 points, so side length can be determined
-        side_length = Geometry.distance(sorted_points[0], second_points[0])
+        side_length = Geometry.distance(first_points[0], second_points[0])
 
         # then continue to the next
         if  (sorted_points[2] == None): # two known points
             # this line might be unnecessary?
-            side_length = Geometry.distance(sorted_points[0], sorted_points[1])
+            side_length = Geometry.distance(first_points[0], sorted_points[1])
             third_points = []
             # each second point has 2 possible third points
             # now 20 scenarios
-            third_points.extend(self._get_next_points(second_points, sorted_points[0], side_length))
-            third_points.extend(self._get_next_points(second_points, sorted_points[0], side_length, 0 - ANGLE))
+            third_points.extend(self._get_next_points(second_points, first_points, side_length))
+            third_points.extend(self._get_next_points(second_points, first_points, side_length, 0 - ANGLE))
             
         # then continue to the next
         if  (sorted_points[3] == None): # three known points
