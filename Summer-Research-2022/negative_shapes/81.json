@@ -1,0 +1,23 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 2
+        }
+    ]
+}

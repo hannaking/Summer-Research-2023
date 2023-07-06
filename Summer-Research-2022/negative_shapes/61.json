@@ -1,0 +1,48 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "C",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Regular Septagon",
+            "sides": 7
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 4
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 3
+        }
+    ]
+}

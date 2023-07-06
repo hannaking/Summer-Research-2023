@@ -1,3 +1,4 @@
+from itertools import combinations
 import random as rand
 import networkx as nx
 import networkx.algorithms.isomorphism as iso
@@ -45,6 +46,7 @@ class RandomFaceGraphCreator():
         
         # planar face graph ensures planar geometry figure without holes
         while not is_planar:
+            # it is far faster to recreate the nodes
             nodes = RandomFaceGraphCreator._create_all_nodes(max_size)
         
             edges = RandomFaceGraphCreator._create_all_edges(nodes)
@@ -56,7 +58,7 @@ class RandomFaceGraphCreator():
             for edge in edges:
                 graph.add_edge(edge[0], edge[1])
         
-            is_planar, proof = nx.check_planarity(graph)
+            is_planar = nx.is_planar(graph)
         
         graph.remove_node('Universe')
         return graph
@@ -102,23 +104,26 @@ class RandomFaceGraphCreator():
             # list of point names
             points = list(nodes.keys())
             # map from point name to number of edges going off of it
-            segment_counts = dict.fromkeys(points, 0)
+            node_degrees = {point : 0 for point in points}
+            # map from the edge tuple to number of edges it contains
+            edge_degrees = {(point1, point2) : 0 for point1, point2 in (combinations(points, 2) if len(points) > 1 else {})}
 
             for i, point in enumerate(points):
                 # size of 1 is can't connect to anything other than the universe,
                 # which doesn't need to be represented
                 size = nodes[point][SIZE] if nodes[point][SIZE] > 1 else 0
                 
-                while size > 1 and segment_counts[point] < size:
+                while size > 1 and node_degrees[point] < size:
                     # always chooses valid other point
-                    other_point = rand.choice(RandomFaceGraphCreator._get_other_points(i, nodes, segment_counts))
+                    other_point = rand.choice(RandomFaceGraphCreator._get_other_points(i, nodes, node_degrees, edge_degrees))
                     
                     edges.append([point, other_point])
                     
-                    segment_counts[point] += 1
-                    segment_counts[other_point] += 1
+                    node_degrees[point] += 1
+                    node_degrees[other_point] += 1
+                    edge_degrees[(point, other_point)] += 1
 
-            if edges == [] or segment_counts['Universe'] >= 3:
+            if edges == [] or node_degrees['Universe'] >= 3:
                     has_all_universe_edges = True
         
         # edges are sorted for cleaner looking display
@@ -130,18 +135,23 @@ class RandomFaceGraphCreator():
     #
     # position - index of the current point in the node's key
     # nodes - map of node names to node attribute
-    # counts - map of node names to number of edges off of it
+    # node_degrees - map of node names to number of edges off of it
+    # edge_degrees - map of edge tuples to number of edges it contains
     #
     # returns the list of other points
     @staticmethod
-    def _get_other_points(position, nodes, counts):
+    def _get_other_points(position, nodes, node_degrees, edge_degrees):
         other_points = list(nodes.keys())[position+1:]
-        
+        point = list(nodes.keys())[position]
+        size_u = nodes[point][SIZE]
+
         # list of points that can not have any more connections
         bad_points = []
         for other_point in other_points:
-            size = nodes[other_point][SIZE]
-            if not RandomFaceGraphCreator._is_valid_to_connect(size, counts[other_point]):
+            size_v = nodes[other_point][SIZE]
+            if not RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v,
+                                                               node_degrees[other_point],
+                                                               edge_degrees[(point, other_point)]):
                 bad_points.append(other_point)
         
         other_points = list(set(other_points).difference(bad_points))
@@ -158,8 +168,8 @@ class RandomFaceGraphCreator():
     #
     # returns whether the node is valid to be connected to
     @staticmethod
-    def _is_valid_to_connect(size, count):
-        return size != 1 and (size == -1 or size > count)
+    def _is_valid_to_connect(size_u, size_v, node_degree, edge_degree):
+        return size_v == -1 or (size_v != 1 and size_v > node_degree and max([size_u, size_v])-1 > 2*edge_degree)
     
     # determines whether or not a graph has an identical graph from a list
     # ignoring the names of points

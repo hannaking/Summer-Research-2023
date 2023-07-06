@@ -1,0 +1,133 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "E",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "F",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "H",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "I",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "J",
+            "shape": "Kite",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "I",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "I",
+            "count": 2
+        },
+        {
+            "point 1": "E",
+            "point 2": "J",
+            "count": 2
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "H",
+            "count": 2
+        }
+    ]
+}
