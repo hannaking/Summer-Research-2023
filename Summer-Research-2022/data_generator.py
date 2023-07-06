@@ -78,7 +78,7 @@ def create_histogram(data):
                 shape_counts[i], ha='center', va='bottom')
 
     # Rotate x-axis labels for better visibility
-    plt.xticks(rotation=90)
+    plt.xticks(rotation= -90)
 
     # Display the histogram
     plt.tight_layout()
