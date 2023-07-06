@@ -270,7 +270,7 @@ class GraphClassifier:
     # returns the model
     def _create_graph_classification_model(self, hp):
 
-        dropout = hp.Float("dropout", min_value=0, max_value=1)
+        dropout = hp.Float("dropout", min_value=0, max_value=0.5)
         learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
         
         layer_1_size = hp.Int("units_1", min_value=16, max_value=512, step=16)
@@ -297,7 +297,7 @@ class GraphClassifier:
     def _get_tuner(self, does_overwrite):
         tuner = CVTuner(
             hypermodel= self._create_graph_classification_model,
-            objective='acc',
+            objective=keras_tuner.Objective('eval', direction='max'),
             max_trials=10,
             executions_per_trial=2,
             overwrite=does_overwrite,
@@ -458,31 +458,31 @@ class GraphClassifier:
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
         return self.model.predict(x=gen, verbose=0)
 
-# classifier = GraphClassifier([], pd.DataFrame())
+classifier = GraphClassifier([], pd.DataFrame())
 
-# classifier.read_json_graphs("Summer-Research-2022/Json shapes")
-# classifier.read_json_graphs("Summer-Research-2022/negative_shapes")
+classifier.read_json_graphs("Summer-Research-2022/Json shapes")
+classifier.read_json_graphs("Summer-Research-2022/negative_shapes")
 
-# print(len(classifier.graphs))
-# print(len(classifier.graph_labels))
+print(len(classifier.graphs))
+print(len(classifier.graph_labels))
 
-# train_history = classifier.train()
+train_history = classifier.train()
 
-# m_eval_mean, m_eval_std, m_eval_accs = classifier.evaluate_model()
+m_eval_mean, m_eval_std, m_eval_accs = classifier.evaluate_model()
 
-# eval_mean, eval_std, eval_accs, eval_history = classifier.evaluate()
+eval_mean, eval_std, eval_accs, eval_history = classifier.evaluate()
 
-# print(m_eval_mean, m_eval_std)
-# print(eval_mean, eval_std)
+print(m_eval_mean, m_eval_std)
+print(eval_mean, eval_std)
 
-# plt.figure(figsize=(8, 6))
-# plt.hist(m_eval_accs)
-# plt.xlabel("Model Accuracy")
-# plt.ylabel("Count")
-# plt.show()
+plt.figure(figsize=(8, 6))
+plt.hist(m_eval_accs)
+plt.xlabel("Model Accuracy")
+plt.ylabel("Count")
+plt.show()
 
-# plt.figure(figsize=(8, 6))
-# plt.hist(eval_accs)
-# plt.xlabel("Evaluation Accuracy")
-# plt.ylabel("Count")
-# plt.show()
+plt.figure(figsize=(8, 6))
+plt.hist(eval_accs)
+plt.xlabel("Evaluation Accuracy")
+plt.ylabel("Count")
+plt.show()

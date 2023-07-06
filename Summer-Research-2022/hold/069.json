@@ -1,0 +1,23 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "B",
+            "shape": "Square",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 3
+        }
+    ]
+}

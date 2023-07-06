@@ -1,0 +1,93 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "F",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "G",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "H",
+            "shape": "Regular Septagon",
+            "sides": 7
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "H",
+            "count": 3
+        }
+    ]
+}

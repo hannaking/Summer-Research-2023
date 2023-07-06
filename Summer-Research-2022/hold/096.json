@@ -1,0 +1,98 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID": "E",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "F",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "H",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID": "I",
+            "shape": "Right Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "F",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "G",
+            "count": 2
+        },
+        {
+            "point 1": "G",
+            "point 2": "I",
+            "count": 2
+        }
+    ]
+}

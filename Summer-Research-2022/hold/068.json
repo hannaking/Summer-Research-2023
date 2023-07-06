@@ -1,0 +1,48 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "C",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 2
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 2
+        }
+    ]
+}

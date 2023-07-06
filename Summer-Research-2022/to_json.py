@@ -43,8 +43,9 @@ class ToJson():
                    "edges"    : edges}
         
         json_data = json.dumps(to_json, indent=4)
-        # puts the '[false]' back on one line
+        # puts the '[false]' / '[true]' back on one line
         json_data = json_data.replace('[\n        false\n    ]', '[false]')
+        json_data = json_data.replace('[\n        true\n    ]', '[true]')
 
         return json_data
     

@@ -1,0 +1,183 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID": "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "F",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "H",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "I",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "J",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID": "K",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "L",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "M",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "N",
+            "shape": "Dart",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "B",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "M",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 2
+        },
+        {
+            "point 1": "C",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "M",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "K",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "M",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "J",
+            "count": 2
+        },
+        {
+            "point 1": "F",
+            "point 2": "K",
+            "count": 1
+        },
+        {
+            "point 1": "G",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "G",
+            "point 2": "K",
+            "count": 2
+        },
+        {
+            "point 1": "H",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "H",
+            "point 2": "K",
+            "count": 1
+        },
+        {
+            "point 1": "H",
+            "point 2": "L",
+            "count": 1
+        },
+        {
+            "point 1": "J",
+            "point 2": "K",
+            "count": 1
+        },
+        {
+            "point 1": "J",
+            "point 2": "L",
+            "count": 1
+        },
+        {
+            "point 1": "L",
+            "point 2": "N",
+            "count": 1
+        },
+        {
+            "point 1": "M",
+            "point 2": "N",
+            "count": 1
+        }
+    ]
+}

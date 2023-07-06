@@ -1,0 +1,12 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        }
+    ],
+    "edges": []
+}

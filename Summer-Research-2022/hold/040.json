@@ -1,0 +1,33 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "B",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 3
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        }
+    ]
+}

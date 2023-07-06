@@ -51,13 +51,13 @@ class TestToStellarGraph(unittest.TestCase):
         self.assertEqual(type(result), bool)
     
     def test_get_only_in_textbook(self):
-        input_shape_list = [0, 1, 1, 1, 0, 0, 0]
+        input_shape_list = [0, 1, 1, 0, 0, 0, 0]
         lattice_generator = LatticeGenerator(input_shape_list)
 
         lattices = lattice_generator.glue_shapes()._lattice_matrix
         face_graphs = FaceGraphGenerator.from_lattices(lattices)
         labels = TextbookIdentifier.identify(face_graphs, "model__1")
-        
+
         filtered_lattices, filtered_graphs = TextbookIdentifier.get_only_in_textbook(lattices[-1], face_graphs, labels)
 
         self.assertEqual(len(filtered_lattices), len(filtered_graphs))

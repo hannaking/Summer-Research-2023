@@ -1,0 +1,23 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Kite",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 2
+        }
+    ]
+}

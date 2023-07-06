@@ -1,0 +1,12 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        }
+    ],
+    "edges": []
+}
