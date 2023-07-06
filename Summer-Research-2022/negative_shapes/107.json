@@ -1,0 +1,28 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "B",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID": "C",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 2
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+model__1
+
+    Value             | Hyperparameter
+    =================================
+    0.4337            | dropout
+    0.00072664        | lr
+    432               | units_1
+    384               | units_2
+    288               | units_3
+    480               | units_4
+    tanh              | activation_1
+    relu              | activation_2
+    relu              | activation_3
+    relu              | activation_4
+
+    simple:
+      mean acc: 0.7243840599060059 
+      std acc:  0.07314444979413003
+
+    full:
+      mean acc: 0.7511956536769867
+      std acc:  0.08148759962473477

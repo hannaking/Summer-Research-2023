@@ -1,0 +1,163 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "F",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "H",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "I",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "J",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "K",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "L",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "L",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "L",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "L",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "K",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "G",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "G",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "G",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "H",
+            "point 2": "K",
+            "count": 1
+        }
+    ]
+}

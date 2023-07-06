@@ -1,0 +1,17 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Line Segment",
+            "sides": 1
+        }
+    ],
+    "edges": []
+}

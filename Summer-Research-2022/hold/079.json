@@ -1,0 +1,93 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "C",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "E",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "F",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 3
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count": 1
+        }
+    ]
+}

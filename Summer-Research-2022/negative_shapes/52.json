@@ -1,0 +1,28 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Regular Octagon",
+            "sides": 8
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 2
+        }
+    ]
+}

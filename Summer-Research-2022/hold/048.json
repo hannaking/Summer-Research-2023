@@ -1,0 +1,53 @@
+{
+    "source": "generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "E",
+            "shape": "Line Segment",
+            "sides": 1
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        }
+    ]
+}
