@@ -1,6 +1,6 @@
 import math
 from shapely.geometry import *
-from shapes.vector import Vector
+from vector import Vector
 
 DEFAULT_SIDE_LENGTH = 1
 

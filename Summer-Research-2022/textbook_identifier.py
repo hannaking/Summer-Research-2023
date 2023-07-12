@@ -1,4 +1,5 @@
 
+from negative_example_generator import NegativeExampleGen
 from gcn_graph_classification import GraphClassifier
 from to_stellar_graph import ToStellarGraph
 
@@ -95,3 +96,40 @@ class TextbookIdentifier():
                 textbook_graphs.append(face_graph)
         
         return textbook_graphs
+    
+    # gets the known textbook graphs and passes them into the helper method
+    #
+    # graphs - a networkx graph or list of networkx graphs
+    # labels - current labels of the graphs
+    # 
+    # returns a parallel stucture containing whether each graph is isomorphic to one of the
+    #         textbook graphs
+    @staticmethod
+    def check_against_known(graphs, labels):
+        known = NegativeExampleGen.read_all_positive_graphs(True)
+        return TextbookIdentifier._check_against_known_helper(graphs, labels, known)
+    
+    # checks the graphs against the known positives isomorphically if the graphs were labeled
+    # as not being textbook graphs
+    # 
+    # graphs - a networkx graph or list of networkx graphs
+    # labels - current labels of the graphs
+    # known - list of known textbook graphs
+    # 
+    # returns a parallel stucture containing whether each graph is isomorphic to one of the
+    #         textbook graphs
+    @staticmethod
+    def _check_against_known_helper(graphs, labels, known):
+        if type(graphs) != list:
+            if not labels:
+                return NegativeExampleGen.is_in(graphs, known)
+            else:
+                return True
+        # recursive case if it is a list of graphs
+        else:
+            corrected_labels = []
+
+            for i, group in enumerate(graphs):
+                corrected_labels.append(TextbookIdentifier._check_against_known_helper(group, labels[i], known))
+            
+            return corrected_labels

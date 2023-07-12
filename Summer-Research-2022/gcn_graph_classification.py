@@ -458,31 +458,31 @@ class GraphClassifier:
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
         return self.model.predict(x=gen, verbose=0)
 
-classifier = GraphClassifier([], pd.DataFrame())
+# classifier = GraphClassifier([], pd.DataFrame())
 
-classifier.read_json_graphs("Summer-Research-2022/Json shapes")
-classifier.read_json_graphs("Summer-Research-2022/negative_shapes")
+# classifier.read_json_graphs("Summer-Research-2022/Json shapes")
+# classifier.read_json_graphs("Summer-Research-2022/negative_shapes")
 
-print(len(classifier.graphs))
-print(len(classifier.graph_labels))
+# print(len(classifier.graphs))
+# print(len(classifier.graph_labels))
 
-train_history = classifier.train()
+# train_history = classifier.train()
 
-m_eval_mean, m_eval_std, m_eval_accs = classifier.evaluate_model()
+# m_eval_mean, m_eval_std, m_eval_accs = classifier.evaluate_model()
 
-eval_mean, eval_std, eval_accs, eval_history = classifier.evaluate()
+# eval_mean, eval_std, eval_accs, eval_history = classifier.evaluate()
 
-print(m_eval_mean, m_eval_std)
-print(eval_mean, eval_std)
+# print(m_eval_mean, m_eval_std)
+# print(eval_mean, eval_std)
 
-plt.figure(figsize=(8, 6))
-plt.hist(m_eval_accs)
-plt.xlabel("Model Accuracy")
-plt.ylabel("Count")
-plt.show()
+# plt.figure(figsize=(8, 6))
+# plt.hist(m_eval_accs)
+# plt.xlabel("Model Accuracy")
+# plt.ylabel("Count")
+# plt.show()
 
-plt.figure(figsize=(8, 6))
-plt.hist(eval_accs)
-plt.xlabel("Evaluation Accuracy")
-plt.ylabel("Count")
-plt.show()
+# plt.figure(figsize=(8, 6))
+# plt.hist(eval_accs)
+# plt.xlabel("Evaluation Accuracy")
+# plt.ylabel("Count")
+# plt.show()

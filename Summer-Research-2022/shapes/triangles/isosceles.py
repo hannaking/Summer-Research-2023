@@ -1,10 +1,14 @@
 import math
+import sys
+
+sys.path.insert(0, 'Summer-Research-2022/shapes')
+
 from shapely.geometry import Point
 from shapes.geometry import Geometry
 
 DEFAULT_SIDE_LENGTH = 1
 
-class Isosceles:
+class Isosceles():
     def __init__(self, known_coords):
         self._points = known_coords
 
