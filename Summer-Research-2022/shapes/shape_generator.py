@@ -1,14 +1,15 @@
 import math
 import copy
 import itertools
+from re import X
 import time
 import sys
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
 from shapely.geometry import Point, Polygon
 from matplotlib import pyplot as plt
-from shape_factory import ShapeFactory
-from vector import Vector
+from shapes.shape_factory import ShapeFactory
+#from vector import Vector
 
 from lattice import Lattice
 
@@ -270,6 +271,9 @@ class ShapeGenerator:
         current_scenario = 0
         total_scenarios = len(scenarios)
 
+        for scenario in scenarios:
+            print(scenario)
+
         # we want to show every scenario, so we will loop through every scenario.
         for scenario in scenarios:
 
@@ -285,7 +289,6 @@ class ShapeGenerator:
                 x, y = [], []
                 # get x and y values from the points
                 for point in draw_order_points:
-
                     x.append(point.x)
                     y.append(point.y)
 
@@ -293,7 +296,7 @@ class ShapeGenerator:
                 plt.fill(x, y, alpha=0.5, edgecolor='purple', linewidth=3)
 
             # now, display the scenario
-            current_scenario = current_scenario+1
+            current_scenario = current_scenario + 1
             print(" --- showing scenario " + str(current_scenario) + " of " + str(total_scenarios) + " --- ")
             print(scenario)
             plt.show()
