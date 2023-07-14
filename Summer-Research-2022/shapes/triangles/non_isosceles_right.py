@@ -123,3 +123,23 @@ class NonIsoscelesRight():
         third_points.append(Geometry.calculate_point_from_angle(math.radians(-90), point2, point1, side_length * math.sqrt(3)))
 
         return third_points
+
+    def _verify_right_triangle(self):
+        if len(self._points) != 3:
+            return False
+
+        # Calculate the lengths of the three sides of the triangle
+        side1 = self._calculate_distance(self._points[0], self._points[1])
+        side2 = self._calculate_distance(self._points[1], self._points[2])
+        side3 = self._calculate_distance(self._points[2], self._points[0])
+
+        # Check if it's a right triangle
+        if math.isclose(side1**2 + side2**2, side3**2) or math.isclose(side2**2 + side3**2, side1**2) or math.isclose(side3**2 + side1**2, side2**2):
+            return True
+
+        return False
+
+    def _calculate_distance(self, point1, point2):
+        x1, y1 = point1
+        x2, y2 = point2
+        return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)

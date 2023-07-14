@@ -1,0 +1,58 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "C",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID": "E",
+            "shape": "Rectangle",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 2
+        }
+    ]
+}

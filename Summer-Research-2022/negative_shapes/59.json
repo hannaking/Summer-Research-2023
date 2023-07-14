@@ -1,0 +1,53 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 2
+        }
+    ]
+}

@@ -16,7 +16,7 @@
         {
             "ID"   : "C",
             "shape": "Equilateral Triangle",
-            "sides": 4
+            "sides": 3
         },
         {
             "ID"   : "D",

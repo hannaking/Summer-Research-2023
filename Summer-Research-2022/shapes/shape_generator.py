@@ -7,8 +7,8 @@ sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
 from shapely.geometry import Point, Polygon
 from matplotlib import pyplot as plt
-from shapes.shape_factory import ShapeFactory
-from shapes.vector import Vector
+from shape_factory import ShapeFactory
+from vector import Vector
 
 from lattice import Lattice
 

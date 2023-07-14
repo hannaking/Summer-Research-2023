@@ -198,6 +198,15 @@ class LatticeGenerator:
 
         return result
 
+    # constrains the lattice matrix to only matricies that have the correct number of shapes
+    def constrain_to_final(self, matrix, num_shapes):
+        final = []
+        for layer in matrix:
+            for lattice, _ in layer:
+                if len(lattice._list_of_shapes) == num_shapes:
+                    final.append(lattice)
+        return final
+
 
     # glue shapes in shape list in every possible way
     # maximum shapes in a figure will be one more than the number of shapes in the shape list

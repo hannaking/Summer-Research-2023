@@ -1,0 +1,53 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 1
+        }
+    ]
+}

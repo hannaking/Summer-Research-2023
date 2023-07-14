@@ -4,13 +4,14 @@ sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 from shapes.triangles.equilateral               import Equilateral
 from shapes.triangles.isosceles_right           import IsoscelesRight
 from shapes.triangles.non_isosceles_right       import NonIsoscelesRight
+from shapes.triangles.isosceles                 import Isosceles
 
 #TODO remeber to add back all other triangle types
 # TriangleFactory class 
 class TriangleFactory:
 
     def __init__(self):
-        self._types = [Equilateral, IsoscelesRight, NonIsoscelesRight]
+        self._types = [Equilateral, IsoscelesRight, NonIsoscelesRight, Isosceles]
 
     def _empty_types(self):
         self._types = []
@@ -27,6 +28,10 @@ class TriangleFactory:
 
         elif type == 'NonIsoscelesRight':
             self._types.append(NonIsoscelesRight)
+            return True
+        
+        elif type == 'Isosceles':
+            self._types.append(Isosceles)
             return True
 
         return False

@@ -1,0 +1,98 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Right Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "F",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Rectangle",
+            "sides": 4
+        },
+        {
+            "ID": "H",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 2
+        },
+        {
+            "point 1": "A",
+            "point 2": "G",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "F",
+            "point 2": "H",
+            "count": 1
+        }
+    ]
+}

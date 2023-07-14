@@ -1,0 +1,73 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Trapezoid",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "C",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "F",
+            "shape": "Rectangle",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 3
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "F",
+            "count": 1
+        }
+    ]
+}

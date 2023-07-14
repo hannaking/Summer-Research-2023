@@ -1,0 +1,43 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID": "C",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 3
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 2
+        }
+    ]
+}

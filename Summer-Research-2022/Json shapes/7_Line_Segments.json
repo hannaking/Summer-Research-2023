@@ -1,0 +1,48 @@
+{
+    "source": "0-547-32411-1, 33",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "B",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "C",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "D",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "E",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "F",
+            "shape": "Line Segment",
+            "sides": 1
+        },
+        {
+            "ID"   : "G",
+            "shape": "Line Segment",
+            "sides": 1
+        }
+     ],
+
+     "edges" :
+     [
+
+     ]
+
+}

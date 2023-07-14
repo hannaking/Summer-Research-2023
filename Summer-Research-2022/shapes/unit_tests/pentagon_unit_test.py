@@ -5,8 +5,7 @@ import math
 sys.path.insert(0, './Summer-Research-2022/')
 
 from shapes.pentagon.pentagon import Pentagon
-from shapely.geometry import *
-from lattice import Lattice
+from shapely.geometry import Point
 from shapes.geometry import Geometry
 
 ANGLE = math.radians(108)

@@ -39,13 +39,13 @@ import networkx  as nx
 import matplotlib.pyplot as plt
 
 # constants
-SEGMENT_TYPES = ["Segment"]
-TRIANGLE_TYPES = ["IsoscelesRight", "Right", "Equilateral", "Isosceles"]
-QUADRILATERAL_TYPES = ["Square", "Rectangle", "Rhombus", "Parallelogram", "Kite", "RightTrapezoid", "IsoscelesTrapezoid", "Dart"]
-PENTAGON_TYPES = ["RegularPentagon"]
-HEXAGON_TYPES = ["RegularHexagon"]
-HEPTAGON_TYPES = ["RegularHeptagon"]
-OCTAGON_TYPES = ["RegularOctagon"]
+SEGMENT_TYPES = [0]
+TRIANGLE_TYPES = [10, 11, 12, 13]
+QUADRILATERAL_TYPES = [20, 21, 22, 23, 24, 25, 26, 27]
+PENTAGON_TYPES = [30]
+HEXAGON_TYPES = [40]
+HEPTAGON_TYPES = [50]
+OCTAGON_TYPES = [60]
 
 ALL_TYPES = [SEGMENT_TYPES, TRIANGLE_TYPES, QUADRILATERAL_TYPES, PENTAGON_TYPES, HEXAGON_TYPES, HEPTAGON_TYPES, OCTAGON_TYPES]
 
@@ -106,35 +106,20 @@ class FaceGraphGenerator:
     #
     # returns a set of face graphs
     @staticmethod
-    def from_lattices(lattices:(list[list[tuple[Lattice]]] | list[list[tuple[LatticeTest]]])):
+    def from_lattices(lattices:list[Lattice]):
         face_graphs = []
-
-        for lattice_types in lattices:
-            for lattice_pair in lattice_types:
-                if(lattice_pair[1] == [0, 0, 0, 0, 0, 0, 0]):
-                    faceGenerator = FaceGraphGenerator(lattice_pair[0])
-                    # keep the face graphs in a parallel array with their lattice
-                    one_lattice_graphs = []
-                    for face_graph in faceGenerator.graphs:
-                        # for graph in face_graphs:
-                            # if not FaceGraphGenerator.is_same(face_graph, graph):
-                        one_lattice_graphs.add(face_graph)
-                    face_graphs.append(one_lattice_graphs)
+        
+        for lattice in lattices:
+            faceGenerator = FaceGraphGenerator(lattice)
+            # keep the face graphs in a parallel array with their lattice
+            one_lattice_graphs = []
+            for face_graph in faceGenerator.graphs:
+                # for graph in face_graphs:
+                # if not FaceGraphGenerator.is_same(face_graph, graph):
+                one_lattice_graphs.append(face_graph)
+            face_graphs.append(one_lattice_graphs.copy())
 
         return face_graphs
-    
-    # @staticmethod
-    # def is_same(graph1, graph2):
-    #     GM = nx.isomorphism.GraphMatcher(graph1, graph2)
-    #     if not GM.is_isomorphic():
-    #         return False
-    #     GM.mapping
-        
-    #     for n1, n2 in GM.mapping.items():
-    #         if graph1.nodes()[n1] != graph2.nodes()[n2]:
-    #             return False
-        
-    #     return True
 
     # Creates one face graph
     # 
@@ -147,7 +132,8 @@ class FaceGraphGenerator:
         graph = nx.MultiGraph()
         # build all nodes from the shape layer
         for i in range(0, len(lattice._list_of_shapes)):
-            graph.add_node(i, type=types[i], size=sizes[i])
+            graph.add_node(i)
+            nx.set_node_attributes(graph, {i : [types[i], sizes[i]]}, 'default')
         
         # go to edge layer and
         for edge in lattice._list_of_edges:

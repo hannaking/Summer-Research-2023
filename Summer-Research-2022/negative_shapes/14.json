@@ -1,0 +1,143 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Regular Hexagon",
+            "sides": 6
+        },
+        {
+            "ID": "B",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Regular Septagon",
+            "sides": 7
+        },
+        {
+            "ID": "E",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID": "F",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID": "G",
+            "shape": "Regular Pentagon",
+            "sides": 5
+        },
+        {
+            "ID": "H",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "I",
+            "shape": "Regular Octagon",
+            "sides": 8
+        },
+        {
+            "ID": "J",
+            "shape": "Dart",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 2
+        },
+        {
+            "point 1": "A",
+            "point 2": "J",
+            "count": 3
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "G",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "H",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "I",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "J",
+            "count": 1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
+            "count": 2
+        },
+        {
+            "point 1": "E",
+            "point 2": "G",
+            "count": 2
+        },
+        {
+            "point 1": "E",
+            "point 2": "I",
+            "count": 2
+        },
+        {
+            "point 1": "F",
+            "point 2": "I",
+            "count": 2
+        },
+        {
+            "point 1": "G",
+            "point 2": "I",
+            "count": 1
+        }
+    ]
+}

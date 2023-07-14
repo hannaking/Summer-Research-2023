@@ -6,7 +6,7 @@ import math
 sys.path.insert(0, './Summer-Research-2022/')
 
 from shapes.triangles.isosceles import Isosceles
-from pygeom import Axes, Point
+from pygeom import Axes3D, Point
 from lattice import Lattice
 
 class TestIsoscelesTriangle(unittest.TestCase):

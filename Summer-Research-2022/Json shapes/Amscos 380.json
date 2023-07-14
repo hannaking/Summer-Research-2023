@@ -1,0 +1,212 @@
+{
+    "source": "978-0486691541, 380",
+    "textbook": [true],
+    "nodes" :
+     [
+        {
+            "ID"   : "A",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "B",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "C",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "D",
+            "shape": "Square",
+            "sides": 4
+        },
+        {
+            "ID"   : "E",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "F",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "G",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "H",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "I",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "J",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "K",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "L",
+            "shape": "Parallelogram",
+            "sides": 4
+        },
+        {
+            "ID"   : "M",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "N",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "O",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID"   : "P",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+     ],
+
+     "edges" :
+     [
+        {
+            "point 1": "A",
+            "point 2": "E",
+            "count"  :  1
+        },
+        {
+            "point 1": "A",
+            "point 2": "L",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "B",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "J",
+            "count"  :  1
+        },
+        {
+            "point 1": "C",
+            "point 2": "K",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "D",
+            "point 2": "I",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "F",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "M",
+            "count"  :  1
+        },
+        {
+            "point 1": "E",
+            "point 2": "L",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "G",
+            "count"  :  1
+        },
+        {
+            "point 1": "F",
+            "point 2": "M",
+            "count"  :  1
+        },
+        {
+            "point 1": "G",
+            "point 2": "H",
+            "count"  :  1
+        },
+        {
+            "point 1": "G",
+            "point 2": "N",
+            "count"  :  1
+        },
+        {
+            "point 1": "H",
+            "point 2": "I",
+            "count"  :  1
+        },
+        {
+            "point 1": "H",
+            "point 2": "N",
+            "count"  :  1
+        },
+        {
+            "point 1": "I",
+            "point 2": "J",
+            "count"  :  1
+        },
+        {
+            "point 1": "I",
+            "point 2": "O",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "K",
+            "count"  :  1
+        },
+        {
+            "point 1": "J",
+            "point 2": "O",
+            "count"  :  1
+        },
+        {
+            "point 1": "K",
+            "point 2": "L",
+            "count"  :  1
+        },      
+        {
+            "point 1": "K",
+            "point 2": "P",
+            "count"  :  1
+        },       
+        {
+            "point 1": "L",
+            "point 2": "P",
+            "count"  :  1
+        }
+     ]
+
+}

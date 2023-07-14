@@ -125,10 +125,14 @@ class RandomFaceGraphCreatorTest(unittest.TestCase):
     def test_get_other_points_all_others(self):
         position = 0
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        node_degrees = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
         expected = ['B', 'C', 'D', 'Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
@@ -136,60 +140,112 @@ class RandomFaceGraphCreatorTest(unittest.TestCase):
     def test_get_other_points_one_left(self):
         position = 3
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        node_degrees = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
         expected = ['Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
     def test_get_other_points_none_left(self):
         position = 4
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        node_degrees = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
         expected = []
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
     def test_get_other_points_one_full(self):
         position = 0
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 4, 'D': 0, 'Universe' : 0}
+        node_degrees = {'A' : 4, 'B' : 0, 'C' : 4, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 4, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
         expected = ['B', 'D', 'Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
     def test_get_other_points_all_full(self):
         position = 0
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 4, 'C' : 4, 'D': 4, 'Universe' : 999}
+        node_degrees = {'A' : 4, 'B' : 4, 'C' : 4, 'D': 4, 'Universe' : 12}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 4,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 4,
+                        ('C', 'D') : 0, ('C', 'Universe') : 4,
+                        ('D', 'Universe') : 4}
 
         expected = ['Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
     def test_get_other_points_has_segment(self):
         position = 0
         nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [00, 1], 'D': [20, 4], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        node_degrees = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
         expected = ['B','D','Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
-    def test_get_other_points_has_segment(self):
+    def test_get_other_points_has_segments(self):
         position = 0
-        nodes = {'A' : [20, 4], 'B' : [00, 1], 'C' : [00, 1], 'D': [00, 1], 'Universe' : [-1, -1]}
-        counts = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [00, 1], 'D': [00, 1], 'Universe' : [-1, -1]}
+        node_degrees = {'A' : 0, 'B' : 0, 'C' : 0, 'D': 0, 'Universe' : 0}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 0, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
 
-        expected = ['Universe']
-        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, counts)
+        expected = ['B', 'Universe']
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
+
+        self.assertEqual(expected, other_points)
+
+    def test_get_other_points_over_edges_u(self):
+        position = 0
+        nodes = {'A' : [40, 6], 'B' : [20, 4], 'C' : [20, 4], 'D': [20, 4], 'Universe' : [-1, -1]}
+        node_degrees = {'A' : 5, 'B' : 1, 'C' : 3, 'D': 0, 'Universe' : 1}
+        edge_degrees = {('A', 'B') : 1, ('A', 'C') : 3, ('A', 'D') : 0, ('A', 'Universe') : 1,
+                        ('B', 'C') : 0, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 0,
+                        ('D', 'Universe') : 0}
+
+        expected = ['B', 'D', 'Universe']
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
+
+        self.assertEqual(expected, other_points)
+
+    def test_get_other_points_over_edges_u(self):
+        position = 0
+        nodes = {'A' : [20, 4], 'B' : [20, 4], 'C' : [40, 5], 'D': [20, 4], 'Universe' : [-1, -1]}
+        node_degrees = {'A' : 3, 'B' : 1, 'C' : 5, 'D': 0, 'Universe' : 1}
+        edge_degrees = {('A', 'B') : 0, ('A', 'C') : 3, ('A', 'D') : 0, ('A', 'Universe') : 0,
+                        ('B', 'C') : 1, ('B', 'D') : 0, ('B', 'Universe') : 0,
+                        ('C', 'D') : 0, ('C', 'Universe') : 1,
+                        ('D', 'Universe') : 0}
+
+        expected = ['B', 'D', 'Universe']
+        other_points = RandomFaceGraphCreator._get_other_points(position, nodes, node_degrees, edge_degrees)
 
         self.assertEqual(expected, other_points)
 
@@ -200,28 +256,52 @@ class RandomFaceGraphCreatorTest(unittest.TestCase):
     '''
 
     def test_is_valid_to_connect_allowed(self):
-        size = 4
-        count = 3
+        size_u = 4
+        size_v = 4
+        node_degree = 3
+        edge_degree = 0
 
-        self.assertTrue(RandomFaceGraphCreator._is_valid_to_connect(size, count))
+        self.assertTrue(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
 
     def test_is_valid_to_connect_line_segment(self):
-        size = 1
-        count = 0
+        size_u = 1
+        size_v = 1
+        node_degree = 0
+        edge_degree = 0
 
-        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size, count))
+        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
 
     def test_is_valid_to_connect_universe(self):
-        size = -1
-        count = 99
+        size_u = 4
+        size_v = -1
+        node_degree = 99
+        edge_degree = 0
 
-        self.assertTrue(RandomFaceGraphCreator._is_valid_to_connect(size, count))
+        self.assertTrue(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
 
     def test_is_valid_to_connect_full(self):
-        size = 4
-        count = 4
+        size_u = 4
+        size_v = 4
+        node_degree = 4
+        edge_degree = 0
 
-        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size, count))
+        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
+
+    def test_is_valid_to_connect_over_edge_u(self):
+        size_u = 6
+        size_v = 4
+        node_degree = 0
+        edge_degree = 3
+
+        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
+
+    def test_is_valid_to_connect_over_edge_v(self):
+        size_u = 4
+        size_v = 6
+        node_degree = 0
+        edge_degree = 3
+
+        self.assertFalse(RandomFaceGraphCreator._is_valid_to_connect(size_u, size_v, node_degree, edge_degree))
 
 if __name__ == '__main__':
     unittest.main()

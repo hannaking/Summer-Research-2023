@@ -1,0 +1,17 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": []
+}

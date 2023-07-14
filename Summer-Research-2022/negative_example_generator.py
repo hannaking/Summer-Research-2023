@@ -254,9 +254,10 @@ class NegativeExampleGen():
                         with open(os.path.join(dirpath, filename)) as f:
                             graph, label = ToStellarGraph.from_json(f.name)
                             graph = graph.to_networkx(feature_attr='default')
-                            if not NegativeExampleGen.is_in(graph, graphs):
-                                print(filename)
+                            if not NegativeExampleGen.is_in(graph, graphs):                                
                                 graphs.append(graph)
+                            else:
+                                print(filename)
         else:
             print("File does not exist.")
 
@@ -340,4 +341,4 @@ class NegativeExampleGen():
     #         graphs.append(NegativeExampleGen.create_with_altered_node(graph.copy(), node, [shape, attribute[1]]))
     #     return graphs
 
-#NegativeExampleGen.generate_original(111, creates_files=True)
+#NegativeExampleGen.generate_original(118, creates_files=True)

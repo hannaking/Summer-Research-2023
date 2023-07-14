@@ -1,0 +1,43 @@
+{
+    "source": "Negative Example Generator",
+    "textbook": [false],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 2
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        }
+    ]
+}
