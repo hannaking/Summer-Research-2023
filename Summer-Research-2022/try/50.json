@@ -1,0 +1,33 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Rhombus",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        },
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        }
+    ]
+}

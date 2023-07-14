@@ -1,0 +1,12 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Line Segment",
+            "sides": 1
+        }
+    ],
+    "edges": []
+}

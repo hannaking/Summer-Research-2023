@@ -1,0 +1,12 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": []
+}

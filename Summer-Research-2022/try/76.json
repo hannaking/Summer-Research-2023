@@ -1,0 +1,63 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Rhombus",
+            "sides": 4
+        },
+        {
+            "ID": "D",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "E",
+            "shape": "Dart",
+            "sides": 4
+        },
+        {
+            "ID": "F",
+            "shape": "Square",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "C",
+            "point 2": "E",
+            "count": 1
+        },
+        {
+            "point 1": "D",
+            "point 2": "E",
+            "count": 1
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Rectangle",
+            "sides": 4
+        }
+    ],
+    "edges": []
+}
