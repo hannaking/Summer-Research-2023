@@ -2,11 +2,17 @@ import unittest
 import sys
 import numpy as np
 import math
+import os
 
-sys.path.insert(0, './Summer-Research-2022/')
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
-from shapes.triangles.isosceles_right import IsoscelesRight
+from triangles.isosceles_right import IsoscelesRight
 from pygeom import Axes3D, Point
+
+sys.path.append("Summer-Research-2022")
+
 from lattice import Lattice
 
 class TestIsoscelesTriangle(unittest.TestCase):

@@ -14,6 +14,7 @@ from to_json import ToJson
 from face_graphs.face_graph_generator import FaceGraphGenerator
 from lattice_generator import LatticeGenerator
 from negative_example_generator import NegativeExampleGen
+from gcn_graph_classification import GraphClassifier
 
 #      Catagory     |     Textbook     |   Not-Textbook   |       Base       
 # ==================|==================|==================|==================
@@ -80,6 +81,14 @@ class Analyzer():
             part_counts[shape] = float(textbook_shape_counts[shape]) / float(textbook_total)
 
         return part_counts
+    
+    def calculate_node_parts(textbook_node_counts, textbook_total):
+        part_counts = dict.fromkeys(textbook_node_counts, 0)
+
+        for count in part_counts:
+            part_counts[count] = float(textbook_node_counts[count]) / float(textbook_total)
+
+        return part_counts
 
     @staticmethod
     def split_pairs(pairs):
@@ -126,6 +135,104 @@ class Analyzer():
         plt.close()
 
     @staticmethod
+    def aquire_willingness():
+        data = Analyzer.read_data("Summer-Research-2022/hold", "data_repeated_100000.json")
+        textbook_pair_percents = Analyzer.calculate_percents(data["Base"]["Pair Counts"], data["Textbook"]["Pair Counts"])
+        textbook_pair_counts = data["Textbook"]["Pair Counts"]
+        base_pair_counts = data["Base"]["Pair Counts"]
+        textbook_shape_counts = data["Textbook"]["Shape Counts"]
+        base_shape_counts = data["Base"]["Shape Counts"]
+
+        pairs = []
+        for pair in textbook_pair_counts:
+            p1, p2 = Analyzer.split_pair(pair)
+            p1 = SHAPE_NUMBER_MAP[p1]
+            p2 = SHAPE_NUMBER_MAP[p2]
+            pair = str(p1) + ", " + str(p2)
+            inverse_pair = str(p2) + ", " + str(p1)
+            pairs.append(pair)
+            pairs.append(inverse_pair)
+        pairs = sorted(pairs)
+
+        bse_count = {}
+        for pair in pairs:
+            p1, p2 = Analyzer.split_pair(pair)
+            p1 = NUMBER_SHAPE_MAP[int(p1)]
+            p2 = NUMBER_SHAPE_MAP[int(p2)]
+            pair = p1 + ", " + p2
+            bse_count[pair] = 0
+
+        for pair in bse_count.keys():
+            p1, p2 = Analyzer.split_pair(pair)
+            if p1 == p2:
+                bse_count[pair] += math.comb(base_shape_counts[p1]+1, 2)
+            else:
+                bse_count[pair] += base_shape_counts[p1] * base_shape_counts[p2]
+
+        base_per_rep = bse_count.copy()
+        maximum = bse_count[max(bse_count, key=lambda key: bse_count[key])]
+        for pair in bse_count:
+            base_per_rep[pair] /= maximum
+
+        base_pair_rep = base_pair_counts.copy()
+
+        for pair in pairs:
+            p1, p2 = Analyzer.split_pair(pair)
+            p1 = NUMBER_SHAPE_MAP[int(p1)]
+            p2 = NUMBER_SHAPE_MAP[int(p2)]
+            pair = p1 + ", " + p2
+            sorted_pair = Analyzer.merge_pair(p1, p2)
+            base_pair_rep[pair] = base_pair_counts[sorted_pair]
+
+        maximum = base_pair_rep[max(base_pair_rep, key=lambda key: base_pair_rep[key])]
+        for pair in base_pair_rep:
+            base_pair_rep[pair] /= base_per_rep[pair]
+
+        Analyzer._create_histogram(base_pair_counts, False, "base")
+        Analyzer._create_histogram(base_pair_rep, False, "Thing")
+        Analyzer._create_histogram(base_per_rep, False, "Per")
+
+        txt_count = {}
+        for pair in pairs:
+            p1, p2 = Analyzer.split_pair(pair)
+            p1 = NUMBER_SHAPE_MAP[int(p1)]
+            p2 = NUMBER_SHAPE_MAP[int(p2)]
+            pair = p1 + ", " + p2
+            txt_count[pair] = 0
+
+        for pair in txt_count.keys():
+            p1, p2 = Analyzer.split_pair(pair)
+            if p1 == p2:
+                txt_count[pair] += math.comb(textbook_shape_counts[p1]+1, 2)
+            else:
+                txt_count[pair] += textbook_shape_counts[p1] * textbook_shape_counts[p2]
+
+        textbook_per_rep = txt_count.copy()
+        maximum = textbook_per_rep[max(textbook_per_rep, key=lambda key: textbook_per_rep[key])]
+        for pair in txt_count:
+            textbook_per_rep[pair] /= maximum
+
+        textbook_pair_rep = textbook_pair_counts.copy()
+
+        for pair in pairs:
+            p1, p2 = Analyzer.split_pair(pair)
+            p1 = NUMBER_SHAPE_MAP[int(p1)]
+            p2 = NUMBER_SHAPE_MAP[int(p2)]
+            pair = p1 + ", " + p2
+            sorted_pair = Analyzer.merge_pair(p1, p2)
+            textbook_pair_rep[pair] = textbook_pair_counts[sorted_pair]
+
+        maximum = textbook_pair_rep[max(textbook_pair_rep, key=lambda key: textbook_pair_rep[key])]
+        for pair in textbook_pair_rep:
+            textbook_pair_rep[pair] /= textbook_per_rep[pair]
+
+        Analyzer._create_histogram(textbook_pair_counts, False, "Textbook")
+        Analyzer._create_histogram(textbook_pair_rep, False, "TXT Thing")
+        Analyzer._create_histogram(textbook_per_rep, False, "TXT Per")
+
+        Analyzer._create_histogram(Analyzer.calculate_percents(base_pair_rep, textbook_pair_rep), True, "A Thing")
+
+    @staticmethod
     def perform_test_parts():
         data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
         positive_shape_counts = Analyzer.calculate_shape_parts(data["Textbook"]["Shape Counts"], data["Textbook"]["Total"])
@@ -152,6 +259,40 @@ class Analyzer():
         plt.show()
 
     @staticmethod
+    def flatten_reps(data):
+        flattened = []
+        for key, reps in data.items():
+            for i in range(0, reps):
+                flattened.append(int(key))
+        return flattened
+
+    @staticmethod
+    def perform_test_nodes():
+        data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
+        textbook_sizes = Analyzer.flatten_reps(data["Textbook"]["Node Count Info"]["count"])
+        
+        data = Analyzer.read_data("Summer-Research-2022/hold", "data_repeated_100000.json")
+        textbook_like_sizes = Analyzer.flatten_reps(data["Textbook"]["Node Count Info"]["count"])
+        
+        txt_sizes = pd.Series(textbook_sizes)
+        txt_lk_sizes = pd.Series(textbook_like_sizes)
+        print(len(txt_sizes), len(txt_lk_sizes))
+        print(stats.shapiro(txt_sizes))
+        print(stats.shapiro(txt_lk_sizes))
+        print(stats.mannwhitneyu(txt_sizes, txt_lk_sizes))
+
+        fig = plt.figure(figsize= (10, 5))
+        ax = fig.add_subplot(111)
+        ax.set_xlabel("Figure Size")
+        ax.set_ylabel("Quantity")
+        plt.hist(txt_sizes,    label= "Textbook Sizes",      density= True, alpha=0.5)
+        plt.hist(txt_lk_sizes, label= "Textbook-Like Sizes", density= True, alpha=0.5)
+        plt.legend()
+        plt.text(0, 5.6, f"Textbook-Like: $\mu= {txt_lk_sizes.mean()}, \ \sigma= {txt_lk_sizes.std()}$")
+        plt.text(0, 5.4, f"Textbook: $\mu= {txt_sizes.mean()}, \ \sigma= {txt_sizes.std()}$")
+        plt.show()
+
+    @staticmethod
     def read_data(directory, name):
         json_file = open(directory + "/" +name)
         return json.load(json_file)
@@ -164,7 +305,7 @@ class Analyzer():
 
         textbook_node_degrees = []
         non_textbook_node_degrees = []
-        base_node_degrees = [] 
+        base_node_degrees = []
         
         textbook_edge_degrees = []
         non_textbook_edge_degrees = []
@@ -334,16 +475,22 @@ class Analyzer():
 
     @staticmethod
     def get_info(information):
+        count = dict.fromkeys(sorted(information), 0)
+        for info in information:
+            count[info] += 1
+        
         if information != []:
             return {"mean"               : float(np.mean(information)),
                     "standard deviation" : float(np.std(information)),
                     "max"                : int(np.amax(information)),
-                    "min"                : int(np.amin(information))}
+                    "min"                : int(np.amin(information)),
+                    "count"              : count}
         else:
             return {"mean"               : -1,
                     "standard deviation" : -1,
                     "max"                : -1,
-                    "min"                : -1}
+                    "min"                : -1,
+                    "count"              : count}
         
     @staticmethod
     def remove_duplicates(graphs, labels):
@@ -413,7 +560,7 @@ class Analyzer():
 #c = 0
 #quant = 10000
 #for i in range(0, quant):
-#    if c%int(quant/100) == 0:
+#    if c%int(quant/10) == 0:
 #        print(c)
 #    c+=1
 #face_graphs = RandomFaceGraphCreator.create_random_face_graphs(quant)
@@ -433,91 +580,34 @@ class Analyzer():
 
 #Analyzer._create_histogram(textbook_pair_percents, True, "Percents")
 
-# data = Analyzer.read_data("Summer-Research-2022/hold", "data_repeated_100000.json")
-# textbook_pair_percents = Analyzer.calculate_percents(data["Base"]["Pair Counts"], data["Textbook"]["Pair Counts"])
-# textbook_pair_counts = data["Textbook"]["Pair Counts"]
-# base_pair_counts = data["Base"]["Pair Counts"]
-# textbook_shape_counts = data["Textbook"]["Shape Counts"]
-# base_shape_counts = data["Base"]["Shape Counts"]
+# SHAPES = {0 : "Segment",
+#           1 : "Triangle",
+#           2 : "Quadralateral",
+#           3 : "Pentagon",
+#           4 : "Hexagon",
+#           5 : "Heptagon",
+#           6 : "Octagon"}
 
-# bse_count = {pair : 0 for pair in textbook_pair_counts.keys()}
-# for pair in bse_count.keys():
-#     p1, p2 = Analyzer.split_pair(pair)
-#     if p1 == p2:
-#         bse_count[pair] += math.comb(base_shape_counts[p1]+1, 2)
-#     else:
-#         bse_count[pair] += base_shape_counts[p1] * base_shape_counts[p2]
+# data_size_3 = {}
+# length = 1
+# for com in itt.combinations_with_replacement(range(0,7), length):
+#     input_shape_list = [0, 0, 0, 0, 0, 0, 0]
+#     for i in com: input_shape_list[i] += 1
 
-# base_per_rep = bse_count.copy()
-# maximum = bse_count[max(bse_count, key=lambda key: bse_count[key])]
-# print(maximum)
-# for pair in bse_count:
-#     base_per_rep[pair] /= maximum
+#     shapes = []
+#     for i, input in enumerate(input_shape_list):
+#         for inp in range(0, input):
+#             shapes.append(SHAPES[i])
 
-# base_pair_rep = base_pair_counts.copy()
-# maximum = base_pair_rep[max(base_pair_rep, key=lambda key: base_pair_rep[key])]
-# print(maximum)
-# for pair in base_pair_rep:
-#     base_pair_rep[pair] /= base_per_rep[pair]
+#     data_size_3[tuple(shapes)] = Analyzer.read_data("Summer-Research-2022/hold/inputs/size_1", "input_" + str(input_shape_list) + ".json")
 
-#Analyzer._create_histogram(base_pair_counts, False, "base")
-#Analyzer._create_histogram(base_pair_rep, False, "Thing")
-#Analyzer._create_histogram(base_per_rep, False, "Per")
+# total_size_3 = {key : {}.copy() for key in data_size_3}
+# for shapes, inp in data_size_3.items():
+#     total_size_3[shapes]["Textbook"] = inp["Textbook"]["Total"]
+#     total_size_3[shapes]["Base"]     = inp["Base"]["Total"]
 
-# txt_count = {pair : 0 for pair in textbook_pair_counts.keys()}
-# for pair in txt_count.keys():
-#     p1, p2 = Analyzer.split_pair(pair)
-#     if p1 == p2:
-#         txt_count[pair] += math.comb(textbook_shape_counts[p1]+1, 2)
-#     else:
-#         txt_count[pair] += textbook_shape_counts[p1] * textbook_shape_counts[p2]
-
-# textbook_per_rep = txt_count.copy()
-# maximum = textbook_per_rep[max(textbook_per_rep, key=lambda key: textbook_per_rep[key])]
-# print(maximum)
-# for pair in txt_count:
-#     textbook_per_rep[pair] /= maximum
-
-# textbook_pair_rep = textbook_pair_counts.copy()
-# maximum = textbook_pair_rep[max(textbook_pair_rep, key=lambda key: textbook_pair_rep[key])]
-# print(maximum)
-# for pair in textbook_pair_rep:
-#     textbook_pair_rep[pair] /= textbook_per_rep[pair]
-
-# Analyzer._create_histogram(textbook_pair_counts, False, "Textbook")
-# Analyzer._create_histogram(textbook_pair_rep, False, "TXT Thing")
-# Analyzer._create_histogram(textbook_per_rep, False, "TXT Per")
-
-SHAPES = {0 : "Segment",
-          1 : "Triangle",
-          2 : "Quadralateral",
-          3 : "Pentagon",
-          4 : "Hexagon",
-          5 : "Heptagon",
-          6 : "Octagon"}
-
-data_size_3 = {}
-length = 1
-for com in itt.combinations_with_replacement(range(0,7), length):
-    input_shape_list = [0, 0, 0, 0, 0, 0, 0]
-    for i in com: input_shape_list[i] += 1
-
-    shapes = []
-    for i, input in enumerate(input_shape_list):
-        for inp in range(0, input):
-            shapes.append(SHAPES[i])
-
-    data_size_3[tuple(shapes)] = Analyzer.read_data("Summer-Research-2022/hold/inputs/size_1", "input_" + str(input_shape_list) + ".json")
-
-total_size_3 = {key : {}.copy() for key in data_size_3}
-for shapes, inp in data_size_3.items():
-    total_size_3[shapes]["Textbook"] = inp["Textbook"]["Total"]
-    total_size_3[shapes]["Base"]     = inp["Base"]["Total"]
-
-for (shape1), total in total_size_3.items():
-    print(total["Base"])
-
-#Analyzer._create_histogram(Analyzer.calculate_percents(base_pair_rep, textbook_pair_rep), True, "A Thing")
+# for (shape1), total in total_size_3.items():
+#     print(total["Base"])
 
 #print(pair_percents)
 
@@ -538,6 +628,18 @@ for (shape1), total in total_size_3.items():
 # Analyzer.perform_test_parts()
 
 # Analyzer.draw_qq_plots_parts()
+
+#data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
+
+#textbook_node_counts = data["Textbook"]["Node Count Info"]["count"]
+#base_node_counts = data["Base"]["Node Count Info"]["count"]
+
+#for amount in textbook_node_counts:
+#    textbook_node_counts[amount] /= base_node_counts[amount]
+
+#Analyzer._create_histogram(textbook_node_counts, True, "Node Counts")
+
+Analyzer.perform_test_nodes()
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -563,16 +665,24 @@ for (shape1), total in total_size_3.items():
 #   base    - total number of figures that include each shape found
 #                 * figures containing <shape>
 
+
+# most textbook figures are built from trianges or contain triangles
+# most repeated is 2 edge glued right triangles (2x next one)
+# most figures have 1, 2 or 4 shapes
+# 1 is by far the most common
+# 3 figures shapes are rarer
+# large figures tend to have 1 or 2 types of shapes
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# smaller figures are very perfered to larger figures
 
 # most textbook figures have triangles
 
 # the paterns are from <not to less> present with less than 10000 graphs
 
 # very few line-segments pass, then has a peak with the triangles, before noticably decreasing upon hitting the quadralaterals,
-# then slopping downward to nothing until octagons
-
-# for the inclusion breakdown the slope get noticibly stepper upon hitting the n-gons
+# then slopping downward to near nothing until octagons
 
 # smaller number of sides is better until 1 which is bad
 # smaller shape code is better until 0 which is bad
@@ -580,10 +690,19 @@ for (shape1), total in total_size_3.items():
 # less than half of the figures contain any given shape
 
 # 61.9% accuracy on the textbook graphs
-# ~88.1% accuracy on the non-textbook graphs
+# 83.1% accuracy on the non-textbook graphs
 
 # it generally perfers edges between one smaller and one larger shape
+# Right Triangle, Regular Octagon - 63.3%
+# Isosceles Right Triangle, Regular Septagon - 62.0%
+# Isosceles Right Triangle, Regular Hexagon - 58.9%
+# Equilateral Triangle, Regular Septagon - 57.5%
+# Equilateral Triangle, Regular Pentagon - 54.1%
+# Isosceles Right Triangle, Regular Pentagon - 51.7%
+# Isosceles Right Triangle, Regular Octagon - 50.5%
 
+# Shapes
+#
 # Textbook shapiro test:
 #                       statistic = 0.8537275791168213 
 #                       p-value   = 0.012230399064719677
@@ -597,3 +716,19 @@ for (shape1), total in total_size_3.items():
 #                       statistic(textbook-like) = 125.0
 #                       p-value                  = 0.5126755928763647
 #       * different
+
+# Nodes
+#
+# Textbook shapiro test:
+#                       statistic = 0.7588671445846558
+#                       p-value   = 0.0000000000012226482846988684
+#       * not normal distribution
+# Textbook-like shapeiro test:
+#                       statistic = 0.8589462041854858
+#                       p-value   = ~0 (N is to high for accurate results)
+#       * not notmal distribution
+# Mannwhitneyu test:
+#                       statistic(textbook)      = 1146147.5
+#                       statistic(textbook-like) = 688516.5
+#                       p-value                  = 0.000002076427567519129
+#       * similier

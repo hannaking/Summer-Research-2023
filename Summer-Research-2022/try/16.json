@@ -1,0 +1,43 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Equilateral Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "D",
+            "shape": "Right Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "D",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "D",
+            "count": 1
+        }
+    ]
+}

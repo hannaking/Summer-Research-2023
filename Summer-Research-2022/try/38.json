@@ -1,0 +1,33 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Isosceles Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        },
+        {
+            "ID": "C",
+            "shape": "Dart",
+            "sides": 4
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "C",
+            "count": 1
+        },
+        {
+            "point 1": "B",
+            "point 2": "C",
+            "count": 2
+        }
+    ]
+}

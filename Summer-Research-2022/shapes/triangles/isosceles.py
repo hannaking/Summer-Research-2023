@@ -1,10 +1,13 @@
 import math
 import sys
+import os
 
-sys.path.insert(0, 'Summer-Research-2022/shapes')
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import Point
-from shapes.geometry import Geometry
+from geometry import Geometry
 
 DEFAULT_SIDE_LENGTH = 1
 
@@ -46,11 +49,11 @@ class Isosceles():
         # We then unsort these scenarios, then return them.
 
         scenarios = []  # list of lists of Points
-
+        
         if None not in self._points:
             scenarios.append(self._points)
             return scenarios
-
+        
         # I need to sort the coords , dragging along a list of indices.
         # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
         # which i need to be happening so we maintain Point order
@@ -65,6 +68,8 @@ class Isosceles():
         point2 = sorted_points[1]
         point3 = sorted_points[2]
 
+        
+
         # boolean that tells whether this triangle is vertex glued or not. default to False.
         vertex_gluing = False
 
@@ -73,7 +78,7 @@ class Isosceles():
             point2 = self.get_second_point(point1)
             # since we only have one point, we know that the square is vertex glued.
             vertex_gluing = True
-
+        
         if point3 == None:
             # get third points (two because it could be above or below the start line)
             third_points = self.get_third_points(point1, point2)
@@ -113,36 +118,47 @@ class Isosceles():
     # when each point is calculated, side_length is used to find what the length of the new side should be according to the proportions of
     # an isosceles right triangle.
     def get_third_points(self, point1, point2):
-        side_length = Geometry.calculate_third_point(point1, point2, DEFAULT_SIDE_LENGTH)
+        side_length = Geometry.distance(point1, point2)
+        angles = [math.radians(30.0), math.radians(75.0), math.radians(67.5)]
         third_points = []
-        third_points.append(Geometry.calculate_point_from_angle(math.radians(90), point2, point1, side_length))
-        third_points.append(Geometry.calculate_point_from_angle(math.radians(-90), point2, point1, side_length))
-        third_points.append(Geometry.calculate_point_from_angle(math.radians(45), point2, point1, side_length * math.sqrt(2)))
-        third_points.append(Geometry.calculate_point_from_angle(math.radians(-45), point2, point1, side_length * math.sqrt(2)))
+        for angle in angles:
+            alt_hyp_side_length = side_length / (2.0 * math.cos(angle))
+            alt_base_side_length = 2.0 * math.cos(angle) * side_length
+            alternate_angle = math.pi - 2.0 * angle
+            print(angle, alt_base_side_length, alt_hyp_side_length)
+
+            third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_base_side_length))
+            third_points.append(Geometry.calculate_point_from_angle(-angle, point2, point1, alt_base_side_length))
+
+            third_points.append(Geometry.calculate_point_from_angle(alternate_angle, point2, point1, side_length))
+            third_points.append(Geometry.calculate_point_from_angle(-alternate_angle, point2, point1, side_length))
+
+            third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_hyp_side_length))
+            third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_hyp_side_length))
 
         return third_points
 
     def _verify_isosceles_triangle(self):
-        if len(self._points) != 3:
-            return False
+        return Isosceles.are_isosceles_triangles([self._points])
+    
+    @staticmethod
+    def are_isosceles_triangles(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 3:
+                return False
+        
+            if None in scenario:
+                return False
 
-        side1 = self._calculate_distance(self._points[0], self._points[1])
-        side2 = self._calculate_distance(self._points[1], self._points[2])
-        side3 = self._calculate_distance(self._points[2], self._points[0])
+            point1, point2, point3 = scenario
 
-        if None in (side1, side2, side3):
-            return False
+            side1 = Geometry.distance(point1, point2)
+            side2 = Geometry.distance(point1, point3)
+            side3 = Geometry.distance(point2, point3)
 
-        if math.isclose(side1, side2) or math.isclose(side2, side3) or math.isclose(side3, side1):
-            if math.isclose(side1**2 + side2**2, side3**2) or math.isclose(side2**2 + side3**2, side1**2) or math.isclose(side3**2 + side1**2, side2**2):
-                return True
+            if (not math.isclose(side1, side2) and
+                not math.isclose(side1, side3) and
+                not math.isclose(side2, side3)):
+                return False
 
-        return False
-
-    def _calculate_distance(self, point1, point2):
-        if point1 is None or point2 is None:
-            return None
-
-        x1, y1 = point1
-        x2, y2 = point2
-        return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        return True

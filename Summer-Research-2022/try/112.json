@@ -1,0 +1,23 @@
+{
+    "source": "Negative Graph Generator",
+    "textbook": [true],
+    "nodes": [
+        {
+            "ID": "A",
+            "shape": "Kite",
+            "sides": 4
+        },
+        {
+            "ID": "B",
+            "shape": "Right Triangle",
+            "sides": 3
+        }
+    ],
+    "edges": [
+        {
+            "point 1": "A",
+            "point 2": "B",
+            "count": 1
+        }
+    ]
+}
