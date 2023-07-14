@@ -50,9 +50,11 @@ class Isosceles():
 
         scenarios = []  # list of lists of Points
         
-        if None not in self._points:
+        if Isosceles.are_isosceles_triangles([self._points]):
             scenarios.append(self._points)
             return scenarios
+        elif None not in self._points:
+            return []
         
         # I need to sort the coords , dragging along a list of indices.
         # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
@@ -67,8 +69,6 @@ class Isosceles():
         point1 = sorted_points[0]
         point2 = sorted_points[1]
         point3 = sorted_points[2]
-
-        
 
         # boolean that tells whether this triangle is vertex glued or not. default to False.
         vertex_gluing = False
@@ -125,7 +125,6 @@ class Isosceles():
             alt_hyp_side_length = side_length / (2.0 * math.cos(angle))
             alt_base_side_length = 2.0 * math.cos(angle) * side_length
             alternate_angle = math.pi - 2.0 * angle
-            print(angle, alt_base_side_length, alt_hyp_side_length)
 
             third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_base_side_length))
             third_points.append(Geometry.calculate_point_from_angle(-angle, point2, point1, alt_base_side_length))
@@ -134,7 +133,7 @@ class Isosceles():
             third_points.append(Geometry.calculate_point_from_angle(-alternate_angle, point2, point1, side_length))
 
             third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_hyp_side_length))
-            third_points.append(Geometry.calculate_point_from_angle(angle, point2, point1, alt_hyp_side_length))
+            third_points.append(Geometry.calculate_point_from_angle(-angle, point2, point1, alt_hyp_side_length))
 
         return third_points
 

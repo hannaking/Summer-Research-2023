@@ -1,10 +1,14 @@
 import sys
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import os
 
-from shapes.triangles.equilateral               import Equilateral
-from shapes.triangles.isosceles_right           import IsoscelesRight
-from shapes.triangles.non_isosceles_right       import NonIsoscelesRight
-from shapes.triangles.isosceles                 import Isosceles
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from triangles.equilateral               import Equilateral
+from triangles.isosceles_right           import IsoscelesRight
+from triangles.non_isosceles_right       import NonIsoscelesRight
+from triangles.isosceles                 import Isosceles
 
 #TODO remeber to add back all other triangle types
 # TriangleFactory class 
