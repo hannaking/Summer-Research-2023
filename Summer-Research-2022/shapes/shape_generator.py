@@ -295,6 +295,7 @@ class ShapeGenerator:
             # now, display the scenario
             current_scenario = current_scenario+1
             print(" --- showing scenario " + str(current_scenario) + " of " + str(total_scenarios) + " --- ")
+            print(scenario)
             plt.show()
             # then we'll loop to the next scenario
 

@@ -1,24 +1,24 @@
+# so sorry about all of the hard-coding. It's awful.
+
+
 import sys
 import math
 import collections
 
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
-from shapely.geometry import *
+from shapely.geometry import Point
 from shapes.geometry import Geometry
 from shapes.vector import Vector
 
 ANGLE = math.radians(90)
-DEFAULT_SIDE_LENGTH = 1
+DEFAULT_SIDE_LENGTH_SHORT = 1
+DEFAULT_SIDE_LENGTH_LONG = 2
 
-# _points = a list of Point objects that represent the starting position for the equilateral triangle
+# _points = a list of Point objects that represent the starting position for the rectangle
 
 #TODO: update for rectangles. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
 # change them so that:
-# - given 1 point, get the second point as the LONG SIDE
-# - given 1 point, get the second point as the SHORT SIDE
-# - given 2 points, get the third point as the LONG SIDE
-# - given 2 points, get the third point as the SHORT SIDE
 # - given 3 points, get the fourth point as whatever side formed between the first and second points (LONG or SHORT)
 class Rectangle(): 
 
@@ -28,7 +28,7 @@ class Rectangle():
     def coordinatize(self):
         # you will start with either one point, two points, or three points.
         #
-        # First, we sort the coordinates #?
+        # First, we sort the coordinates
         #
         # if you have one point, you will need to find the second point. There is only one option: 1 unit to the right of the start point.
         # We make this decision based on the fact that since we only know the first point, we have no knowledge of the size of the square,
@@ -58,8 +58,6 @@ class Rectangle():
         # Each of these is a new scenario.
         # We then unsort these scenarios, then return them.
 
-        scenarios = []  # list of lists of Points
-
         if None not in self._points:
             scenarios.append(self._points)
             return scenarios
@@ -71,39 +69,66 @@ class Rectangle():
         sorted_points = [b[1] for b in first_sort]
 
         # to make it easier to understand what sorted points are
-        point1 = sorted_points[0]
-        point2 = sorted_points[1]
-        point3 = sorted_points[2]
-        point4 = sorted_points[3]
+        pt1 = sorted_points[0]
+        pt2 = sorted_points[1]
+        pt3 = sorted_points[2]
+        pt4 = sorted_points[3]
+
+        scenarios = [[pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4]]  # list of lists of Points
+        # maximum possible scenarios is 80 -> 1 option for first point
+        #                                     2 options for second point for every first point
+        #                                     4 options for third point for every second point
+        #                                     1 option for fourth point for every third point
+        #                                     = 8 before rotations
+        #                                     * (this + 9 angles) = 80 max scenarios
 
         # boolean that tells whether this square is vertex glued or not. default to False.
         vertex_gluing = False
 
-        if point2 == None:
+        # so third points works if 2 in
+        second_points = [pt2, pt2]
+        if pt2 == None:
             # get second point
-            point2 = self.get_second_point(point1)
-            # since we only have one point, we know that the square is vertex glued.
+            second_points = self.get_second_point(pt1)
+            # since we only have one point, we know that the rectangle is vertex glued.
             vertex_gluing = True
+            # fill the appropriate scenarios
+            for i in range(0, len(scenarios)):
+                if i < len(scenarios) / 2: scenarios[i][1] = second_points[0]
+                else: scenarios[i][1] = second_points[1]
 
-        if point3 == None:
-            # get third points 
-            third_points = self.get_third_points(point1, point2)
+        if pt3 == None:
+            # get third points
+            third_points = []
+            third_points = self.get_third_points(pt1, second_points[0])
+            third_points.extend(self.get_third_points(pt1, second_points[1]))
+            print(third_points)
+            for scenario in scenarios:
+                scenario[2] = third_points.pop(0)
         
-        if point4 == None:
+        if pt4 == None:
             # get fourth points
-            fourth_points = self.get_fourth_points(point1, point2)
+            for scenario in scenarios:
+                scenario[3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2])
 
-        # we have two scenarios at 0 degrees: above the x axis and below the x axis
-        scenarios.append([point1, point2, third_points[0], fourth_points[0]])
-        scenarios.append([point1, point2, third_points[1], fourth_points[1]])
+        # get rid of any unused / empty / repeated scenarios
+        # necessary?
+        scenarios = [x for x in scenarios if None not in x]
 
         # you would only ever want to rotate your shape if you are vertex glued.
         # if you are already given two or three points, there is no point in rotating your shape.
         if vertex_gluing == True:
             # now we will rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
             # creating a new scenario, and add it to the list of scenarios
-            # 2 scenarios * 9 angles = 18 new scenarios
-            # 20 scenarios in total
+            # 8 scenarios * 9 angles = 72 new scenarios
+            # 80 scenarios in total
             # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex we are glued to.
             angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
             original_scenario_len = len(scenarios)
@@ -120,30 +145,38 @@ class Rectangle():
         # a list of lists of 4 Points
         return scenarios
 
-    # returns a Point object. there is only one option: 1 unit to the right of the start point.
-    #TODO: update for rectangles
+    # returns a list of 2  Point objects.
+    # if you get here, you are vertex glued. use default side values
+    # you need to have this first side be the short side and the long side (so a list)
     def get_second_point(self, point1):
-        return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
+        return [Point(point1.x + DEFAULT_SIDE_LENGTH_SHORT, point1.y), 
+                Point(point1.x + DEFAULT_SIDE_LENGTH_LONG, point1.y)]
 
     # return a list of Point objects. 
     # finds the third points by finding the point 90 degrees and -90 degrees from the line formed by pt 1 and pt 2
-    #TODO: update for rectangles
+    # i need this to be the other of what the first two points are
+    #     so, if points one and 2 are a short side, this needs to be a long side and vice versa
+    #     how do I know? i don't :/
+    #     we decided to use a factor of 2 for the side lengths. so I can return both length first / 2 and first * 2 i think
     def get_third_points(self, point1, point2):
         side_length = Geometry.distance(point1, point2)
         third_points = []
-        third_points.append(Geometry.calculate_point_from_angle(ANGLE, point2, point1, side_length))
-        third_points.append(Geometry.calculate_point_from_angle(-ANGLE, point2, point1, side_length))
+        # this is the long side
+        third_points.append(Geometry.calculate_point_from_angle(ANGLE, point2, point1, side_length * 2))
+        third_points.append(Geometry.calculate_point_from_angle(ANGLE, point2, point1, side_length / 2))
+        # this is the short side
+        third_points.append(Geometry.calculate_point_from_angle(-ANGLE, point2, point1, side_length * 2))
+        third_points.append(Geometry.calculate_point_from_angle(-ANGLE, point2, point1, side_length / 2))
 
         return third_points
 
     # return a Point object. there is 1 option: the final corner of the square.
-    # finds the fourth points by finding the point -90 degrees and 90 degrees from the line formed by pt 2 and pt 1
+    # finds the fourth points by finding the point 90 degrees from the line formed by pt 2 and pt 1
     # notice how this is FLIPPED from get_third_points.
-    #TODO: update for rectangles
-    def get_fourth_points(self, point1, point2):
-        side_length = Geometry.distance(point1, point2)
-        fourth_points = []
-        fourth_points.append(Geometry.calculate_point_from_angle(-ANGLE, point1, point2, side_length))
-        fourth_points.append(Geometry.calculate_point_from_angle(ANGLE, point1, point2, side_length))
-
-        return fourth_points
+    # need the if... negative angle to avoid twists -> be on the right side of the first segment
+    # returns None if any input point is None
+    def get_fourth_points(self, point1, point2, point3):
+        if point1 == None or point2 == None or point3 == None: return None
+        side_length = Geometry.distance(point2, point3)
+        if (point3.x, point3.y) < (point2.x, point2.y): return Geometry.calculate_point_from_angle(-ANGLE, point1, point2, side_length)
+        return Geometry.calculate_point_from_angle(ANGLE, point1, point2, side_length)

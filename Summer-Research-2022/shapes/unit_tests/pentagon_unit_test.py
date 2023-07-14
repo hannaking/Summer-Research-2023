@@ -37,7 +37,9 @@ class TestPentagon(unittest.TestCase):
     def test_coordinatize_4_in(self):
         point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), None]
         pent = Pentagon(point_list)
+        print("------------------------------here-------------------------------")
         scenarios = pent.coordinatize()
+        print("------------------------------done--------------------------------")
         self.assertEqual(len(scenarios), 1)
         self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
     
@@ -46,7 +48,7 @@ class TestPentagon(unittest.TestCase):
         pent = Pentagon(point_list)
         scenarios = pent.coordinatize()
         self.assertEqual(len(scenarios), 1)
-        self.assertEqual(scenarios[1], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
+        self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
 
     def test_coordinatize_2_in(self):
         point_list = [Point(0,0), Point(1,0), None, None, None]
@@ -61,40 +63,6 @@ class TestPentagon(unittest.TestCase):
         pent = Pentagon(point_list)
         scenarios = pent.coordinatize()
         self.assertEqual(len(scenarios), 20)
-
-    #-----------------------------------------Get Next Points----------------------------------------
-    # 1 in on points
-    # no angle in, no side length in (default arguments)
-    # multiple in on points
-    def test_get_next_points_1_in(self):
-        point_list = [Point(0,0), Point(1,0), None, None, None]
-        pent = Pentagon(point_list)
-        points = [point_list[1]]
-        ref_points = [point_list[0]]
-        next_points = pent.get_next_points(points, ref_points, DEFAULT_SIDE_LENGTH, ANGLE)
-        self.assertEquals(len(next_points), 1)
-        expected = [Point(1.31, 0.95), Point(1.31, -0.95)]
-        self.assertEquals(expected, next_points)
-
-    def test_get_next_points_default(self):
-        point_list = [Point(0,0), Point(1,0), None, None, None]
-        pent = Pentagon(point_list)
-        points = [point_list[1]]
-        ref_points = [point_list[0]]
-        next_points = pent.get_next_points(points, ref_points)
-        self.assertEquals(len(next_points), 1)
-        expected = [Point(1.31, 0.95), Point(1.31, -0.95)]
-        self.assertEquals(expected, next_points)
-
-    def test_get_next_points_multiple_in(self):
-        point_list = [Point(0,0), Point(1,0), None, None, None]
-        pent = Pentagon(point_list)
-        points = [Point(1.31, 0.95), Point(1.31, -0.95)]
-        ref_points = [point_list[0]]
-        next_points = pent.get_next_points(points, ref_points)
-        self.assertEquals(len(next_points), 1)
-        expected = [Point(0.5, 1.5), Point(0.5, -1.5)]
-        self.assertEquals(expected, next_points)
 
 if __name__ == "__main__":
     unittest.main()

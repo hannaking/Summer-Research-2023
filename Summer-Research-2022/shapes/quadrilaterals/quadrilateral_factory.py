@@ -1,7 +1,9 @@
 import sys
-sys.path.insert(0, 'C:/Users/lilyb/Desktop/College Stuff/Summer Research (2022)/Summer-Research-2022-displaying-geometry-figures')
-
+sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 from shapes.quadrilaterals.square    import Square
+from shapes.quadrilaterals.rectangle import Rectangle
+from shapes.quadrilaterals.kite import Kite
+from shapes.quadrilaterals.isotrapezoid import IsoTrapezoid
 
 # QuadrilateralFactory class 
 class QuadrilateralFactory:
@@ -16,6 +18,18 @@ class QuadrilateralFactory:
             
             if type == 'Square':
                 self._types.append(Square)
+                return True
+
+            if type == 'Rectangle':
+                self._types.append(Rectangle)
+                return True
+
+            if type == 'Kite':
+                self._types.append(Kite)
+                return True
+
+            if type == 'IsoTrapezoid':
+                self._types.append(IsoTrapezoid)
                 return True
     
             return False

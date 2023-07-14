@@ -1,14 +1,14 @@
 # Main file for the project.
 # This file is responsible for the main flow of the program.
 from lattice_generator import LatticeGenerator
-from face_graphs.face_graph_generator import FaceGraphGenerator
+#from face_graphs.face_graph_generator import FaceGraphGenerator
 from shapes.shape_generator import ShapeGenerator
 
 
 if __name__ == '__main__':
 
     show_lattices = False
-    show_figures  = False
+    show_figures  = True
 
     if not show_lattices:
         print("Not showing lattices.")
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     # [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0, 0, 0, 1, 0, 0, 0]
+    input_shape_list = [0, 0, 1, 0, 0, 0, 0]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -45,10 +45,12 @@ if __name__ == '__main__':
 
     # Determine shape types to use. Value of 'None' will include all shape types.
     # Options: 'Segment', 'Equilateral' ..... 'RegularPent', 'RegularHex', 'RegularSept', 'RegularOct'
-    shape_types = ['RegularPent']
+    shape_types = ['IsoTrapezoid']
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
 
     # Generate the figures. Returns tuple in the form (list of coordinates, corresponding lattice)
     figures = shape_generator.generate_from_lattice_matrix(lattices, show_figures)
+
+    if show_figures: figures.show()
