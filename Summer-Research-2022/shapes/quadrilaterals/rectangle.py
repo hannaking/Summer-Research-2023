@@ -4,12 +4,15 @@
 import sys
 import math
 import collections
+import os
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import Point
-from shapes.geometry import Geometry
-from shapes.vector import Vector
+from geometry import Geometry
+from vector import Vector
 
 ANGLE = math.radians(90)
 DEFAULT_SIDE_LENGTH_SHORT = 1
@@ -180,3 +183,32 @@ class Rectangle():
         side_length = Geometry.distance(point2, point3)
         if (point3.x, point3.y) < (point2.x, point2.y): return Geometry.calculate_point_from_angle(-ANGLE, point1, point2, side_length)
         return Geometry.calculate_point_from_angle(ANGLE, point1, point2, side_length)
+    
+    def _verify_rectangle(self):
+        return Rectangle.are_rectangles([self._points])
+
+    @staticmethod
+    def are_rectangles(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                return False
+
+            if None in scenario:
+                return False
+
+            point1, point2, point3, point4 = scenario
+
+            side1 = Geometry.distance(point1, point2)
+            side2 = Geometry.distance(point2, point3)
+            side3 = Geometry.distance(point3, point4)
+            side4 = Geometry.distance(point4, point1)
+
+            diagonal1 = Geometry.distance(point1, point3)
+            diagonal2 = Geometry.distance(point2, point4)
+
+            if (not math.isclose(side1, side3) or
+                not math.isclose(side2, side4) or
+                not math.isclose(diagonal1, diagonal2)):
+                return False
+
+        return True

@@ -3,13 +3,18 @@ import copy
 import itertools
 import time
 import sys
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import Point, Polygon
 from matplotlib import pyplot as plt
 from shape_factory import ShapeFactory
 from vector import Vector
 
+sys.path.append('Summer-Research-2022')
 from lattice import Lattice
 
 #@ temp stuff, delete later

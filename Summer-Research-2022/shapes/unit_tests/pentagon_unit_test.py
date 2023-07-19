@@ -1,6 +1,11 @@
 import unittest
 import sys
 import math
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 sys.path.insert(0, './Summer-Research-2022/')
 
