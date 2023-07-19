@@ -252,7 +252,7 @@ class Dart():
         
         return new_scenarios
 
-    # gets the third and fourth points given two points
+    # gets the fourth points given three points
     #
     # point1 - 2d point
     # point2 - 2d point
