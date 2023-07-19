@@ -53,7 +53,7 @@ class Isosceles():
         if Isosceles.are_isosceles_triangles([self._points]):
             scenarios.append(self._points)
             return scenarios
-        elif None not in self._points:
+        elif None not in self._points or len(self._points) != 3:
             return []
         
         # I need to sort the coords , dragging along a list of indices.
@@ -154,7 +154,7 @@ class Isosceles():
             side1 = Geometry.distance(point1, point2)
             side2 = Geometry.distance(point1, point3)
             side3 = Geometry.distance(point2, point3)
-
+            
             if (not math.isclose(side1, side2) and
                 not math.isclose(side1, side3) and
                 not math.isclose(side2, side3)):

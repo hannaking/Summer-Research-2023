@@ -19,7 +19,7 @@ class TestIsoscelesTriangle(unittest.TestCase):
 
     # 1 point integer, 1 point irrational, 2 points integers, 2 points irrational, 3 points isosceles, 3 points non isosceles,
     # four points
-    def test_coordinatize_simple_1_point(self):
+    def test_coordinatize_irrational_1_point(self):
         points = [Point(math.pi, math.cos(34)), None, None]
         shape = Isosceles(points)
         scenarios = shape.coordinatize()

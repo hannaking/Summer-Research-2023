@@ -15,6 +15,8 @@ from keras.losses import binary_crossentropy
 from keras.callbacks import EarlyStopping
 import keras_tuner
 from keras.utils.vis_utils import plot_model
+from ann_visualizer.visualize import ann_viz;
+import visualkeras
 
 from to_stellar_graph import ToStellarGraph
 from graph_hyper_model import CVTuner
@@ -457,6 +459,16 @@ class GraphClassifier:
     def predict(self):
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
         return self.model.predict(x=gen, verbose=0)
+
+classifier = GraphClassifier([], pd.DataFrame())
+classifier.load_model("Summer-Research-2022/models/model__1/model_save__1")
+model = classifier.model
+
+
+a = visualkeras.graph_view(model)
+
+print(a.show())
+
 
 # classifier = GraphClassifier([], pd.DataFrame())
 
