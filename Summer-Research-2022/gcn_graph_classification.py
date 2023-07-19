@@ -460,14 +460,14 @@ class GraphClassifier:
         gen = self.generator.flow(self.graphs, targets=[0 for graph in self.graphs])
         return self.model.predict(x=gen, verbose=0)
 
-classifier = GraphClassifier([], pd.DataFrame())
-classifier.load_model("Summer-Research-2022/models/model__1/model_save__1")
-model = classifier.model
+#classifier = GraphClassifier([], pd.DataFrame())
+#classifier.load_model("Summer-Research-2022/models/model__1/model_save__1")
+#model = classifier.model
 
 
-a = visualkeras.graph_view(model)
+#a = visualkeras.graph_view(model)
 
-print(a.show())
+#print(a.show())
 
 
 # classifier = GraphClassifier([], pd.DataFrame())

@@ -43,16 +43,6 @@ if __name__ == '__main__':
     # the lists are stored in the same order as their lattices are in lattices
     # so they are associated, bc I need the lattice for the face graph later when graphing to the plane.
     #face_graphs = FaceGraphGenerator.from_lattices(lattices)
-    
-    #face_graphs = [RandomFaceGraphCreator.create_random_face_graphs(5)]
-    #isTextbooks = TextbookIdentifier.identify(face_graphs, "model__1")
-    #print(isTextbooks)
-    #Analyzer.analyze(face_graphs, isTextbooks)
-
-   # for i, graph_group in enumerate(face_graphs):
-        #for j, graph in enumerate(graph_group):
-            #json = ToJson.from_networkx(graph, 'default', 'generator', isTextbooks[i][j])
-            #ToJson.create_json_file("Summer-Research-2022/hold/", str(i) + str(j), json)
 
     # Determine shape types to use. Value of 'None' will include all shape types.
     # Options: 'Segment', 'Equilateral' ..... 'RegularPent', 'RegularHex', 'RegularSept', 'RegularOct'
