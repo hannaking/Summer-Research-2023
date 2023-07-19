@@ -11,8 +11,8 @@ from shapes.vector import Vector
 # i decided to use 60 and 120
 SMALL_ANGLE = math.radians(60)
 LARGE_ANGLE = math.radians(120)
-DEFAULT_SIDE_LENGTH_SHORT = 1
-DEFAULT_SIDE_LENGTH_LONG = 2 * DEFAULT_SIDE_LENGTH_SHORT # from 30-60-90 rules
+DEFAULT_SIDE_LENGTH = 1
+# longer side will be 2 * short from 30-60-90 rules
 
 # _points = a list of Point objects that represent the starting position for the rectangle
 
@@ -110,19 +110,13 @@ class IsoTrapezoid():
         
         if pt4 == None:
             # get fourth points
-            angles = [-math.radians(60),
-                      math.radians(60),
-                      -math.radians(120),
-                      math.radians(120)]
+            angles = [-60, 60, -120, 120]
             for i in range(len(scenarios)):
-                scenarios[i][3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2], angles[i])
+                scenarios[i][3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2], math.radians(angles[i]))
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?
         scenarios = [x for x in scenarios if None not in x]
-
-        print(scenarios)
-        print()
 
         # you would only ever want to rotate your shape if you are vertex glued.
         # if you are already given two or three points, there is no point in rotating your shape.
@@ -144,9 +138,6 @@ class IsoTrapezoid():
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
 
-        print(scenarios)
-        print()
-
         # a list of lists of 4 Points
         return scenarios
 
@@ -154,7 +145,7 @@ class IsoTrapezoid():
     # if you get here, you are vertex glued. use default side values
     # you need to have this first side be the short side and the long side (so a list)
     def get_second_point(self, point1):
-        return Point(point1.x + DEFAULT_SIDE_LENGTH_SHORT, point1.y)
+        return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
     # return a list of Point objects. 
     # finds the third points by finding the point 90 degrees and -90 degrees from the line formed by pt 1 and pt 2
@@ -180,6 +171,6 @@ class IsoTrapezoid():
     # returns None if any input point is None
     def get_fourth_points(self, point1, point2, point3, angle):
         if point1 == None or point2 == None or point3 == None: return None
-        side_length = Geometry.distance(point2, point3) if Geometry.distance(point2, point3) < Geometry.distance(point1, point2) else Geometry.distance(point1, point2)
+        side_length = Geometry.distance(point1, point2) / 2 if abs(angle) == math.radians(60) else Geometry.distance(point1, point2)
         return Geometry.calculate_point_from_angle(angle, point1, point2, side_length)
 
