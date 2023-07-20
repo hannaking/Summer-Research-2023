@@ -1,6 +1,8 @@
 import sys
 import os
 
+import numpy as np
+
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
@@ -93,6 +95,28 @@ class Geometry():
 
         distance = math.sqrt( (point2.x - point1.x)**2 + (point2.y - point1.y)**2 )
         return distance
+
+    # gets the angle in degrees between three points
+    #  *angle is signed and between (-pi, pi) radians
+    #
+    # point1 - 2d point | one side of the angle
+    # mid_point - 2d point | mid point of the angle
+    # point3 - 2d point | other side of the angle
+    #
+    # returns the angle in radians
+    @staticmethod
+    def get_angle(point1, mid_point, point3):
+        a = np.array([point1.x, point1.y])
+        b = np.array([mid_point.x, mid_point.y])
+        c = np.array([point3.x, point3.y])
+
+        ba = a - b
+        bc = c - b
+        
+        angle = math.atan2(ba[0] * bc[1] - ba[1] * bc[0],
+                           ba[0] * bc[0] + ba[1] * bc[1])
+
+        return angle
 
     # calculates all coordinates from the segment formed by the start and end point
     # from angles (in radians): 0, 30, 45, 60, 90, 180, -30, -45, -60, -90

@@ -70,7 +70,7 @@ class Dart():
         # checks if a dart can't be made or if the passed in points are already a dart
         if None not in sorted_points:
             if(self.are_darts(scenarios)):
-                return scenarios
+                return [self._points]
             else:
                 return []
 

@@ -51,7 +51,7 @@ class Parallelogram():
         # checks if a parallelogram can't be made or if the passed in points are already a parallelogram
         if None not in sorted_points:
             if(self.are_parallelograms(scenarios)):
-                return scenarios
+                return [self._points]
             else:
                 return []
 

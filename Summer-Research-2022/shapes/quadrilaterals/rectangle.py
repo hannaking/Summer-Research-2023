@@ -5,6 +5,7 @@ import sys
 import math
 import collections
 import os
+import numpy as np
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -77,6 +78,13 @@ class Rectangle():
         pt3 = sorted_points[2]
         pt4 = sorted_points[3]
 
+        # checks if a parallelogram can't be made or if the passed in points are already a parallelogram
+        if None not in sorted_points:
+            if(self._verify_rectangle()):
+                return [self._points]
+            else:
+                return []
+
         scenarios = [[pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
@@ -117,6 +125,8 @@ class Rectangle():
                 scenario[2] = third_points.pop(0)
         
         if pt4 == None:
+            if(pt3 != None and not self._verify_square_3_points()):
+                return []
             # get fourth points
             for scenario in scenarios:
                 scenario[3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2])
@@ -211,4 +221,30 @@ class Rectangle():
                 not math.isclose(diagonal1, diagonal2)):
                 return False
 
+        return True
+
+    def _verify_square_3_points(self):
+        return Rectangle.are_rectangleable([self._points])
+
+    @staticmethod
+    def are_rectangleable(self, scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                    return False
+            
+            if(scenario[0] == None or
+               scenario[1] == None or
+               scenario[2] == None or
+               scenario[3] != None):
+                return False
+
+            point1 = scenario[0]
+            point2 = scenario[1]
+            point3 = scenario[2]
+            
+            angle = abs(Rectangle.get_angle(point1, point2, point3))
+
+            if not math.isclose(angle, math.pi / 2, abs_tol=1e-9):
+                return False
+            
         return True
