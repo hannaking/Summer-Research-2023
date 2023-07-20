@@ -8,8 +8,15 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 import math
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
 from shapely.geometry import *
-from shapes.vector import Vector
+from vector import Vector
 
 DEFAULT_SIDE_LENGTH = 1
 

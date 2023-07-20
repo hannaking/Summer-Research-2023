@@ -10,18 +10,29 @@ sys.path.append(parent)
 from shapely.geometry import Point
 from geometry import Geometry
 
-# i decided to use 60 and 120
-SMALL_ANGLE = math.radians(60)
-LARGE_ANGLE = math.radians(120)
+# i decided to use 45 and 135 for the non-right angles
+# i also decided the top and angled sides would be equal
+# (both so I could determine side lengths -> 45-45-90 tri rules are nice)
+SMALL_ANGLE = math.radians(45)
+RIGHT_ANGLE = math.radians(90)
+LARGE_ANGLE = math.radians(135)
 DEFAULT_SIDE_LENGTH = 1
-# longer side will be 2 * short from 30-60-90 rules
+# top side = x
+# angled side = sqrt(2)x
+# flat side = x
+# bottom = 2x
+# *----*
+# |     \
+# |      \
+# |       \
+# *--------*
 
 # _points = a list of Point objects that represent the starting position for the rectangle
 
 #TODO: update for rectangles. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
 # change them so that:
 # - given 3 points, get the fourth point as whatever side formed between the first and second points (LONG or SHORT)
-class IsoTrapezoid(): 
+class RightTrapezoid(): 
 
     def __init__(self, known_coords):
         self._points = known_coords
@@ -78,43 +89,52 @@ class IsoTrapezoid():
         scenarios = [[pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
+                     [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4]]  # list of lists of Points
         # maximum possible scenarios is 80 -> 1 option for first point
-        #                                     2 options for second point for every first point
-        #                                     2 options for third point for every second point
+        #                                     1 options for second point for every first point
+        #                                     8 options for third point for every second point
         #                                     1 option for fourth point for every third point
-        #                                     = 4 before rotations
-        #                                     * (this + 9 angles) = 40 max scenarios
+        #                                     = 8 before rotations
+        #                                     * (this + 9 angles) = 80 max scenarios
 
         # boolean that tells whether this shape is vertex glued or not. default to False.
         vertex_gluing = False
 
         # so third points works
-        second_points = pt2
+        second_point = pt2
 
         if pt2 == None:
             # get second point
-            second_points = self.get_second_point(pt1)
+            # will be all 4 sides
+            second_point = self.get_second_point(pt1)
             # since we only have one point, we know that the rectangle is vertex glued.
             vertex_gluing = True
             # fill the appropriate scenarios
             for i in range(len(scenarios)):
                 scenarios[i][1] = self.get_second_point(pt1)
 
+        side_len = Geometry.distance(pt1, second_point)
+
         if pt3 == None:
             # get third points
-            # will be short sides
-            # will be 120, -120, 60, and -60
             third_points = []
-            third_points = self.get_third_points(pt1, second_points)
+            third_points = self.get_third_points(pt1, second_point, side_len)
             for scenario in scenarios:
                 scenario[2] = third_points.pop(0)
-        
+
         if pt4 == None:
             # get fourth points
-            angles = [-60, 60, -120, 120]
+            angles = [45, -45, 90, -90, 90, -90, 135, -135]
+            multipliers = [2 / math.sqrt(2), 2 / math.sqrt(2),
+                          0.5, 0.5,
+                          1, 1, 
+                          math.sqrt(2), math.sqrt(2)]
             for i in range(len(scenarios)):
-                scenarios[i][3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2], math.radians(angles[i]))
+                scenarios[i][3] = self.get_fourth_points(scenarios[i][1], scenarios[i][2], math.radians(angles[i]), multipliers[i] * Geometry.distance(scenarios[i][1], scenarios[i][2]))
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?
@@ -155,14 +175,20 @@ class IsoTrapezoid():
     #     so, if points one and 2 are a short side, this needs to be a long side and vice versa
     #     how do I know? i don't :/
     #     we decided to use a factor of 2 for the side lengths. so I can return both length first / 2 and first * 2 i think
-    def get_third_points(self, point1, point2):
-        side_length = Geometry.distance(point1, point2)
+    def get_third_points(self, point1, point2, side_len):
+        side_lengths = [math.sqrt(2) * side_len,
+                        (2/math.sqrt(2)) * side_len,
+                        .5 * side_len,
+                        side_len]
+        angles = [LARGE_ANGLE, SMALL_ANGLE, RIGHT_ANGLE, RIGHT_ANGLE]
+        
         third_points = []
-        # long side = 2 * short side
-        third_points.append(Geometry.calculate_point_from_angle(SMALL_ANGLE, point2, point1, side_length / 2))
-        third_points.append(Geometry.calculate_point_from_angle(-SMALL_ANGLE, point2, point1, side_length / 2))
-        third_points.append(Geometry.calculate_point_from_angle(LARGE_ANGLE, point2, point1, side_length))
-        third_points.append(Geometry.calculate_point_from_angle(-LARGE_ANGLE, point2, point1, side_length))
+        # this will make the second side
+        # so, need  t->a      a->b      b->f        f->t
+        #           135, -35  45, -45   90, -90     90, -90
+        for i in range(len(side_lengths)):
+            third_points.append(Geometry.calculate_point_from_angle(angles[i], point2, point1, side_lengths[i]))
+            third_points.append(Geometry.calculate_point_from_angle(-angles[i], point2, point1, side_lengths[i]))
 
         return third_points
 
@@ -171,8 +197,6 @@ class IsoTrapezoid():
     # notice how this is FLIPPED from get_third_points.
     # need the if... negative angle to avoid twists -> be on the right side of the first segment
     # returns None if any input point is None
-    def get_fourth_points(self, point1, point2, point3, angle):
-        if point1 == None or point2 == None or point3 == None: return None
-        side_length = Geometry.distance(point1, point2) / 2 if abs(angle) == math.radians(60) else Geometry.distance(point1, point2)
-        return Geometry.calculate_point_from_angle(angle, point1, point2, side_length)
+    def get_fourth_points(self, point2, point3, angle, side_length):
+        return Geometry.calculate_point_from_angle(angle, point3, point2, side_length)
 

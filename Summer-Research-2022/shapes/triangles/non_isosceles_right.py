@@ -1,8 +1,13 @@
 import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 import math
 
 from shapely.geometry import *
-from shapes.geometry import Geometry
+from geometry import Geometry
 
 DEFAULT_SIDE_LENGTH = 1
 

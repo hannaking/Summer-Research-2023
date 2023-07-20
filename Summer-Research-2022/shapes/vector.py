@@ -12,6 +12,13 @@ __status__      = "Production"
 from random import *
 import math
 
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
 class Vector:
     def __init__(self, x=0, y=0):
         self.x = 0

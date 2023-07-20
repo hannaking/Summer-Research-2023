@@ -1,4 +1,3 @@
-import math
 import copy
 import itertools
 from re import X
@@ -13,7 +12,6 @@ sys.path.append(parent)
 from shapely.geometry import Point, Polygon
 from matplotlib import pyplot as plt
 from shapes.shape_factory import ShapeFactory
-#from vector import Vector
 
 sys.path.append('Summer-Research-2022')
 from lattice import Lattice

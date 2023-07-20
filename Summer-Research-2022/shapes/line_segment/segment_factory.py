@@ -1,7 +1,11 @@
 import sys
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import os
 
-from shapes.line_segment.segment import Segment
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from line_segment.segment import Segment
 
 # SegmentFactory class 
 class SegmentFactory:

@@ -1,11 +1,15 @@
-import sys
+
 import math
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import *
-from shapes.geometry import Geometry
-from lattice import Lattice
+from geometry import Geometry
 
 ANGLE = math.radians(60)
 DEFAULT_SIDE_LENGTH = 1

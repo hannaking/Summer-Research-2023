@@ -1,15 +1,17 @@
 # fix comments
 # currently right kite only
 
-import sys
 import math
-import collections
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import Point
-from shapes.geometry import Geometry
-from shapes.vector import Vector
+from geometry import Geometry
 
 ANGLES = [math.radians(-120), math.radians(120), math.radians(-90),math.radians(90),
           math.radians(-90), math.radians(90), math.radians(-60), math.radians(60)]
