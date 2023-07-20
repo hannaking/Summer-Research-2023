@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     # [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0, 0, 1, 0, 0, 0, 0]
+    input_shape_list = [0, 1, 1, 0, 0, 0, 0]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -31,6 +31,10 @@ if __name__ == '__main__':
     # Generate the lattices.
     lattices = lattice_generator.glue_shapes()._lattice_matrix
     
+    lattices_final = lattice_generator.constrain_to_final(lattices, 2)
+    
+    refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
+
     # Show lattices.
     if show_lattices:
 
@@ -46,10 +50,10 @@ if __name__ == '__main__':
 
     # Determine shape types to use. Value of 'None' will include all shape types.
     # Options: 'Segment', 'Equilateral' ..... 'RegularPent', 'RegularHex', 'RegularSept', 'RegularOct'
-    shape_types = ['IsoTrapezoid']
+    shape_types = ['Equilateral', 'Dart']
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
 
     # Generate the figures. Returns tuple in the form (list of coordinates, corresponding lattice)
-    figures = shape_generator.generate_from_lattice_matrix(lattices, show_figures)
+    figures = shape_generator.generate_from_lattice_matrix(refomatted_final, show_figures)

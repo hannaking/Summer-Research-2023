@@ -31,7 +31,23 @@ class ShapeFactory:
         each scenario is a possible figure (?)
 
     """
-    def __init__(self, edge_amount, predetermined_shape_types=['Segment', 'Equilateral', 'IsoscelesRight', 'NonIsoscelesRight', 'Square', 'Rectangle', 'Kite', 'RegularPent']):
+    def __init__(self, edge_amount, predetermined_shape_types=['Segment',     # line segment
+                                                               'Equilateral', # triangles
+                                                               'Isosceles',
+                                                               'IsoscelesRight',
+                                                               'NonIsoscelesRight',
+                                                               'Square',      # quadralaterals
+                                                               'Rectangle',
+                                                               'Rhombus',
+                                                               'Parallelogram',
+                                                               'Kite',
+                                                               'RightTrapezoid',
+                                                               'IsoTrapezoid',
+                                                               'Dart',
+                                                               'RegularPent', # n-gons
+                                                               'RegularHex',
+                                                               'RegularHept',
+                                                               'RegularOct']):
 
         if edge_amount < 1:
             raise ValueError('Shape must have at least 1 edge')
