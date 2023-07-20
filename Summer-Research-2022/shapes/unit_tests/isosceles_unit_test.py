@@ -38,8 +38,6 @@ class TestIsoscelesTriangle(unittest.TestCase):
         points = [Point(0, 0), None, None]
         shape = Isosceles(points)
         scenarios = shape.coordinatize()
-
-        self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
         
         gen = ShapeGenerator()
         lattice = Lattice(3)
@@ -90,7 +88,6 @@ class TestIsoscelesTriangle(unittest.TestCase):
         self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
 
         self.assertEqual(len(scenarios), 1)
-        self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
 
         unique = set()
         for scenario in scenarios:

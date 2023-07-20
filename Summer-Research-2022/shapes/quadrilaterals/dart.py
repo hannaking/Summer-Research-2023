@@ -12,10 +12,10 @@ from geometry import Geometry
 
 DEFAULT_SIDE_LENGTH = 1
 DEFAULT_RATIO = 2
-DEFAULT_ANGLES = [math.radians(30),
-                  math.radians(45),
-                  math.pi - (math.radians(330) + 2*math.asin(math.sin(math.radians(330)/2)/2))/2,
-                  math.pi - (math.radians(315) + 2*math.asin(math.sin(math.radians(315)/2)/2))/2,
+DEFAULT_ANGLES = [#math.radians(30),
+                  #math.radians(45),
+                  #math.pi - (math.radians(330) + 2*math.asin(math.sin(math.radians(330)/2)/2))/2,
+                  #math.pi - (math.radians(315) + 2*math.asin(math.sin(math.radians(315)/2)/2))/2,
                   math.pi - (math.radians(300) + 2*math.asin(math.sin(math.radians(300)/2)/2))/2,
                   math.pi - (math.radians(270) + 2*math.asin(math.sin(math.radians(270)/2)/2))/2]
 

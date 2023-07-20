@@ -55,10 +55,6 @@ class IsoscelesRight():
 
         scenarios = []  # list of lists of Points
 
-        if None not in self._points:
-            scenarios.append(self._points)
-            return scenarios
-
         # I need to sort the coords , dragging along a list of indices.
         # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
         # which i need to be happening so we maintain Point order
@@ -72,6 +68,13 @@ class IsoscelesRight():
         point1 = sorted_points[0]
         point2 = sorted_points[1]
         point3 = sorted_points[2]
+
+        # checks if a right isotriangle can't be made or if the passed in points are already a right isotriangle
+        if None not in sorted_points:
+            if(self._verify_isosceles_triangle()):
+                return [self._points]
+            else:
+                return []
 
         # boolean that tells whether this triangle is vertex glued or not. default to False.
         vertex_gluing = False

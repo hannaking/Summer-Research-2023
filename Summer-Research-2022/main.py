@@ -56,4 +56,4 @@ if __name__ == '__main__':
     shape_generator = ShapeGenerator(shape_types)
 
     # Generate the figures. Returns tuple in the form (list of coordinates, corresponding lattice)
-    figures = shape_generator.generate_from_lattice_matrix(refomatted_final, show_figures)
+    figures = shape_generator.generate_from_lattice_matrix([[refomatted_final[0][-1]]], show_figures)

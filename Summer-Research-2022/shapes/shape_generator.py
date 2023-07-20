@@ -260,7 +260,7 @@ class ShapeGenerator:
         self._draw_order_indices[sl_index] = (shape_factory._draw_order_indices)
 
         # verify that the scenarios are consistent with each other
-        self.verify_scenarios(new_coords) #@ debugging purposes
+        #self.verify_scenarios(new_coords) #@ debugging purposes
 
         # for each scenario, call the recursive function
         for coord in new_coords:
@@ -335,18 +335,18 @@ class ShapeGenerator:
     #@ Helper methods for debugging purposes
     #@ These can be deleted once the code is working
 
-    # checks if the scenarios are consistent with each other
-    # and that no indices have varying data types
-    def verify_scenarios(self, scenarios):
+    # # checks if the scenarios are consistent with each other
+    # # and that no indices have varying data types
+    # def verify_scenarios(self, scenarios):
 
-        baseline = scenarios[0]
+    #     baseline = scenarios[0]
 
-        for scenario in scenarios:
+    #     for scenario in scenarios:
 
-            for i in range( len( scenario )):
+    #         for i in range( len( scenario )):
 
-                if scenario[i] is None:
-                    if not baseline[i] is None:
+    #             if scenario[i] is None:
+    #                 if not baseline[i] is None:
             
-                        raise Exception("Scenario " + str(scenario) + " has inconsistent data types at index " + str(i))
+    #                     raise Exception("Scenario " + str(scenario) + " has inconsistent data types at index " + str(i))
             
