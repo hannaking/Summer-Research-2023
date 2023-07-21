@@ -10,22 +10,19 @@ sys.path.append(parent)
 from shapely.geometry import *
 from geometry import Geometry
 
-ANGLE = math.radians(60)
 DEFAULT_SIDE_LENGTH = 1
 
 # _points = a list of Point objects that represent the starting position for the equilateral triangle
 
-# sides of equal length, all angles are 60 degrees
 class Segment: 
-    # coming from Triangle (?) based on the lattice (not anymore)
     def __init__(self, known_coords):
-        # you only get one coordinate, the starting point
         self._points = known_coords
 
-    def coordinatize(self, lattice):
+    def coordinatize(self):
         scenarios = []  # list of lists of Points
 
-        if None not in self._points:
+        # shouldn't happen, because segments annot be edge glued
+        if None not in self._points: # two points in
             scenarios.append(self._points)
             return scenarios
 
@@ -42,10 +39,9 @@ class Segment:
         point1 = sorted_points[0]
         point2 = sorted_points[1]
 
-        if point2 == None:
+        if point2 == None: # one point in
             # get second point
-            point2 = self.get_second_point(point1)
-            # since we only have one point, we know that the square is vertex glued.
+            point2 = Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
         # we have 1 scenario at 0 degrees: point1 and point2.
         scenarios.append([point1, point2])
@@ -69,7 +65,3 @@ class Segment:
 
         # a list of lists of 3 Points
         return scenarios
-
-    # returns a Point object. there is only one option: 1 unit to the right of the start point.
-    def get_second_point(self, point1):
-        return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)

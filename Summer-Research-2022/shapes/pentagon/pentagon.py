@@ -110,12 +110,7 @@ class Pentagon():
                 for angle in angles:
                     new_scenario = Geometry.rotate(scenarios[i], math.radians(angle))
                     scenarios.append(new_scenario)
-        print(scenarios)
-        temp = []
-        for s in scenarios:
-            if s not in temp: temp.append(s)
-        scenarios = temp
-        print(scenarios)
+
         # unsort all scenarios
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]

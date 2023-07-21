@@ -67,6 +67,13 @@ class ShapeFactory:
 
             #TODO pop this stuff out / reduce repeated code?
 
+            seg_factory = SegmentFactory()
+            seg_factory._empty_types()
+            for type in predetermined_shape_types:
+                
+                if seg_factory._include_type(type):
+                    shape_types[0] = seg_factory
+
             # If any triangle types are in the list of predetermined shape types, append to the triangle factory,
             # and use the triangle factory.
             tri_factory = TriangleFactory()
