@@ -65,3 +65,13 @@ class Segment:
 
         # a list of lists of 3 Points
         return scenarios
+    
+    def _verify_line_segment(self):
+        if len(self._points) != 2:
+            return False
+
+        if (math.isclose(self._points[0].x, self._points[1].x, abs_tol=1e-9) and
+            math.isclose(self._points[0].y, self._points[1].y, abs_tol=1e-9)):
+            return False
+        
+        return True 

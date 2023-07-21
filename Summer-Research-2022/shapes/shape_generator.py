@@ -293,8 +293,8 @@ class ShapeGenerator:
         current_scenario = 0
         total_scenarios = len(scenarios)
 
-        for scenario in scenarios:
-            print(scenario)
+        # for scenario in scenarios:
+        #     print(scenario)
 
         # we want to show every scenario, so we will loop through every scenario.
         for scenario in scenarios:
@@ -445,7 +445,7 @@ class ShapeGenerator:
         # get the number of children of the shape node
         # this is the number of edges that the shape has
         shape_edge_amount = len(shape_node.get_children())
-        print(shape_edge_amount, shape)
+        
         # creates a shape factory object that will be used to generate the coordinates of the shape
         # passing shape_edge_amount gives ShapeFactory the information needed to pick the correct shape
         shape_factory = ShapeFactory(shape_edge_amount, [shape])

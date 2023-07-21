@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0,         1,        0,      0,        0,        0,         0]
+    input_shape_list = [0,         1,        1,      0,        0,        0,         0]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # Generate the lattices.
     lattices = lattice_generator.glue_shapes()._lattice_matrix
     
-    lattices_final = lattice_generator.constrain_to_final(lattices, 1)
+    lattices_final = lattice_generator.constrain_to_final(lattices, sum(input_shape_list))
     dual_graphs = FaceGraphGenerator.from_lattices(lattices_final)
     
     refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
@@ -55,7 +55,6 @@ if __name__ == '__main__':
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
-    #print(lattices_final)
-    #print(dual_graphs)
+   
     # Generate the figures. Returns tuple in the form (list of coordinates, corresponding lattice)
-    figures = shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
+    figures = shape_generator.generate_from_dual_lattice_pairs([lattices_final[-1]], [dual_graphs[-1]], show_figures)

@@ -113,7 +113,6 @@ class Rhombus():
             scenarios[i] = scenario
 
         # a list of lists of 4 Points
-        print(scenarios)
         return scenarios
 
     # returns a Point object. there is only one option: 1 unit to the right of the start point.

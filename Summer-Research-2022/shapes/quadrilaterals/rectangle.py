@@ -120,7 +120,7 @@ class Rectangle():
             third_points = []
             third_points = self.get_third_points(pt1, second_points[0])
             third_points.extend(self.get_third_points(pt1, second_points[1]))
-            print(third_points)
+            
             for scenario in scenarios:
                 scenario[2] = third_points.pop(0)
         

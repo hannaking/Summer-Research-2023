@@ -168,11 +168,11 @@ class Kite():
                 scenarios[i][3] = Geometry.calculate_point_from_angle(ANGLES[i], scenarios[i][0], scenarios[i][1], length)
 
 
-        print(scenarios)
+        #print(scenarios)
         # get rid of any unused / empty / repeated scenarios
         # necessary?
         scenarios = [x for x in scenarios if None not in x]
-        print(scenarios)
+        #print(scenarios)
 
         # you would only ever want to rotate your shape if you are vertex glued.
         # if you are already given two or three points, there is no point in rotating your shape.
