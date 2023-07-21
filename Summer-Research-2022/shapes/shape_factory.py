@@ -1,18 +1,24 @@
 import sys
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapes.triangles.triangle_factory              import TriangleFactory
-from shapes.quadrilaterals.quadrilateral_factory    import QuadrilateralFactory
-from shapes.pentagon.pentagon_factory              import PentagonFactory
-from shapes.line_segment.segment_factory            import SegmentFactory
+from quadrilaterals.quadrilateral_factory    import QuadrilateralFactory
+from pentagon.pentagon_factory               import PentagonFactory
+from hexagon.hexagon_factory                 import HexagonFactory
+from octagon.octagon_factory                 import OctagonFactory
+from septagon.septagon_factory               import SeptagonFactory
+from line_segment.segment_factory            import SegmentFactory
 
 #temp
 from lattice import Lattice
 from shapely.geometry import Point
 
 PLACEHOLDER = "there is no shape with only 2 edges"
-#TODO: Add shapes up to octagons (fill in the Nones)
-SHAPE_TYPES = [SegmentFactory(), PLACEHOLDER, TriangleFactory(), QuadrilateralFactory(), None, None, None, None]    
+SHAPE_TYPES = [SegmentFactory(), PLACEHOLDER, TriangleFactory(), QuadrilateralFactory(), PentagonFactory(), HexagonFactory(), SeptagonFactory(), OctagonFactory()]    
 
 TOP_LATTICE_LAYER       = 4
 SHAPE_LATTICE_LAYER     = 3
@@ -31,7 +37,24 @@ class ShapeFactory:
         each scenario is a possible figure (?)
 
     """
-    def __init__(self, edge_amount, predetermined_shape_types=['Segment', 'Equilateral', 'IsoscelesRight', 'NonIsoscelesRight', 'Square', 'Rectangle', 'Kite', 'RegularPent']):
+
+    def __init__(self, edge_amount, predetermined_shape_types=['Segment',     # line segment
+                                                               'Equilateral', # triangles
+                                                               'Isosceles',
+                                                               'IsoscelesRight',
+                                                               'NonIsoscelesRight',
+                                                               'Square',      # quadralaterals
+                                                               'Rectangle',
+                                                               'Rhombus',
+                                                               'Parallelogram',
+                                                               'Kite',
+                                                               'RightTrapezoid',
+                                                               'IsoTrapezoid',
+                                                               'Dart',
+                                                               'RegularPent', # n-gons
+                                                               'RegularHex',
+                                                               'RegularSept',
+                                                               'RegularOct']):
 
         if edge_amount < 1:
             raise ValueError('Shape must have at least 1 edge')
@@ -42,7 +65,7 @@ class ShapeFactory:
 
             shape_types = [None, PLACEHOLDER, None, None, None, None, None, None]
 
-            #TODO pop this stuff out into a method / reduce repeated code
+            #TODO pop this stuff out / reduce repeated code?
 
             # If any triangle types are in the list of predetermined shape types, append to the triangle factory,
             # and use the triangle factory.
@@ -62,13 +85,32 @@ class ShapeFactory:
                 if quad_factory._include_type(type):
                     shape_types[3] = quad_factory
 
-            # If any pentagon types are in the list of predetermined shape types, append to the quadrilateral factory,
-            # and use the quadrilateral factory.
+            # If any pentagon types are in the list of predetermined shape types, append to the pent factory,
+            # and use the pent factory.
             pent_factory = PentagonFactory()
             pent_factory._empty_types()
             for type in predetermined_shape_types:
                 if pent_factory._include_type(type):
                     shape_types[4] = pent_factory
+
+            # same thing
+            hex_factory = HexagonFactory()
+            hex_factory._empty_types()
+            for type in predetermined_shape_types:
+                if hex_factory._include_type(type):
+                    shape_types[5] = hex_factory
+
+            sept_factory = SeptagonFactory()
+            sept_factory._empty_types()
+            for type in predetermined_shape_types:
+                if sept_factory._include_type(type):
+                    shape_types[6] = sept_factory
+
+            oct_factory = OctagonFactory()
+            oct_factory._empty_types()
+            for type in predetermined_shape_types:
+                if oct_factory._include_type(type):
+                    shape_types[7] = oct_factory
 
         # -1 to shift values to 0-indexed
         self._shape_type_factory = shape_types[edge_amount - 1]

@@ -251,8 +251,8 @@ class Analyzer():
         ax = fig.add_subplot(111)
         ax.set_xlabel("Average Shape Instances per Figures")
         ax.set_ylabel("number of Shape Types")
-        plt.hist(pos_shapes, label= "Textbook Shapes", density= True, alpha=0.5)
-        plt.hist(txt_shapes, label= "Textbook-Like Shapes", density= True, alpha=0.5)
+        plt.hist(pos_shapes, label= "Textbook Shapes", density= False, alpha=0.5)
+        plt.hist(txt_shapes, label= "Textbook-Like Shapes", density= False, alpha=0.5)
         plt.legend()
         plt.text(0, 5.6, f"Textbook-Like: $\mu= {txt_shapes.mean()}, \ \sigma= {txt_shapes.std()}$")
         plt.text(0, 5.4, f"Textbook: $\mu= {pos_shapes.mean()}, \ \sigma= {pos_shapes.std()}$")
@@ -280,11 +280,12 @@ class Analyzer():
         print(stats.shapiro(txt_sizes))
         print(stats.shapiro(txt_lk_sizes))
         print(stats.mannwhitneyu(txt_sizes, txt_lk_sizes))
-
+        print(txt_sizes)
         fig = plt.figure(figsize= (10, 5))
         ax = fig.add_subplot(111)
+        ax.set_title("Distribution of Figure Sizes")
         ax.set_xlabel("Figure Size")
-        ax.set_ylabel("Quantity")
+        ax.set_ylabel("Percent")
         plt.hist(txt_sizes,    label= "Textbook Sizes",      density= True, alpha=0.5)
         plt.hist(txt_lk_sizes, label= "Textbook-Like Sizes", density= True, alpha=0.5)
         plt.legend()
@@ -639,7 +640,7 @@ class Analyzer():
 
 #Analyzer._create_histogram(textbook_node_counts, True, "Node Counts")
 
-Analyzer.perform_test_nodes()
+Analyzer.perform_test_parts()
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

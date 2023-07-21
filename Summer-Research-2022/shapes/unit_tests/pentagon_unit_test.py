@@ -41,16 +41,18 @@ class TestPentagon(unittest.TestCase):
     def test_coordinatize_4_in(self):
         point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), None]
         pent = Pentagon(point_list)
-        print("------------------------------here-------------------------------")
+        
         scenarios = pent.coordinatize()
-        print("------------------------------done--------------------------------")
+        
         self.assertEqual(len(scenarios), 1)
         self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
     
     def test_coordinatize_3_in(self):
         point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), None, None]
         pent = Pentagon(point_list)
+        print("------------------------------here--------------------------------")
         scenarios = pent.coordinatize()
+        print("------------------------------done--------------------------------")
         self.assertEqual(len(scenarios), 1)
         self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
 
@@ -65,7 +67,9 @@ class TestPentagon(unittest.TestCase):
     def test_coordinatize_1_in(self): # also vertex glued test
         point_list = [Point(0,0), None, None, None, None]
         pent = Pentagon(point_list)
+        
         scenarios = pent.coordinatize()
+        
         self.assertEqual(len(scenarios), 20)
 
 if __name__ == "__main__":

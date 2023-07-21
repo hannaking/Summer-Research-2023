@@ -1,7 +1,11 @@
 import sys
-sys.path.insert(0, 'C:/Users/lilyb/Desktop/College Stuff/Summer Research (2022)/Summer-Research-2022-displaying-geometry-figures')
+import os
 
-from shapes.pentagon.pentagon    import Pentagon
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from pentagon.pentagon    import Pentagon
 
 class PentagonFactory:
 

@@ -50,10 +50,8 @@ class Isosceles():
 
         scenarios = []  # list of lists of Points
         
-        if Isosceles.are_isosceles_triangles([self._points]):
-            scenarios.append(self._points)
-            return scenarios
-        elif None not in self._points:
+        # checks if there are the correct number of points
+        if len(self._points) != 3:
             return []
         
         # I need to sort the coords , dragging along a list of indices.
@@ -69,6 +67,13 @@ class Isosceles():
         point1 = sorted_points[0]
         point2 = sorted_points[1]
         point3 = sorted_points[2]
+
+        # checks if an isotriangle can't be made or if the passed in points are already an isotriangle
+        if None not in sorted_points:
+            if(self.are_isosceles_triangles([sorted_points])):
+                return [self._points]
+            else:
+                return []
 
         # boolean that tells whether this triangle is vertex glued or not. default to False.
         vertex_gluing = False
@@ -154,7 +159,7 @@ class Isosceles():
             side1 = Geometry.distance(point1, point2)
             side2 = Geometry.distance(point1, point3)
             side3 = Geometry.distance(point2, point3)
-
+            
             if (not math.isclose(side1, side2) and
                 not math.isclose(side1, side3) and
                 not math.isclose(side2, side3)):

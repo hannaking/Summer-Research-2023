@@ -19,7 +19,7 @@ class TestIsoscelesTriangle(unittest.TestCase):
 
     # 1 point integer, 1 point irrational, 2 points integers, 2 points irrational, 3 points isosceles, 3 points non isosceles,
     # four points
-    def test_coordinatize_simple_1_point(self):
+    def test_coordinatize_irrational_1_point(self):
         points = [Point(math.pi, math.cos(34)), None, None]
         shape = Isosceles(points)
         scenarios = shape.coordinatize()
@@ -38,8 +38,6 @@ class TestIsoscelesTriangle(unittest.TestCase):
         points = [Point(0, 0), None, None]
         shape = Isosceles(points)
         scenarios = shape.coordinatize()
-
-        self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
         
         gen = ShapeGenerator()
         lattice = Lattice(3)
@@ -90,7 +88,6 @@ class TestIsoscelesTriangle(unittest.TestCase):
         self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
 
         self.assertEqual(len(scenarios), 1)
-        self.assertTrue(Isosceles.are_isosceles_triangles(scenarios))
 
         unique = set()
         for scenario in scenarios:

@@ -1,6 +1,7 @@
 import sys
 import math
 import collections
+import numpy as np
 
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
@@ -54,10 +55,6 @@ class Square():
 
         scenarios = []  # list of lists of Points
 
-        if None not in self._points:
-            scenarios.append(self._points)
-            return scenarios
-
         # I need to sort the coords , dragging along a list of indices.
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
 
@@ -69,6 +66,13 @@ class Square():
         point2 = sorted_points[1]
         point3 = sorted_points[2]
         point4 = sorted_points[3]
+
+        # checks if a parallelogram can't be made or if the passed in points are already a parallelogram
+        if None not in sorted_points:
+            if(self._verify_square()):
+                return [self._points]
+            else:
+                return []
 
         # boolean that tells whether this square is vertex glued or not. default to False.
         vertex_gluing = False
@@ -84,6 +88,8 @@ class Square():
             third_points = self.get_third_points(point1, point2)
         
         if point4 == None:
+            if(point3 != None and not self._verify_square_3_points()):
+                return []
             # get fourth points
             fourth_points = self.get_fourth_points(point1, point2)
 
@@ -138,3 +144,78 @@ class Square():
         fourth_points.append(Geometry.calculate_point_from_angle(ANGLE, point1, point2, side_length))
 
         return fourth_points
+    
+    # gets the angle in degrees between three points
+    #  *angle is signed and between (-pi, pi) radians
+    #
+    # point1 - 2d point | one side of the angle
+    # mid_point - 2d point | mid point of the angle
+    # point3 - 2d point | other side of the angle
+    #
+    # returns the angle in radians
+    @staticmethod
+    def get_angle(point1, mid_point, point3):
+        a = np.array([point1.x, point1.y])
+        b = np.array([mid_point.x, mid_point.y])
+        c = np.array([point3.x, point3.y])
+
+        ba = a - b
+        bc = c - b
+        
+        angle = math.atan2(ba[0] * bc[1] - ba[1] * bc[0],
+                           ba[0] * bc[0] + ba[1] * bc[1])
+
+        return angle
+
+    def _verify_square_3_points(self):
+        if len(self._points) != 4:
+                return False
+            
+        if(self._points[0] == None or
+           self._points[1] == None or
+           self._points[2] == None or
+           self._points[3] != None):
+            return False
+
+        point1 = self._points[0]
+        point2 = self._points[1]
+        point3 = self._points[2]
+
+        side1 = Geometry.distance(point1, point2)
+        side2 = Geometry.distance(point2, point3)
+            
+        angle = abs(Square.get_angle(point1, point2, point3))
+
+        if not math.isclose(angle, math.pi / 2, abs_tol=1e-9) or not math.isclose(side1, side2, abs_tol=1e-9):
+            return False
+            
+        return True
+    
+    def _verify_square(self):
+        if len(self._points) != 4:
+            return False
+            
+        if None in self._points:
+            return False
+            
+        point1, point2, point3, point4 = self._points
+
+        side1 = Geometry.distance(point1, point2)
+        side2 = Geometry.distance(point2, point3)
+        side3 = Geometry.distance(point3, point4)
+        side4 = Geometry.distance(point4, point1)
+
+        if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
+            return False
+        
+        angle = Square.get_angle(point1, point2, point3)
+
+        if(not math.isclose(side1, side2, abs_tol=1e-9) or
+           not math.isclose(side2, side3, abs_tol=1e-9) or
+           not math.isclose(side3, side4, abs_tol=1e-9)):
+            return False
+            
+        if not math.isclose(angle, math.pi / 2, abs_tol=1e-9):
+            return False
+
+        return True

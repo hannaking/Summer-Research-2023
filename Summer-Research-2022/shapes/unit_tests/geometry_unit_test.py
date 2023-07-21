@@ -122,6 +122,100 @@ class TestGeometry(unittest.TestCase):
             self.assertAlmostEqual(rotated_scenario[i].x, expected[i].x)
             self.assertAlmostEqual(rotated_scenario[i].y, expected[i].y)
 
+ # ---------------------------------get_angle--------------------------------#
+        
+    def test_get_angle_acute_positive(self):
+        p1 = Point(0, 1)
+        p2 = Point(1, 0)
+        p3 = Point(0, 0)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, math.pi / 4)
+
+    def test_get_angle_acute_negative(self):
+        p1 = Point(0, 0)
+        p2 = Point(1, 0)
+        p3 = Point(0, 1)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, -math.pi / 4)
+
+    def test_get_angle_right_positive(self):
+        p1 = Point(1, 1)
+        p2 = Point(1, 0)
+        p3 = Point(0, 0)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, math.pi / 2)
+
+    def test_get_angle_right_negative(self):
+        p1 = Point(0, 0)
+        p2 = Point(1, 0)
+        p3 = Point(1, 1)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, -math.pi / 2)
+
+    def test_get_angle_obtuse_positive(self):
+        p1 = Point(2, 1)
+        p2 = Point(1, 0)
+        p3 = Point(0, 0)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, 3 * math.pi / 4)
+
+    def test_get_angle_obtuse_negative(self):
+        p1 = Point(0, 0)
+        p2 = Point(1, 0)
+        p3 = Point(2, 1)
+        points = [p1, p2, p3]
+
+        scenarios = []
+        for rotation in [0, 45, 90, 135, 180, -45, -90, -135]:
+            new_scenario = Geometry.rotate(points, math.radians(rotation))
+            scenarios.append(new_scenario)
+        
+        for scenario in scenarios:
+            angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+            self.assertAlmostEqual(angle, -3 * math.pi / 4)
+
+
+
  # ----------------------------- get second points --------------------------#
     # origin
     def test_get_second_points_0_0(self):

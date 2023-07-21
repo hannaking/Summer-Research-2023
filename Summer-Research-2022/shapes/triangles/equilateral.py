@@ -1,11 +1,15 @@
-import sys
+
 import math
 
-sys.path.insert(0, 'C:/dev/Summer Research 2022/')
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
 from shapely.geometry import *
-from shapes.geometry import Geometry
-from lattice import Lattice
+from geometry import Geometry
 
 ANGLE = math.radians(60)
 DEFAULT_SIDE_LENGTH = 1
@@ -36,10 +40,6 @@ class Equilateral():
         # about the Lattice - there is a whole mess about sorting and unsorting the coord list to make it match the lattice in thr factory
         scenarios = []  # list of lists of Points
 
-        if None not in self._points:
-            scenarios.append(self._points)
-            return scenarios
-
         second_points = [] # list of possible second points in the shape - don't necessarily go in the second position of the list
 
         # I need to sort the coords , dragging along a list of indices.
@@ -50,6 +50,13 @@ class Equilateral():
         # but this does get a sorted points list
 
         sorted_points = [b[1] for b in first_sort]
+
+        # checks if an equilateral triangle can't be made or if the passed in points are already an equilateral triangle
+        if None not in sorted_points:
+            if(self._verify_equilateral_triangle()):
+                return [self._points]
+            else:
+                return []
 
         # get all possible next point for the given single point
         if (sorted_points[1] == None): # one known point
@@ -74,3 +81,17 @@ class Equilateral():
         return scenarios
 
     
+    def _verify_equilateral_triangle(self):
+        if len(self._points) != 3:
+            return False
+
+        # Calculate the lengths of the three sides of the triangle
+        side1 = Geometry.distance(self._points[0], self._points[1])
+        side2 = Geometry.distance(self._points[1], self._points[2])
+        side3 = Geometry.distance(self._points[2], self._points[0])
+        
+        # Check if it's an equilateral triangle
+        if not math.isclose(side1, side2) or not math.isclose(side2, side3):
+            return False
+
+        return True
