@@ -22,9 +22,6 @@ DEFAULT_SIDE_LENGTH = 1
 # Point(-10*math.cos(math.radians(54)), -10*math.sin(math.radians(54))),
 # Point(-10*math.cos(math.radians(18)), 10*math.sin(math.radians(18)))]
 
-
-# I think there will be rounding inaccuracies in the asserts, making them fail
-
 class TestPentagon(unittest.TestCase):
     #-----------------------------------------------Init--------------------------------------------
     def test_init(self):
@@ -44,7 +41,6 @@ class TestPentagon(unittest.TestCase):
                       Point( math.sqrt(10 - 2*math.sqrt(5)) / 4, -(math.sqrt(5) + 1) / 4),
                       Point(-math.sqrt(10 - 2*math.sqrt(5)) / 4, -(math.sqrt(5) + 1) / 4),
                       Point(-math.sqrt(10 + 2*math.sqrt(5)) / 4,  (math.sqrt(5) - 1) / 4)]
-        #point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)]
         pent = Pentagon(point_list)
         scenarios = pent.coordinatize()
         self.assertEqual(len(scenarios), 1)
@@ -56,14 +52,12 @@ class TestPentagon(unittest.TestCase):
                       Point( math.sqrt(10 - 2*math.sqrt(5)) / 4, -(math.sqrt(5) + 1) / 4),
                       Point(-math.sqrt(10 - 2*math.sqrt(5)) / 4, -(math.sqrt(5) + 1) / 4),
                       None]
-        #point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), None]
         pent = Pentagon(point_list)
         
         scenarios = pent.coordinatize()
         
         self.assertEqual(len(scenarios), 1)
         self.assertTrue(Pentagon.are_pentagons(scenarios))
-        #self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
     
     def test_coordinatize_3_in(self):
         point_list = [Point(0, 1),
@@ -71,14 +65,10 @@ class TestPentagon(unittest.TestCase):
                       Point( math.sqrt(10 - 2*math.sqrt(5)) / 4, -(math.sqrt(5) + 1) / 4),
                       None,
                       None]
-        #point_list = [Point(0,0), Point(1,0), Point(1.31, 0.95), None, None]
         pent = Pentagon(point_list)
-        print("------------------------------here--------------------------------")
         scenarios = pent.coordinatize()
-        print("------------------------------done--------------------------------")
         self.assertEqual(len(scenarios), 1)
         self.assertTrue(Pentagon.are_pentagons(scenarios))
-        #self.assertEqual(scenarios[0], [Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)])
 
     def test_coordinatize_2_in(self):
         point_list = [Point(0,0), Point(1,0), None, None, None]
@@ -86,16 +76,66 @@ class TestPentagon(unittest.TestCase):
         scenarios = pent.coordinatize()
         self.assertEqual(len(scenarios), 2)
         self.assertTrue(pent.are_pentagons(scenarios))
-        #self.assertIn([Point(0,0), Point(1,0), Point(1.31, 0.95), Point(0.5, 1.5), Point(-0.31, 0.95)], scenarios)
-        #self.assertIn([Point(0,0), Point(1,0), Point(1.31, -0.95), Point(0.5, -1.5), Point(-0.31, -0.95)], scenarios)
 
-    def test_coordinatize_1_in(self): # also vertex glued test
+    def test_coordinatize_1_in(self):
         point_list = [Point(0,0), None, None, None, None]
         pent = Pentagon(point_list)
         
         scenarios = pent.coordinatize()
         
         self.assertEqual(len(scenarios), 20)
+
+    #----------------------------------------Get Second Point Scenario-------------------------------------
+    # more than one scenario in (this will never happen)
+    # one scenario in list
+    # empty scenario list (this also should never happen)
+
+
+    #------------------------------------------Get Second Point-----------------------------------------
+    # normal
+    def test_get_second_point(self):
+        pass
+
+    #----------------------------------------Get Third Point Scenarios----------------------------------
+    # more than one scenario in (this will never happen)
+    # one scenario in list
+    # empty scenario list (this also should never happen)
+
+    #------------------------------------------Get Third Points-----------------------------------------
+    # normal
+
+    #---------------------------------------Get Next Point Scenarios--------------------------------------
+    # getting fourth
+    # getting fifth
+    # one scenario in
+    # two scenario in
+    # no scenarios in
+
+    #------------------------------------------Get Next Point-----------------------------------------
+    # positive angle
+    # negative angle
+
+    #---------------------------------------Get Rotated Scenarios-------------------------------------
+    # one scenario in
+    # multiple scenario in (2)
+
+    #------------------------------------------Verify Pentagon-----------------------------------------
+    # not testing - only action is to call are_pentagons
+
+    #--------------------------------------Verify Pentagon n Points-----------------------------------------
+    # not testing - only action is to call are_pentagonable
+
+    #------------------------------------------Are Pentagonable-----------------------------------------
+    # one of the scenarios has wrong len
+    # num present sides < 3
+    # has noned and point != None
+    # first angle wrong
+    # other angle wrong
+    # a side wrong
+
+    #------------------------------------------Are Pentagons-----------------------------------------
+    # a scenario not len 5
+    # a scenario contains None
 
 if __name__ == "__main__":
     unittest.main()
