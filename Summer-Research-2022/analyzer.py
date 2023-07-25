@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from matplotlib import ticker as mtick
 import networkx as nx
 import numpy as np
+import scipy
 from scipy import stats
 import pandas as pd
 
@@ -638,7 +639,10 @@ class Analyzer():
 #for amount in textbook_node_counts:
 #    textbook_node_counts[amount] /= base_node_counts[amount]
 
-#Analyzer._create_histogram(textbook_node_counts, True, "Node Counts")
+data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
+textbook_node_counts = data["Textbook"]["Node Count Info"]["count"]
+
+Analyzer._create_histogram(textbook_node_counts, False, "Node Counts")
 
 #Analyzer.perform_test_parts()
 
@@ -647,9 +651,12 @@ class Analyzer():
         
 # data = Analyzer.read_data("Summer-Research-2022/hold", "data_repeated_100000.json")
 # textbook_shape_parts = Analyzer.calculate_shape_parts(data["Textbook"]["Shape Counts"], data["Textbook"]["Total"])
-        
+
 # pos_shapes = pd.Series(positive_shape_parts.values())
 # txt_shapes = pd.Series(textbook_shape_parts.values())
+
+# print(stats.linregress(np.sort(pos_shapes), np.sort(txt_shapes)))
+
 # print(pos_shapes)
 # plt.figure()
 # plt.scatter(np.sort(pos_shapes), np.sort(txt_shapes))
