@@ -114,7 +114,7 @@ class IsoTrapezoid():
             # get fourth points
             angles = [-60, 60, -120, 120]
             for i in range(len(scenarios)):
-                scenarios[i][3] = self.get_fourth_points(scenario[0], scenario[1], scenario[2], math.radians(angles[i]))
+                scenarios[i][3] = self.get_fourth_points(scenarios[i][0], scenarios[i][1], scenarios[i][2], math.radians(angles[i]))
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?

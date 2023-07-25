@@ -325,10 +325,6 @@ class ShapeGenerator:
             # then we'll loop to the next scenario
 
     def generate_from_lattice_matrix(self, lattice_matrix, show_scenarios=False):
-        """
-            Generates scenarios from a lattice matrix.
-            lattice_matrix: the lattice matrix that the scenarios will be generated from
-        """
         start = time.time()
 
         coords = []
@@ -351,10 +347,6 @@ class ShapeGenerator:
 
 
     def generate_from_dual_lattice_pairs(self, lattices, dual_graphs, show_scenarios=False):
-        """
-            Generates scenarios from a lattice matrix.
-            lattice_matrix: the lattice matrix that the scenarios will be generated from
-        """
         start = time.time()
 
         coords = []
@@ -373,6 +365,8 @@ class ShapeGenerator:
         print("-----------------------------------")
         print("Time elapsed:", end - start, "seconds")
         print("-----------------------------------")
+        
+        return len(coords)
 
     """
         One of the main methods of the class.
@@ -396,12 +390,14 @@ class ShapeGenerator:
         # pass through the lattice and the initial list of scenarios
         coordinate_figures = []
         sl_index = 0
-        
+
+        overlapping_scenarios = []
         # call the recursive function
         for graph in dual_graphs:
-            self.pair_traversal_helper(lattice, graph, coords, coordinate_figures, sl_index)
-        
-            overlapping_scenarios = []
+            success = self.pair_traversal_helper(lattice, graph, coords, coordinate_figures, sl_index)
+            if not success:
+                continue
+
             # loop through each scenario and check if it has any overlapping shapes
             for scenario in coordinate_figures:
                 # if we have a None scenario (empty), skip it
@@ -436,11 +432,14 @@ class ShapeGenerator:
         # base case
         if None not in coords and sl_index >= len(lattice._nodes_list[SHAPE_LATTICE_LAYER]):
             coordinate_figures.append(coords)
-            return
+            return True
 
         shape_node = lattice._nodes_list[SHAPE_LATTICE_LAYER][sl_index]
 
         shape = NUMBER_SHAPE_MAP[nx.get_node_attributes(dual_graph, 'default')[sl_index][0]]
+
+        if self._shape_types != None and shape not in self._shape_types:
+            return False
 
         # get the number of children of the shape node
         # this is the number of edges that the shape has
@@ -459,7 +458,7 @@ class ShapeGenerator:
         #   [(0,0), None, (0,1)]
         # ]
         new_coords = [x for x in shape_factory.coordinatize( copy.deepcopy(coords), lattice, sl_index )]
-
+        
         # now that we've coordinatized, shape factory has stored the draw order of the shape (draw order is
         # the same for all scenarios of a shape). we'll append it to our list
         # of draw order indices to use for drawing later.
@@ -469,8 +468,10 @@ class ShapeGenerator:
         #self.verify_scenarios(new_coords) #@ debugging purposes
 
         # for each scenario, call the recursive function
+        success = True
         for coord in new_coords:
-            self.pair_traversal_helper(lattice, dual_graph, coord, coordinate_figures, sl_index + 1)
+            success = success and self.pair_traversal_helper(lattice, dual_graph, coord, coordinate_figures, sl_index + 1)
+        return success
 
     
     #@ Helper methods for debugging purposes
