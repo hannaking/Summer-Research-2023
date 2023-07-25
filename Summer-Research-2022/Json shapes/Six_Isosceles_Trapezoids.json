@@ -6,12 +6,12 @@
         {
             "ID"   : "A",
             "shape": "Isosceles Trapezoid",
-            "sides": 8
+            "sides": 4
         },
         {
             "ID"   : "B",
             "shape": "Isosceles Trapezoid",
-            "sides": 8
+            "sides": 4
         },
         {
             "ID"   : "C",
@@ -26,12 +26,12 @@
         {
             "ID"   : "E",
             "shape": "Isosceles Trapezoid",
-            "sides": 8
+            "sides": 4
         },
         {
             "ID"   : "F",
             "shape": "Isosceles Trapezoid",
-            "sides": 8
+            "sides": 4
         }
      ],
 

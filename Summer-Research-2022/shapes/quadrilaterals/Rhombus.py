@@ -83,6 +83,8 @@ class Rhombus():
         if point3 == None:
             # get third points
             third_points = self.get_third_points(point1, point2)
+        else:
+            third_points = [point3]
         
         # we have two scenarios at 0 degrees: above the x axis and below the x axis
         for third_point in third_points:
@@ -168,7 +170,8 @@ class Rhombus():
                 if not math.isclose(sides[0], side):
                     return False
             
-            if math.isclose(point1, point3) or math.isclose(point2, point4):
+            if ((math.isclose(point1.x, point3.x) and math.isclose(point1.y, point3.y)) or 
+                (math.isclose(point2.x, point4.x) and math.isclose(point2.y, point4.y))):
                 return False
 
             # Calculate angles
