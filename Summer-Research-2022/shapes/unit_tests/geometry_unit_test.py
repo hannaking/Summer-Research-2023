@@ -1,13 +1,16 @@
 import unittest
 import sys
 import math
+import sys
+import os
 
-sys.path.insert(0, './Summer-Research-2022/')
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 
-from node import Node
 from shapely.geometry import Point
-from shapes.vector import Vector
-from shapes.geometry import Geometry
+from vector import Vector
+from geometry import Geometry
 
 TOP_LATTICE_LAYER       = 4
 SHAPE_LATTICE_LAYER     = 3

@@ -4,6 +4,7 @@ from re import X
 import time
 import sys
 import os
+import networkx as nx
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -34,6 +35,24 @@ VERTEX_LATTICE_LAYER    = 1
 BOTTOM_LATTICE_LAYER    = 0
 
 DEFAULT_SIDE_LENGTH = 1
+
+NUMBER_SHAPE_MAP = {00 : 'Segment',
+                    10 : 'Equilateral',
+                    11 : 'Isosceles',
+                    12 : 'IsoscelesRight',
+                    13 : 'NonIsoscelesRight',
+                    20 : 'Square',
+                    21 : 'Rectangle',
+                    22 : 'Rhombus',
+                    23 : 'Parallelogram',
+                    24 : 'Kite',
+                    25 : 'RightTrapezoid',
+                    26 : 'IsoTrapezoid',
+                    27 : 'Dart',
+                    30 : 'RegularPent',
+                    40 : 'RegularHex',
+                    50 : 'RegularSept',
+                    60 : 'RegularOct'}
 
 """
     The ShapeGenerator class is responsible for everything that has to do with putting a lattice on a plane.
@@ -171,7 +190,7 @@ class ShapeGenerator:
         return polygon1.intersects(polygon2) and not polygon1.touches(polygon2)
 
     """
-        The main method of the class.
+        One of the main methods of the class.
         1. populate the draw_order_indices list with Nones for the length of the shape lattice layer
         2. populate the coords list with Nones for the length of the vertex lattice layer
         3. declare an empty list of coordinate_figures, which will be the list of completed scenarios
@@ -274,8 +293,8 @@ class ShapeGenerator:
         current_scenario = 0
         total_scenarios = len(scenarios)
 
-        for scenario in scenarios:
-            print(scenario)
+        # for scenario in scenarios:
+        #     print(scenario)
 
         # we want to show every scenario, so we will loop through every scenario.
         for scenario in scenarios:
@@ -330,6 +349,130 @@ class ShapeGenerator:
         print("Time elapsed:", end - start, "seconds")
         print("-----------------------------------")
 
+
+    def generate_from_dual_lattice_pairs(self, lattices, dual_graphs, show_scenarios=False):
+        """
+            Generates scenarios from a lattice matrix.
+            lattice_matrix: the lattice matrix that the scenarios will be generated from
+        """
+        start = time.time()
+
+        coords = []
+        for lattice, dual_graphs in zip(lattices, dual_graphs):
+
+            figures = self.generate_by_pair_traversal(lattice, dual_graphs)
+            coords.extend(figures)
+
+            if show_scenarios:
+                self.show(figures, lattice)
+
+        end = time.time()
+
+        print("-----------------------------------")
+        print("Number of figures generated:", len(coords))
+        print("-----------------------------------")
+        print("Time elapsed:", end - start, "seconds")
+        print("-----------------------------------")
+
+    """
+        One of the main methods of the class.
+        1. populate the draw_order_indices list with Nones for the length of the shape lattice layer
+        2. populate the coords list with Nones for the length of the vertex lattice layer
+        3. declare an empty list of coordinate_figures, which will be the list of completed scenarios
+        and declare your starting shape index (sl_index) to be 0
+        4. call the recursive lattice_traversal_helper method, passing coords, coordinate_figures, and sl_index into it
+        5. filter out all scenarios that contain overlapping shapes out of coordinate_figures
+        6. return the coordinate_figures list
+    """
+    def generate_by_pair_traversal(self, lattice, dual_graphs):
+        # list that will hold the indices of the shape's coordinates in the scenario
+        # in the order that they should be drawn (i.e. the order in which you would walk around the perimeter of the shape)
+        self._draw_order_indices = [None] * len(lattice._nodes_list[SHAPE_LATTICE_LAYER])
+
+        # list with length of lattice vertex node amount, bc each vertex will need coordinates
+        # we have to start somewhere, so the first vertex is always the origin
+        coords = [Point(0,0)] + [None] * (len(lattice._nodes_list[VERTEX_LATTICE_LAYER]) - 1)
+
+        # pass through the lattice and the initial list of scenarios
+        coordinate_figures = []
+        sl_index = 0
+        
+        # call the recursive function
+        for graph in dual_graphs:
+            self.pair_traversal_helper(lattice, graph, coords, coordinate_figures, sl_index)
+        
+            overlapping_scenarios = []
+            # loop through each scenario and check if it has any overlapping shapes
+            for scenario in coordinate_figures:
+                # if we have a None scenario (empty), skip it
+                if None in scenario:
+                    continue
+
+                # keep track of overlapping scenarios by adding them to the list.
+                # the reason it doesn't remove the scenarios here is because it had caused
+                # problems by missing some overlapping scenarios bc loop
+                if self.has_overlap(scenario, lattice):
+                    overlapping_scenarios.append(scenario)
+
+        # now we can remove the overlapping scenarios from the coordinate_figures list and return
+        return [i for i in coordinate_figures if i not in overlapping_scenarios]
+
+
+    """ 
+        The recursive function that does the parsing 
+
+        lattice: the lattice that the shapes are being generated from
+        coords: the list of coordinates that have been calculated so far
+        coordinate_figures: the list of scenarios that have been found so far
+        sl_index: the current index in the shape lattice layer list
+
+        returns: nothing, but adds completed scenarios to the class's coordinate_figures list,
+        which will be returned in generate_by_lattice_traversal
+        base case: when None is not in coords, we have found all the coordinates for a scenario
+        
+    """
+    def pair_traversal_helper(self, lattice, dual_graph:nx.MultiGraph, coords, coordinate_figures, sl_index):
+        # if there are no more empty spots in the list, then all the coordinates have been calculated
+        # base case
+        if None not in coords and sl_index >= len(lattice._nodes_list[SHAPE_LATTICE_LAYER]):
+            coordinate_figures.append(coords)
+            return
+
+        shape_node = lattice._nodes_list[SHAPE_LATTICE_LAYER][sl_index]
+
+        shape = NUMBER_SHAPE_MAP[nx.get_node_attributes(dual_graph, 'default')[sl_index][0]]
+
+        # get the number of children of the shape node
+        # this is the number of edges that the shape has
+        shape_edge_amount = len(shape_node.get_children())
+        
+        # creates a shape factory object that will be used to generate the coordinates of the shape
+        # passing shape_edge_amount gives ShapeFactory the information needed to pick the correct shape
+        shape_factory = ShapeFactory(shape_edge_amount, [shape])
+        
+
+        # Scenarios is a list of lists of coordinates.
+        # Each list of coordinates represents one figure.
+        #
+        # [
+        #   [(0,0), None, (1,1)],
+        #   [(0,0), None, (0,1)]
+        # ]
+        new_coords = [x for x in shape_factory.coordinatize( copy.deepcopy(coords), lattice, sl_index )]
+
+        # now that we've coordinatized, shape factory has stored the draw order of the shape (draw order is
+        # the same for all scenarios of a shape). we'll append it to our list
+        # of draw order indices to use for drawing later.
+        self._draw_order_indices[sl_index] = (shape_factory._draw_order_indices)
+
+        # verify that the scenarios are consistent with each other
+        #self.verify_scenarios(new_coords) #@ debugging purposes
+
+        # for each scenario, call the recursive function
+        for coord in new_coords:
+            self.pair_traversal_helper(lattice, dual_graph, coord, coordinate_figures, sl_index + 1)
+
+    
     #@ Helper methods for debugging purposes
     #@ These can be deleted once the code is working
 

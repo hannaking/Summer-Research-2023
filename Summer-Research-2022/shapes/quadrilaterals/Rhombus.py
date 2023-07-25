@@ -81,16 +81,15 @@ class Rhombus():
             vertex_gluing = True
 
         if point3 == None:
-            # get third points 
+            # get third points
             third_points = self.get_third_points(point1, point2)
         
-        if point4 == None:
-            # get fourth points
-            fourth_points = self.get_fourth_points(point1, point2)
-
         # we have two scenarios at 0 degrees: above the x axis and below the x axis
-        scenarios.append([point1, point2, third_points[0], fourth_points[0]])
-        scenarios.append([point1, point2, third_points[1], fourth_points[1]])
+        for third_point in third_points:
+            if point4 == None:
+                # get fourth points
+                fourth_point = self.get_fourth_points(point1, point2, third_point)
+                scenarios.append([point1, point2, third_point, fourth_point])
 
         # you would only ever want to rotate your shape if you are vertex glued.
         # if you are already given two or three points, there is no point in rotating your shape.
@@ -113,7 +112,6 @@ class Rhombus():
             scenarios[i] = scenario
 
         # a list of lists of 4 Points
-        print(scenarios)
         return scenarios
 
     # returns a Point object. there is only one option: 1 unit to the right of the start point.
@@ -129,19 +127,23 @@ class Rhombus():
         third_points.append(Geometry.calculate_point_from_angle(SMALL_ANGLE, point2, point1, side_length))
         third_points.append(Geometry.calculate_point_from_angle(-SMALL_ANGLE, point2, point1, side_length))
 
+        third_points.append(Geometry.calculate_point_from_angle(LARGE_ANGLE, point2, point1, side_length))
+        third_points.append(Geometry.calculate_point_from_angle(-LARGE_ANGLE, point2, point1, side_length))
+
         return third_points
 
     # return a Point object. there is 1 option: the final corner of the square.
     # finds the fourth points by finding the point -90 degrees and 90 degrees from the line formed by pt 2 and pt 1
     # notice how this is FLIPPED from get_third_points.
-    def get_fourth_points(self, point1, point2):
-        side_length = Geometry.distance(point1, point2)
-        fourth_points = []
-        fourth_points.append(Geometry.calculate_point_from_angle(-LARGE_ANGLE, point1, point2, side_length))
-        fourth_points.append(Geometry.calculate_point_from_angle(LARGE_ANGLE, point1, point2, side_length))
+    def get_fourth_points(self, point1, point2, point3):
+        side_length = Geometry.distance(point2, point3)
+        angle = Geometry.get_angle(point1, point2, point3)
+        other_angle = math.copysign(1, angle) * (math.pi - abs(angle))
+        fourth_point = []
 
-        return fourth_points
+        fourth_point = Geometry.calculate_point_from_angle(other_angle, point3, point2, side_length)
 
+        return fourth_point
 
     def _verify_rhombus(self):
         return Rhombus.are_rhombi([self._points])
@@ -157,30 +159,29 @@ class Rhombus():
 
             point1, point2, point3, point4 = scenario
 
-            side1 = Geometry.distance(point1, point2)
-            side2 = Geometry.distance(point2, point3)
-            side3 = Geometry.distance(point3, point4)
-            side4 = Geometry.distance(point4, point1)
+            sides = [Geometry.distance(point1, point2),
+                     Geometry.distance(point2, point3),
+                     Geometry.distance(point3, point4),
+                     Geometry.distance(point4, point1)]
 
-            diagonal1 = Geometry.distance(point1, point3)
-            diagonal2 = Geometry.distance(point2, point4)
-
-            if not math.isclose(side1, side2) or not math.isclose(side2, side3) or not math.isclose(side3, side4) or not math.isclose(side4, side1):
-                return False
-
-            if not math.isclose(diagonal1, diagonal2):
+            for side in sides:
+                if not math.isclose(sides[0], side):
+                    return False
+            
+            if math.isclose(point1, point3) or math.isclose(point2, point4):
                 return False
 
             # Calculate angles
-            #angle1 = Geometry.calculate_angle(point1, point2, point3)
-            #angle2 = Geometry.calculate_angle(point2, point3, point4)
-            #angle3 = Geometry.calculate_angle(point3, point4, point1)
-            #angle4 = Geometry.calculate_angle(point4, point1, point2)
+            angle1 = Geometry.get_angle(point1, point2, point3)
+            angle2 = Geometry.get_angle(point2, point3, point4)
+            angle3 = Geometry.get_angle(point3, point4, point1)
+            angle4 = Geometry.get_angle(point4, point1, point2)
 
-#            if not math.isclose(angle1, angle3) or not math.isclose(angle2, angle4):
- #               return False
-
-  #          if not math.isclose(angle1 + angle2, 180) or not math.isclose(angle2 + angle3, 180) or not math.isclose(angle3 + angle4, 180) or not math.isclose(angle4 + angle1, 180):
-   #             return False
+            if not math.isclose(angle1, angle3) or not math.isclose(angle2, angle4):
+                return False
+            
+            for angle in [angle1, angle2, angle3, angle4]:
+                if math.isclose(angle, math.radians(180)) or math.isclose(angle, math.radians(0), abs_tol=1e-9):
+                    return False
 
         return True

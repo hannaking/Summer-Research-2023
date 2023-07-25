@@ -5,7 +5,7 @@ from shapes.quadrilaterals.rectangle import Rectangle
 from shapes.quadrilaterals.Rhombus import Rhombus
 from shapes.quadrilaterals.parallelogram import Parallelogram
 from shapes.quadrilaterals.kite import Kite
-#from shapes.quadrilaterals.righttrapezoid import RightTrapezoid
+from shapes.quadrilaterals.righttrapezoid import RightTrapezoid
 from shapes.quadrilaterals.isotrapezoid import IsoTrapezoid
 from shapes.quadrilaterals.dart import Dart
 
@@ -13,7 +13,7 @@ from shapes.quadrilaterals.dart import Dart
 class QuadrilateralFactory:
 
     def __init__(self):
-        self._types = [Square, Rectangle, Rhombus, Parallelogram, Kite, IsoTrapezoid, Dart]
+        self._types = [Square, Rectangle, Rhombus, Parallelogram, Kite, RightTrapezoid, IsoTrapezoid, Dart]
 
     def _empty_types(self):
         self._types = []
@@ -40,9 +40,9 @@ class QuadrilateralFactory:
                 self._types.append(Kite)
                 return True
             
-            # if type == 'RightTrapezoid':
-            #     self._types.append(RightTrapezoid)
-            #     return True
+            if type == 'RightTrapezoid':
+                self._types.append(RightTrapezoid)
+                return True
 
             if type == 'IsoTrapezoid':
                 self._types.append(IsoTrapezoid)

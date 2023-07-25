@@ -67,6 +67,13 @@ class ShapeFactory:
 
             #TODO pop this stuff out / reduce repeated code?
 
+            seg_factory = SegmentFactory()
+            seg_factory._empty_types()
+            for type in predetermined_shape_types:
+                
+                if seg_factory._include_type(type):
+                    shape_types[0] = seg_factory
+
             # If any triangle types are in the list of predetermined shape types, append to the triangle factory,
             # and use the triangle factory.
             tri_factory = TriangleFactory()
@@ -130,7 +137,7 @@ class ShapeFactory:
         coords = [known_coords[x] for x in correspondance_indices]
 
         self._draw_order_indices = self.get_draw_order_indices(coords, correspondance_indices)
-
+        
         scenarios = self._shape_type_factory._coordinatize(coords)
 
         for scenario in scenarios:
@@ -152,14 +159,11 @@ class ShapeFactory:
     """
     def get_draw_order_indices(self, coords, correspondance_indices):
         # first, get how the indices are ordered after they are sorted (according to their values). save to sorted_indices.
-        first_sort = [ b for b in sorted(enumerate(coords), key=lambda e: e[1] is None ) ]
+        first_sort = sorted(enumerate(coords), key=lambda e: e[1] is None )
         sorted_indices = [b[0] for b in first_sort]
-
-        # unsort correspondance_indices along with sorted_indices.
-        # (i got this code from here: https://www.adamsmith.haus/python/answers/how-to-sort-two-lists-together-in-python)
-        zipped_lists = zip(sorted_indices, correspondance_indices)
-        sorted_pairs = sorted(zipped_lists)
-        tuples = zip(*sorted_pairs)
-        draw_order_indices = [ list(tuple) for tuple in tuples ]  [1]
-
+        
+        draw_order_indices = []
+        for i in sorted_indices:
+            draw_order_indices.append(correspondance_indices[i])
+        
         return draw_order_indices

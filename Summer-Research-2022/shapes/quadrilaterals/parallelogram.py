@@ -225,7 +225,6 @@ class Parallelogram():
                 scenario[1] == None or
                 scenario[2] == None or
                 scenario[3] != None):
-                print(scenario)
                 return False
 
             point1 = scenario[0]

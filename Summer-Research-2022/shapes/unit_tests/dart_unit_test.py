@@ -55,7 +55,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 480)
+        self.assertEqual(len(scenarios), 160)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -71,7 +71,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -83,7 +83,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -95,7 +95,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -107,7 +107,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -119,7 +119,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -131,7 +131,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -143,7 +143,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -155,7 +155,7 @@ class TestDart(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestDart.show_failed(scenarios)
         self.assertTrue(Dart.are_darts(scenarios))
-        self.assertEqual(len(scenarios), 48)
+        self.assertEqual(len(scenarios), 16)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)

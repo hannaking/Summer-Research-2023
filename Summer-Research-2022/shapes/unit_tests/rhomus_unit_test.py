@@ -69,8 +69,8 @@ class TestRhombus(unittest.TestCase):
         
         gen = ShapeGenerator()
         lattice = Lattice(4)
-        gen.generate_by_lattice_traversal(lattice)
-        gen.show(scenarios, lattice)
+        #gen.generate_by_lattice_traversal(lattice)
+        #gen.show(scenarios, lattice)
 
 if __name__ == "__main__":
     unittest.main()

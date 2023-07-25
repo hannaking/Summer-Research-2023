@@ -17,7 +17,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_0_0(self):
         points = [Point(0,0), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(1,0),                              # 0
@@ -41,7 +41,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_1_0(self):
         points = [Point(1,0), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(2,0),                                  # 0
@@ -65,7 +65,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_1_1(self):
         points = [Point(1,1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(2,1),                                      # 0
@@ -90,7 +90,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_0_1(self):
         points = [Point(0,1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(1,1),                                  # 0
@@ -114,7 +114,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_neg_1_pos_1(self):
         points = [Point(-1,1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(0,1),                                      # 0
@@ -138,7 +138,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_neg_1_0(self):
         points = [Point(-1,0), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(0,0),                                  # 0
@@ -162,7 +162,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_neg_1_neg_1(self):
         points = [Point(-1,-1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(0,-1),                                     # 0
@@ -186,7 +186,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_0_neg_1(self):
         points = [Point(0,-1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(1,-1),                                 # 0
@@ -210,7 +210,7 @@ class TestEquilateralTriangle(unittest.TestCase):
     def test_get_second_points_pos_1_neg_1(self):
         points = [Point(1,-1), None, None]
         equilateral = Equilateral(points)
-        second_points = equilateral.get_second_points(points[0])
+        second_points = Geometry.get_second_points(points[0])
 
         expected = [
             Point(2,-1),                                     # 0
@@ -240,22 +240,11 @@ class TestEquilateralTriangle(unittest.TestCase):
   # - from three points:
   #   - (0,0), (1,0), (sqrt(3)/2, 1/2)
     def test_coordinatize_one_point_origin_first_position(self):
-        lattice = Lattice(3)
         points = [Point(0,0), None, None]
         equilateral = Equilateral(points)
-        coordinatized = equilateral.coordinatize(lattice)
+        coordinatized = equilateral.coordinatize()
 
-        expected = [
-
-        ]
-
-        self.assertEqual(len(coordinatized), len(expected))
-        for i in range(len(coordinatized)):
-            self.assertAlmostEqual(coordinatized[i].x, expected[i].x)
-            self.assertAlmostEqual(coordinatized[i].y, expected[i].y)
-    
-
-
+        self.assertEqual(len(coordinatized), 10)
 
 #* from old code, not sure if we still need them ----------------------------------------------
     # def test_verify_equilateral_triangle_true(self):
