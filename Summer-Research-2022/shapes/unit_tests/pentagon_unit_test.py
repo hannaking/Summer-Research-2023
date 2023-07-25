@@ -96,27 +96,27 @@ class TestPentagon(unittest.TestCase):
         # so i can use the method
         pent = Pentagon([point1, None, None, None, None])
         new_scenarios = pent.get_second_point_scenario(scenarios)
-        self.assertEquals(2, len(new_scenarios))
-        self.assertEquals(3, sum([1 for _ in new_scenarios[0] if _ is None]))
-        self.assertEquals(3, sum([1 for _ in new_scenarios[1] if _ is None]))
-        self.assertEquals([point1, Point(1,0), None, None, None], new_scenarios[0])
-        self.assertEquals([point1, Point(1,0), None, None, None], new_scenarios[1])
+        self.assertEqual(2, len(new_scenarios))
+        self.assertEqual(3, sum([1 for _ in new_scenarios[0] if _ is None]))
+        self.assertEqual(3, sum([1 for _ in new_scenarios[1] if _ is None]))
+        self.assertEqual([point1, Point(1,0), None, None, None], new_scenarios[0])
+        self.assertEqual([point1, Point(1,0), None, None, None], new_scenarios[1])
 
     def test_get_second_point_scenario_one(self):
         point1 = Point(0,0)
         scenarios = [[point1, None, None, None, None]]
         pent = Pentagon([point1, None, None, None, None])
         new_scenarios = pent.get_second_point_scenario(scenarios)
-        self.assertEquals(1, len(new_scenarios))
-        self.assertEquals(3, sum([1 for _ in new_scenarios[0] if _ is None]))
-        self.assertEquals([point1, Point(1,0), None, None, None], new_scenarios[0])
+        self.assertEqual(1, len(new_scenarios))
+        self.assertEqual(3, sum([1 for _ in new_scenarios[0] if _ is None]))
+        self.assertEqual([point1, Point(1,0), None, None, None], new_scenarios[0])
 
     def test_get_second_point_scenario_empty(self):
         point1 = Point(0,0)
         scenarios = []
         pent = Pentagon([point1, None, None, None, None])
         new_scenarios = pent.get_second_point_scenario(scenarios)
-        self.assertEquals(0, len(new_scenarios))
+        self.assertEqual(0, len(new_scenarios))
 
     #------------------------------------------Get Second Point-----------------------------------------
     # normal
@@ -136,7 +136,7 @@ class TestPentagon(unittest.TestCase):
         pent = Pentagon([point1, point2, None, None, None])
         scenarios = [[point1, point2, None, None, None], [point1, point2, None, None, None]]
         new_scenarios = pent.get_third_point_scenarios(scenarios)
-        self.assertEquals(4, len(new_scenarios))
+        self.assertEqual(4, len(new_scenarios))
         # next test will check values
     def test_get_third_point_scenarios_one(self):
         point1 = Point(0,10)
@@ -144,14 +144,14 @@ class TestPentagon(unittest.TestCase):
         pent = Pentagon([point1, point2, None, None, None])
         scenarios = [[point1, point2, None, None, None]]
         new_scenarios = pent.get_third_point_scenarios(scenarios)
-        self.assertEquals(2, len(new_scenarios))
+        self.assertEqual(2, len(new_scenarios))
         # checking values in get third point, so no need to here
 
     def test_get_third_point_scenarios_empty(self):
         pent = Pentagon([None, None, None, None, None])
         scenarios = []
         new_scenarios = pent.get_third_point_scenarios(scenarios)
-        self.assertEquals(0, len(new_scenarios))
+        self.assertEqual(0, len(new_scenarios))
 
     #------------------------------------------Get Third Points-----------------------------------------
     # normal
@@ -159,10 +159,10 @@ class TestPentagon(unittest.TestCase):
         point1 = Point(0,10)
         point2 = Point(10*math.cos(math.radians(18)), 10*math.sin(math.radians(18)))
         pent = Pentagon([point1, point2, None, None, None])
-        point3s = pent.get_third_point(point1, point2)
-        self.assertEquals(2, len(point3s))
-        self.assertTrue(pent.is_pentagonable(point1, point2, point3s[0], None, None))
-        self.assertTrue(pent.is_pentagonable(point1, point2, point3s[1], None, None))
+        point3s = pent.get_third_points(point1, point2)
+        self.assertEqual(2, len(point3s))
+        self.assertTrue(pent.are_pentagonable([[point1, point2, point3s[0], None, None]]))
+        self.assertTrue(pent.are_pentagonable([[point1, point2, point3s[1], None, None]]))
 
     #---------------------------------------Get Next Point Scenarios--------------------------------------
     # getting fourth
@@ -176,8 +176,8 @@ class TestPentagon(unittest.TestCase):
         point3 = Point(1,1)
         pent = Pentagon([point1, point2, point3, None, None])
         scenarios = [[point1, point2, point3, None, None]]
-        new_scenarios = pent.get_next_point_scenarios(scenarios, )
-        self.assertEquals(1, len(new_scenarios))
+        new_scenarios = pent.get_next_point_scenarios(scenarios, 3)
+        self.assertEqual(1, len(new_scenarios))
     def test_get_next_point_scenarios_fifth(self):
         point1 = Point(0,0)
         point2 = Point(1,0)
@@ -185,22 +185,23 @@ class TestPentagon(unittest.TestCase):
         point4 = Point(0,1)
         pent = Pentagon([point1, point2, point3, point4, None])
         scenarios = [[point1, point2, point3, point4, None]]
-        new_scenarios = pent.get_next_point_scenarios(scenarios)
-        self.assertEquals(1, len(new_scenarios))
+        new_scenarios = pent.get_next_point_scenarios(scenarios, 4)
+        self.assertEqual(1, len(new_scenarios))
     def test_get_next_point_scenarios_two(self):
         point1 = Point(0,0)
         point2 = Point(1,0)
-        pent = Pentagon([point1, point2, None, None, None])
-        scenarios = [[point1, point2, None, None, None], [point1, point2, None, None, None]]
-        new_scenarios = pent.get_next_point_scenarios(scenarios)
-        self.assertEquals(2, len(new_scenarios))
+        point3 = Point(1,1)
+        pent = Pentagon([point1, point2, point3, None, None])
+        scenarios = [[point1, point2, point3, None, None], [point1, point2, point3, None, None]]
+        new_scenarios = pent.get_next_point_scenarios(scenarios, 3)
+        self.assertEqual(2, len(new_scenarios))
     def test_get_next_point_scenarios_empty(self):
         point1 = Point(0,0)
         point2 = Point(1,0)
         pent = Pentagon([point1, point2, None, None, None])
         scenarios = []
-        new_scenarios = pent.get_next_point_scenarios(scenarios)
-        self.assertEquals(0, len(new_scenarios))
+        new_scenarios = pent.get_next_point_scenarios(scenarios, 2)
+        self.assertEqual(0, len(new_scenarios))
 
     #------------------------------------------Get Next Point-----------------------------------------
     # positive angle
@@ -208,19 +209,20 @@ class TestPentagon(unittest.TestCase):
     def test_get_next_point_positive(self):
         point1 = Point(0,10)
         point2 = Point(10*math.cos(math.radians(18)), 10*math.sin(math.radians(18)))
-        point3 = Point(10*math.cos(math.radians(54)), -10*math.sin(math.radians(54))),
-        point4 = Point(-10*math.cos(math.radians(54)), -10*math.sin(math.radians(54))),
+        point3 = Point(10*math.cos(math.radians(54)), -10*math.sin(math.radians(54)))
+        point4 = Point(-10*math.cos(math.radians(54)), -10*math.sin(math.radians(54)))
         # expected 5: Point(-10*math.cos(math.radians(18)), 10*math.sin(math.radians(18)))]
         pent = Pentagon([point1, point2, point3, point4, None])
-        point5 = pent.get_next_point(point1, point2, point3, point4)
-        self.assertEquals(Point(-10*math.cos(math.radians(18)), 10*math.sin(math.radians(18))), point5)
+        point5 = pent.get_next_point(point2, point3, point4)
+        self.assertTrue(math.isclose(-10*math.cos(math.radians(18)), point5.x))
+        self.assertTrue(math.isclose(10*math.sin(math.radians(18)), point5.y))
     def test_get_next_point_negative(self):
         point1 = Point(0,10)
         point2 = Point(10*math.cos(math.radians(18)), 10*math.sin(math.radians(18)))
         pent = Pentagon([point1, point2, None, None, None])
         point3 = pent.get_third_points(point1, point2)[1]
         pent.get_next_point(point1, point2, point3)
-        self.assertTrue(pent.is_pentagonable(point1, point2, point3, None, None))
+        self.assertTrue(pent.are_pentagonable([[point1, point2, point3, None, None]]))
 
     #---------------------------------------Get Rotated Scenarios-------------------------------------
     # one scenario in
@@ -230,13 +232,13 @@ class TestPentagon(unittest.TestCase):
         scenarios = [[Point(0,0), Point(1,0), Point(2,0), Point(3,0), Point(4,0)]]
         pent = Pentagon(scenarios[0])
         rotated_scenarios = pent.get_rotated_scenarios(scenarios)
-        self.assertEquals(10, len(rotated_scenarios))
+        self.assertEqual(10, len(rotated_scenarios))
     def test_get_rotated_scenarios_multiple(self):
         scenarios = [[Point(0,0), Point(1,0), Point(2,0), Point(3,0), Point(4,0)],
                      [Point(0,0), Point(1,0), Point(2,0), Point(3,0), Point(4,0)]]
         pent = Pentagon(scenarios[0])
         rotated_scenarios = pent.get_rotated_scenarios(scenarios)
-        self.assertEquals(20, len(rotated_scenarios))
+        self.assertEqual(20, len(rotated_scenarios))
 
     #------------------------------------------Verify Pentagon-----------------------------------------
     # not testing - only action is to call are_pentagons
