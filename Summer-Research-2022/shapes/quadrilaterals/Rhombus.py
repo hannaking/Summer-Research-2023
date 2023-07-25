@@ -169,7 +169,8 @@ class Rhombus():
                 if not math.isclose(sides[0], side):
                     return False
             
-            if math.isclose(point1, point3) or math.isclose(point2, point4):
+            if ((math.isclose(point1.x, point3.x) and math.isclose(point1.y, point3.y)) or 
+                (math.isclose(point2.x, point4.x) and math.isclose(point2.y, point4.y))):
                 return False
 
             # Calculate angles
