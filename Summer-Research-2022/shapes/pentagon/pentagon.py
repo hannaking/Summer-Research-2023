@@ -155,6 +155,7 @@ class Pentagon():
     # gets the scenarios that include the next points from the scenarios including
     # 
     # scenarios - list of list of one point and three Nones
+    # place - int, the index of the new point
     # 
     # returns the new scenario
     def get_next_point_scenarios(self, scenarios, place):
@@ -230,7 +231,7 @@ class Pentagon():
             num_present_sides = sum(_ is not None for _ in scenario)
             
             if num_present_sides >= 3:
-                
+                # whether the loop has seen a none
                 has_noned = False
                 points = []
                 for point in scenario:
