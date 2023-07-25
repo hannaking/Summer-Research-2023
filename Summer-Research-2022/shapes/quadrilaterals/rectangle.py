@@ -125,7 +125,7 @@ class Rectangle():
                 scenario[2] = third_points.pop(0)
         
         if pt4 == None:
-            if(pt3 != None and not self._verify_square_3_points()):
+            if(pt3 != None and not self._verify_rectangle_3_points()):
                 return []
             # get fourth points
             for scenario in scenarios:
@@ -223,11 +223,11 @@ class Rectangle():
 
         return True
 
-    def _verify_square_3_points(self):
+    def _verify_rectangle_3_points(self):
         return Rectangle.are_rectangleable([self._points])
 
     @staticmethod
-    def are_rectangleable(self, scenarios):
+    def are_rectangleable(scenarios):
         for scenario in scenarios:
             if len(scenario) != 4:
                     return False

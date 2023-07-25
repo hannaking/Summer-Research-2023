@@ -83,7 +83,8 @@ class Rhombus():
         if point3 == None:
             # get third points
             third_points = self.get_third_points(point1, point2)
-        
+        else:
+            third_points = [point3]
         # we have two scenarios at 0 degrees: above the x axis and below the x axis
         for third_point in third_points:
             if point4 == None:
