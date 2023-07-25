@@ -262,7 +262,7 @@ class Dart():
     def get_fourth_points(self, point1, point2, point3):
         side1 = Geometry.distance(point1, point2)
         side2 = Geometry.distance(point2, point3)
-        angle = math.radians(Dart.get_angle(point1, point2, point3))
+        angle = math.radians(Geometry.get_angle(point1, point2, point3))
         fourth_points = []
 
         if math.isclose(side1, side2, abs_tol=1e-9):

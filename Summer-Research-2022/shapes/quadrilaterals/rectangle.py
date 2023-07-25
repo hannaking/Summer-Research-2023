@@ -242,7 +242,7 @@ class Rectangle():
             point2 = scenario[1]
             point3 = scenario[2]
             
-            angle = abs(Rectangle.get_angle(point1, point2, point3))
+            angle = abs(Geometry.get_angle(point1, point2, point3))
 
             if not math.isclose(angle, math.pi / 2, abs_tol=1e-9):
                 return False

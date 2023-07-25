@@ -30,9 +30,11 @@ class QuadrilateralFactory:
 
             if type == 'Rhombus':
                 self._types.append(Rhombus)
+                return True
 
             if type == 'Parallelogram':
                 self._types.append(Parallelogram)
+                return True
 
             if type == 'Kite':
                 self._types.append(Kite)

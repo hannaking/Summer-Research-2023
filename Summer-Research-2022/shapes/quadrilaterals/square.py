@@ -184,7 +184,7 @@ class Square():
         side1 = Geometry.distance(point1, point2)
         side2 = Geometry.distance(point2, point3)
             
-        angle = abs(Square.get_angle(point1, point2, point3))
+        angle = abs(Geometry.get_angle(point1, point2, point3))
 
         if not math.isclose(angle, math.pi / 2, abs_tol=1e-9) or not math.isclose(side1, side2, abs_tol=1e-9):
             return False
@@ -208,7 +208,7 @@ class Square():
         if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
             return False
         
-        angle = Square.get_angle(point1, point2, point3)
+        angle = Geometry.get_angle(point1, point2, point3)
 
         if(not math.isclose(side1, side2, abs_tol=1e-9) or
            not math.isclose(side2, side3, abs_tol=1e-9) or

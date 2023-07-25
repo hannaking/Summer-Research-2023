@@ -191,34 +191,12 @@ class Parallelogram():
     def get_fourth_point(self, point1, point2, point3):
         side1 = Geometry.distance(point1, point2)
 
-        angle = Parallelogram.get_angle(point1, point2, point3)
+        angle = Geometry.get_angle(point1, point2, point3)
         other_angle = Parallelogram.get_other_angle(angle)
 
         fourth_point = Geometry.calculate_point_from_angle(other_angle, point3, point2, side1)
 
         return fourth_point
-    
-    # gets the angle in degrees between three points
-    #  *angle is signed and between (-pi, pi) radians
-    #
-    # point1 - 2d point | one side of the angle
-    # mid_point - 2d point | mid point of the angle
-    # point3 - 2d point | other side of the angle
-    #
-    # returns the angle in radians
-    @staticmethod
-    def get_angle(point1, mid_point, point3):
-        a = np.array([point1.x, point1.y])
-        b = np.array([mid_point.x, mid_point.y])
-        c = np.array([point3.x, point3.y])
-
-        ba = a - b
-        bc = c - b
-        
-        angle = math.atan2(ba[0] * bc[1] - ba[1] * bc[0],
-                           ba[0] * bc[0] + ba[1] * bc[1])
-
-        return angle
 
     # verify the the points compose a parallelogram
     #
@@ -254,7 +232,7 @@ class Parallelogram():
             point2 = scenario[1]
             point3 = scenario[2]
             
-            angle = abs(Parallelogram.get_angle(point1, point2, point3))
+            angle = abs(Geometry.get_angle(point1, point2, point3))
 
             if math.isclose(angle, math.pi, abs_tol=1e-9) or math.isclose(angle, 0, abs_tol=1e-9):
                 return False
@@ -281,8 +259,8 @@ class Parallelogram():
             if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
                 return False
         
-            angle1 = Parallelogram.get_angle(point1, point2, point3)
-            angle2 = Parallelogram.get_angle(point2, point3, point4)
+            angle1 = Geometry.get_angle(point1, point2, point3)
+            angle2 = Geometry.get_angle(point2, point3, point4)
 
             alt_angle2 = Parallelogram.get_other_angle(angle1)
 
