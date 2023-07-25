@@ -16,9 +16,9 @@ LARGE_ANGLE = math.radians(120)
 DEFAULT_SIDE_LENGTH = 1
 # longer side will be 2 * short from 30-60-90 rules
 
-# _points = a list of Point objects that represent the starting position for the rectangle
+# _points = a list of Point objects that represent the starting position for the isotrapezoid
 
-#TODO: update for rectangles. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
+#TODO: update for isotrapezoids. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
 # change them so that:
 # - given 3 points, get the fourth point as whatever side formed between the first and second points (LONG or SHORT)
 class IsoTrapezoid(): 
@@ -75,6 +75,13 @@ class IsoTrapezoid():
         pt3 = sorted_points[2]
         pt4 = sorted_points[3]
 
+        # checks if a isosceles trapezoid can't be made or if the passed in points are already a isosceles trapezoid
+        if None not in sorted_points:
+            if(self._verify_isotrapezoid()):
+                return [self._points]
+            else:
+                return []
+
         scenarios = [[pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
@@ -95,7 +102,7 @@ class IsoTrapezoid():
         if pt2 == None:
             # get second point
             second_points = self.get_second_point(pt1)
-            # since we only have one point, we know that the rectangle is vertex glued.
+            # since we only have one point, we know that the isotrapezoid is vertex glued.
             vertex_gluing = True
             # fill the appropriate scenarios
             for i in range(len(scenarios)):
@@ -111,6 +118,8 @@ class IsoTrapezoid():
                 scenario[2] = third_points.pop(0)
         
         if pt4 == None:
+            if(pt3 != None and not self._verify_isotrapezoid_3_points()):
+                return []
             # get fourth points
             angles = [-60, 60, -120, 120]
             for i in range(len(scenarios)):
@@ -176,3 +185,54 @@ class IsoTrapezoid():
         side_length = Geometry.distance(point1, point2) / 2 if abs(angle) == math.radians(60) else Geometry.distance(point1, point2)
         return Geometry.calculate_point_from_angle(angle, point1, point2, side_length)
 
+    def _verify_isotrapezoid(self):
+        return IsoTrapezoid.are_isotrapezoids([self._points])
+
+    @staticmethod
+    def are_isotrapezoids(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                return False
+
+            if None in scenario:
+                return False
+
+            point1, point2, point3, point4 = scenario
+
+            angle1 = Geometry.get_angle(point1, point2, point3)
+            angle2 = Geometry.get_angle(point2, point3, point4)
+            angle3 = Geometry.get_angle(point3, point4, point1)
+            angle4 = Geometry.get_angle(point4, point1, point2)
+
+            if (not((math.isclose(angle1, angle2) and math.isclose(angle3, angle4)) or 
+                    (math.isclose(angle1, angle4) and math.isclose(angle2, angle3)))):
+                return False
+                
+
+        return True
+
+    def _verify_isotrapezoid_3_points(self):
+        return IsoTrapezoid.are_isotrapezoidable([self._points])
+
+    @staticmethod
+    def are_isotrapezoidable(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                    return False
+            
+            if(scenario[0] == None or
+               scenario[1] == None or
+               scenario[2] == None or
+               scenario[3] != None):
+                return False
+
+            point1 = scenario[0]
+            point2 = scenario[1]
+            point3 = scenario[2]
+            
+            angle = abs(Geometry.get_angle(point1, point2, point3))
+
+            if math.isclose(angle, 0, abs_tol=1e-9) or math.isclose(angle, math.pi, abs_tol=1e-9):
+                return False
+            
+        return True
