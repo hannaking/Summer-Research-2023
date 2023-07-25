@@ -79,6 +79,13 @@ class Kite():
         pt3 = sorted_points[2]
         pt4 = sorted_points[3]
 
+        # checks if a kite can't be made or if the passed in points are already a kite
+        if None not in sorted_points:
+            if(self._verify_kite()):
+                return [self._points]
+            else:
+                return []
+
         scenarios = [[pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
@@ -157,10 +164,11 @@ class Kite():
             for i in range(len(scenarios)):
                 length = side_short if Geometry.distance(scenarios[i][0], scenarios[i][1]) == side_long else side_long
                 scenarios[i][2] = Geometry.calculate_point_from_angle(ANGLES2[i], scenarios[i][3], scenarios[i][0], length)
-
             
         
         elif pt4 == None:
+            if(not self._verify_kite_3_points()):
+                return []
             # get fourth points
             # same as above
             for i in range(len(scenarios)):
@@ -205,3 +213,120 @@ class Kite():
                 Point(point1.x + DEFAULT_SIDE_LENGTH_LONG, point1.y)]
 
 
+    # finds the point that the line created by point1 and point2 intersects with
+    # a perpendicular line that passes through point3.
+    # if point1 == point2 returns point1
+    #
+    # point1 - 2d point that helps define the line
+    # point2 - 2d point that helps define the line
+    # point3 - 2d point that the perpendicular line falls under
+    #
+    # returns the intersect point
+    @staticmethod
+    def find_intersect(point1, point2, point3):
+        x1, y1 = point1.x, point1.y
+        x2, y2 = point2.x, point2.y
+        x3, y3 = point3.x, point3.y
+
+        px = x2 - x1
+        py = y2 - y1
+        
+        dAB = px * px + py * py
+        
+        if dAB != 0:
+            u = ((x3 - x1) * px + (y3 - y1) * py) / dAB
+        else:
+            return Point(x1, y1)
+
+        x = x1 + u * px
+        y = y1 + u * py
+
+        return Point(x, y)
+    
+     # verify the the points compose a kite
+    #
+    # returns whether or not it composes a kite
+    def _verify_kite(self):
+        return Kite.are_kites([self._points])
+
+    # verify the the first 3 points can form a kite
+    #
+    # returns whether or not it can form a kite
+    def _verify_kite_3_points(self):
+        p1 = self._points[0]
+        p2 = self._points[0]
+        p3 = self._points[0]
+        return Kite.are_kiteable([[p1, p2, p3, None]])
+
+    # determins if all of the scenarios are posible to create a kite
+    # 
+    # scenarios - list of lists of points
+    # 
+    # returns whether the scenarios are 3 points that could form kites
+    @staticmethod
+    def are_kiteable(scenarios):
+        for scenario in scenarios:
+
+            if len(scenario) != 4:
+                return False
+            
+            if (scenario[0] == None or
+                scenario[1] == None or
+                scenario[2] == None or
+                scenario[3] != None):
+                return False
+
+            point1 = scenario[0]
+            point2 = scenario[1]
+            point3 = scenario[2]
+            
+            intersect_point = Kite.find_intersect(point1, point3, point2)
+            
+            diagonal = Geometry.distance(point1, point3)
+            right = Geometry.distance(point1, intersect_point)
+            left = Geometry.distance(intersect_point, point3)
+            
+            # the intersect must be off of the diagonal or be its midpoint
+            if(not math.isclose(right + left, diagonal, abs_tol=1e-9)):
+                return False
+
+        return True
+    
+    # determins if all of the scenarios are posible are a kite
+    # 
+    # scenarios - list of lists of points
+    # 
+    # returns whether the scenarios are 4 points that form kites
+    @staticmethod
+    def are_kites(scenarios):
+        for scenario in scenarios:
+
+            if len(scenario) != 4:
+                return False
+            
+            if None in scenario:
+                return False
+            
+            point1, point2, point3, point4 = scenario
+
+            intersect_point1 = Kite.find_intersect(point1, point3, point2)
+            intersect_point2 = Kite.find_intersect(point2, point4, point1)
+            
+            # both intersect points must be the same
+            if(not math.isclose(intersect_point1.x, intersect_point2.x, abs_tol=1e-9) or
+               not math.isclose(intersect_point1.y, intersect_point2.y, abs_tol=1e-9)):
+                return False
+            
+            diagonal1 = Geometry.distance(point1, point3)
+            right1, left1 = Geometry.distance(point1, intersect_point1), Geometry.distance(point3, intersect_point1)
+            
+            diagonal2 = Geometry.distance(point2, point4)
+            right2, left2 = Geometry.distance(point2, intersect_point1), Geometry.distance(point4, intersect_point1)
+
+            # one of the intersect points must be the midpoint its other diagonal
+            # and the other must be off of its other diagonal, but not both
+            if(not math.isclose(right1+left1, diagonal1, abs_tol=1e-9) or
+               not math.isclose(right2+left2, diagonal1, abs_tol=1e-9)):
+                return False
+
+        return True
