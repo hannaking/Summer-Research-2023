@@ -11,7 +11,7 @@ from textbook_identifier import TextbookIdentifier
 if __name__ == '__main__':
 
     show_lattices = False
-    show_figures  = True
+    show_figures  = False
 
     if not show_lattices:
         print("Not showing lattices.")
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0,         1,        1,      0,        0,        0,         0]
+    input_shape_list = [0,         2,        1,      0,        0,        0,         0       ]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -33,6 +33,9 @@ if __name__ == '__main__':
     
     lattices_final = lattice_generator.constrain_to_final(lattices, sum(input_shape_list))
     dual_graphs = FaceGraphGenerator.from_lattices(lattices_final)
+
+    key = TextbookIdentifier.identify(dual_graphs, "model__1")
+    lattices_final, dual_graphs = TextbookIdentifier.get_only_in_textbook(lattices_final, dual_graphs, key)
     
     refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
 
@@ -51,10 +54,14 @@ if __name__ == '__main__':
 
     # Determine shape types to use. Value of 'None' will include all shape types.
     # Options: 'Segment', 'Equilateral' ..... 'RegularPent', 'RegularHex', 'RegularSept', 'RegularOct'
-    shape_types = ['Isosceles']
+    shape_types = ['Equilateral', 'Dart']
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
-   
+    
+    figures = 0
     # Generate the figures. Returns tuple in the form (list of coordinates, corresponding lattice)
-    figures = shape_generator.generate_from_dual_lattice_pairs([lattices_final[-1]], [dual_graphs[-1]], show_figures)
+    for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
+        print(str(i+1) + "/" + str(len(lattices_final)) + " (" + str(len(graphs)) + ")")
+        figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [graphs], show_figures)
+    print(figures)

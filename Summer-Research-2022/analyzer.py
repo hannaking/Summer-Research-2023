@@ -640,7 +640,23 @@ class Analyzer():
 
 #Analyzer._create_histogram(textbook_node_counts, True, "Node Counts")
 
-Analyzer.perform_test_parts()
+#Analyzer.perform_test_parts()
+
+# data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
+# positive_shape_parts = Analyzer.calculate_shape_parts(data["Textbook"]["Shape Counts"], data["Textbook"]["Total"])
+        
+# data = Analyzer.read_data("Summer-Research-2022/hold", "data_repeated_100000.json")
+# textbook_shape_parts = Analyzer.calculate_shape_parts(data["Textbook"]["Shape Counts"], data["Textbook"]["Total"])
+        
+# pos_shapes = pd.Series(positive_shape_parts.values())
+# txt_shapes = pd.Series(textbook_shape_parts.values())
+# print(pos_shapes)
+# plt.figure()
+# plt.scatter(np.sort(pos_shapes), np.sort(txt_shapes))
+# plt.xlabel('Percent Textbook-like Shape Distribution')
+# plt.ylabel('Percent Textbook Shape Distribution')
+# plt.show()
+# plt.close()
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
