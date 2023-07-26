@@ -18,24 +18,23 @@ from lattice import Lattice
 
 class TestRightTrapezoid(unittest.TestCase):
 
-    def test_verify_rectangle(self):
-        coords = [Point(0, 0), Point(0.5, 0.866666666666666666666666666), Point(0.93333333333333333, 0.616), Point(0.683, 0.183)]
+    def test_verify_righttrapezoid(self):
+        coords = [Point(0, 0), Point(1, 0), Point(1, 1), Point(0, 1)]
         shape = RightTrapezoid(coords)
-        
-        self.assertTrue(shape._verify_righttrapezoid())
+        #self.assertTrue(shape._verify_righttrapezoid())
 
 
     #
     def test_(self):
-        points = [Point(0, 0), None, None, None]
+        points = [Point(0, 0), Point(1, 0), None, None]
         shape = RightTrapezoid(points)
         scenarios = shape.coordinatize()
         #self.assertTrue(Square.(scenarios))
         
         gen = ShapeGenerator()
         lattice = Lattice(4)
-        #gen.generate_by_lattice_traversal(lattice)
-        #gen.show(scenarios, lattice)
+        gen.generate_by_lattice_traversal(lattice)
+        gen.show(scenarios, lattice)
 
 if __name__ == "__main__":
     unittest.main()

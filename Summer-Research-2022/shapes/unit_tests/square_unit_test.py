@@ -18,57 +18,57 @@ from lattice import Lattice
 
 class TestSquare(unittest.TestCase):
 
-    def test_verify_rectangle(self):
+    def test_verify_square(self):
         coords = [Point(0, 0), Point(1, 0), Point(1, 1), Point(0, 1)]
         shape = Square(coords)
         self.assertTrue(shape._verify_square())
 
-    def test_verify_rectangle2(self):
+    def test_verify_square2(self):
         coords = [Point(1, 1), Point(6, 1), Point(6, 6), Point(1, 6)]
         shape = Square(coords)
         self.assertTrue(shape._verify_square())
 
-    def test_verify_rectangle3(self):
+    def test_verify_square3(self):
         coords = [Point(1, 1), Point(6, 1), Point(6, 6), Point(1, 6)]
         shape = Square(coords)
         self.assertTrue(shape._verify_square())
     
-    def test_verify_rectangle4(self):
+    def test_verify_square4(self):
         coords = [Point(-2, -3), Point(1, -3), Point(1, 4), Point(-2, 4)]
         shape = Square(coords)
         self.assertTrue(shape._verify_square())
 
-    def test_verify_rectangle_too_many_coords(self):
+    def test_verify_square_too_many_coords(self):
         coords = [Point(0, 0), Point(1, 0), Point(1, 1), Point(0, 1), Point(2, 2)]
         shape = Square(coords)
         self.assertFalse(shape._verify_square())
 
-    def test_verify_rectangle_too_few_coords(self):
+    def test_verify_square_too_few_coords(self):
         coords = [Point(0, 0), Point(1, 0), Point(1, 1)]
         shape = Square(coords)
         self.assertFalse(shape._verify_square())
 
-    def test_verify_rectangle_not_rectangle(self):
+    def test_verify_square_not_rectangle(self):
         coords = [Point(0, 0), Point(1, 0), Point(0, 1)]
         shape = Square(coords)
         self.assertFalse(shape._verify_square())
 
-    def test_verify_rectangle_not_rectangle_2(self):
+    def test_verify_square_not_rectangle_2(self):
         coords = [Point(2, 4), Point(0, 5), Point(5, 6), Point(3, 3)]
         shape = Square(coords)
         self.assertFalse(shape._verify_square())
 
     #
     def test_(self):
-        points = [Point(-2, -3), None, None, None]
+        points = [Point(0, 0), Point(1, 0), Point(1, 1), None]
         shape = Square(points)
         scenarios = shape.coordinatize()
         #self.assertTrue(Square.(scenarios))
         
         gen = ShapeGenerator()
         lattice = Lattice(4)
-        #gen.generate_by_lattice_traversal(lattice)
-        #gen.show(scenarios, lattice)
+        gen.generate_by_lattice_traversal(lattice)
+        gen.show(scenarios, lattice)
 
 if __name__ == "__main__":
     unittest.main()
