@@ -18,9 +18,6 @@ DEFAULT_SIDE_LENGTH = 1
 
 # _points = a list of Point objects that represent the starting position for the isotrapezoid
 
-#TODO: update for isotrapezoids. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
-# change them so that:
-# - given 3 points, get the fourth point as whatever side formed between the first and second points (LONG or SHORT)
 class IsoTrapezoid(): 
 
     def __init__(self, known_coords):

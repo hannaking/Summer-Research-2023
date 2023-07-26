@@ -27,11 +27,6 @@ DEFAULT_SIDE_LENGTH = 1
 # |       \
 # *--------*
 
-# _points = a list of Point objects that represent the starting position for the rectangle
-
-#TODO: update for rectangles. you do not need to change anything other than get_second_point, get_third_points, and get_fourth_points.
-# change them so that:
-# - given 3 points, get the fourth point as whatever side formed between the first and second points (LONG or SHORT)
 class RightTrapezoid(): 
 
     def __init__(self, known_coords):
@@ -137,13 +132,23 @@ class RightTrapezoid():
             if(pt3 != None and not self._verify_righttrapezoid_3_points()):
                 return []
             # get fourth points
-            angles = [45, -45, 90, -90, 90, -90, 135, -135]
-            multipliers = [2 / math.sqrt(2), 2 / math.sqrt(2),
-                          0.5, 0.5,
-                          1, 1, 
-                          math.sqrt(2), math.sqrt(2)]
-            for i in range(len(scenarios)):
-                scenarios[i][3] = self.get_fourth_points(scenarios[i][1], scenarios[i][2], math.radians(angles[i]), multipliers[i] * Geometry.distance(scenarios[i][1], scenarios[i][2]))
+            for scenario in scenarios:
+                # get angle between points
+                past_angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
+                past_side_len = Geometry.distance(scenario[1], scenario[2])
+                # +/-45
+                if math.degrees(abs(past_angle)) == 45:
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[3], 1/2 * past_side_len)
+                # +/- 135
+                elif math.degrees(abs(past_angle)) == 135:
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(45), scenario[2], scenario[3], (2/math.sqrt(2)) * past_side_len)
+                # either 90
+                else:
+                    first_side_len = Geometry.distance(scenario[0], scenario[1])
+                    if math.isclose(past_side_len, first_side_len):
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(135), scenario[2], scenario[3], math.sqrt(2) * past_side_len)
+                    else:
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[3], 1 * past_side_len)
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?
@@ -200,14 +205,6 @@ class RightTrapezoid():
             third_points.append(Geometry.calculate_point_from_angle(-angles[i], point2, point1, side_lengths[i]))
 
         return third_points
-
-    # return a Point object. there is 1 option: the final corner of the square.
-    # finds the fourth points by finding the point 90 degrees from the line formed by pt 2 and pt 1
-    # notice how this is FLIPPED from get_third_points.
-    # need the if... negative angle to avoid twists -> be on the right side of the first segment
-    # returns None if any input point is None
-    def get_fourth_points(self, point2, point3, angle, side_length):
-        return Geometry.calculate_point_from_angle(angle, point3, point2, side_length)
 
     def _verify_righttrapezoid(self):
         return RightTrapezoid.are_righttrapezoids([self._points])
