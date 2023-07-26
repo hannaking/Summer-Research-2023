@@ -78,8 +78,8 @@ class Hexagon():
         if point4 == None:            
             scenarios = self.get_next_point_scenarios(scenarios, 3)
 
-        if point5 == None:
-            scenarios = self.get_next_point_scenarios(scenarios, 4)
+        if point5 == None:           
+            scenarios = self.get_next_point_scenarios(scenarios, 4) 
 
         if point6 == None:
             scenarios = self.get_next_point_scenarios(scenarios, 5)
@@ -109,7 +109,7 @@ class Hexagon():
 
             second_point = self.get_second_point(point1)
             
-            new_scenarios.append([point1, second_point, None, None, None])
+            new_scenarios.append([point1, second_point, None, None, None, None])
 
         return new_scenarios
     
@@ -137,7 +137,7 @@ class Hexagon():
             third_points = self.get_third_points(point1, point2)
             
             for third_point in third_points:
-                new_scenarios.append([point1, point2, third_point, None, None])
+                new_scenarios.append([point1, point2, third_point, None, None, None])
 
         return new_scenarios
     

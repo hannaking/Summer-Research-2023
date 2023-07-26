@@ -117,7 +117,7 @@ class Octagon():
 
             second_point = self.get_second_point(point1)
             
-            new_scenarios.append([point1, second_point, None, None, None])
+            new_scenarios.append([point1, second_point, None, None, None, None, None, None])
 
         return new_scenarios
     
@@ -145,7 +145,7 @@ class Octagon():
             third_points = self.get_third_points(point1, point2)
             
             for third_point in third_points:
-                new_scenarios.append([point1, point2, third_point, None, None])
+                new_scenarios.append([point1, point2, third_point, None, None, None, None, None])
 
         return new_scenarios
     
