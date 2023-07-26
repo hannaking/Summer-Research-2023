@@ -6,8 +6,8 @@ import numpy as np
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 
 from shapely.geometry import *
-from shapes.geometry import Geometry
-from shapes.vector import Vector
+from geometry import Geometry
+from vector import Vector
 
 ANGLE = math.radians(90)
 DEFAULT_SIDE_LENGTH = 1
