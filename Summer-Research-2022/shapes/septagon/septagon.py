@@ -1,126 +1,288 @@
 import math
 import sys
 import os
+import numpy as np
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-from shapely.geometry import *
-
+from shapely.geometry import Point
 from geometry import Geometry
 
-ANGLE = math.radians(128 + (4/7))
+NUM_SIDES = 7
 DEFAULT_SIDE_LENGTH = 1
+ANGLE = math.radians(128 + (4/7))
+ROTATE_ANGLES = [math.radians(30),
+                 math.radians(45),
+                 math.radians(60),
+                 math.radians(90),
+                 math.radians(180),
+                 math.radians(-30),
+                 math.radians(-45),
+                 math.radians(-60),
+                 math.radians(-90)]
 
-# 7 sides of equal length, all angles are 128 and 4/7 degrees
-
-class Septagon(): 
-    # take a list of 1-5 Points, the unknown Points being None
-    # known information about the starting position of the pentagon
+class Septagon():
+     
     def __init__(self, known_coords):
         self._points = known_coords
 
-    # Get Points to make up the Pentagon
+    # takes a non zero number of points and returns lists of 4 points such that they form pentagons 
+    # if one point is passed in the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90
+    # degree roations
+    # the sides have a ratio of 1:2 unless the ratio is included in the input points
     #
-    # returns a list of lists of Points, each list is one coordinatization of the pentagon
+    # returns a list of scenarios
     def coordinatize(self):
-        scenarios = [] # list of lists of Points
 
-        # start with anywhere from 1 to 5 points
-        # if all Points are given (5 points), just return that one scenario
-        if None not in self._points:
-            return scenarios.append(self._points)
+        scenarios = []
 
-        # I need to sort the coords , dragging along a list of indices.
-        first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
-
-        # but this does get a sorted points list
+        # sorts to be traversible in order
+        first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None)]
         sorted_points = [b[1] for b in first_sort]
 
-        side_length = DEFAULT_SIDE_LENGTH
+        # checks if there are the correct number of points
+        if len(sorted_points) != NUM_SIDES:
+            return []
+
+        point1 = sorted_points[0]
+        point2 = sorted_points[1]
+        point3 = sorted_points[2]
+        point4 = sorted_points[3]
+        point5 = sorted_points[4]
+        point6 = sorted_points[5]
+        point7 = sorted_points[6]
+
         vertex_gluing = False
-        
-        # to make it easier to understand what sorted points are
-        pt1 = sorted_points[0]
-        pt2 = sorted_points[1]
-        pt3 = sorted_points[2]
-        pt4 = sorted_points[3]
-        pt5 = sorted_points[4]
-        pt6 = sorted_points[5]
-        pt7 = sorted_points[6]
 
-        scenarios = [[pt1, pt2, pt3, pt4, pt5, pt6, pt7],
-                     [pt1, pt2, pt3, pt4, pt5, pt6, pt7]]
-
-        # get all possible next point for the given single point
-        if (sorted_points[1] == None): # one known point
-            scenarios[0][1] = Point(pt1.x + DEFAULT_SIDE_LENGTH, pt1.y)
-            scenarios[1][1] = Point(pt1.x + DEFAULT_SIDE_LENGTH, pt1.y)
-            vertex_gluing = True
-
-        # now have at least 2 points, so side length can be determined
-        side_length = Geometry.distance(pt1, scenarios[1][1])
-
-        # then continue to the next
-        if  (sorted_points[2] == None): # two known points
-            third_points = []
-            # 2 possible third points
-            third_points.append(Geometry.calculate_point_from_angle(ANGLE, scenarios[1][1], pt1, side_length))
-            third_points.append(Geometry.calculate_point_from_angle(-ANGLE, scenarios[1][1], pt1, side_length))
-            for scenario in scenarios:
-                scenario[2] = third_points.pop(0)
+        scenarios = [[point1, point2, point3, point4, point5, point6, point7]]
             
-        # then continue to the next
-        if  (sorted_points[3] == None): # three known points
-            # each third point has one possible fourth point
-            for i in range(0, len(scenarios)):
-                scenarios[i][3] = Geometry.calculate_point_from_angle(ANGLE, scenarios[i][2], scenarios[i][1], side_length)
+        # checks if a pentagon can't be made or if the passed in points are already a pentagon
+        if None not in sorted_points:
+            if(self._verify_septagon()):
+                return [self._points]
+            else:
+                return []
 
-        # then continue to the next
-        if (sorted_points[4] == None): # four known points
-            # each fourth point has one possible fifth point
-            for i in range(0, len(scenarios)):
-                scenarios[i][4] = Geometry.calculate_point_from_angle(ANGLE, scenarios[i][3], scenarios[i][2], side_length)
+        if point2 == None:
+            scenarios = self.get_second_point_scenario(scenarios)
+            vertex_gluing = True
+        
+        if point3 == None:
+            scenarios = self.get_third_point_scenarios(scenarios)
+        else:
+            # checks if the known n points can even form a septagon
+            if(not self._verify_septagon_n_points()):
+                return []
 
-        # then continue to the next
-        if (sorted_points[5] == None): # five known points
-            # each fifth point has one possible sixth point
-            for i in range(0, len(scenarios)):
-                scenarios[i][5] = Geometry.calculate_point_from_angle(ANGLE, scenarios[i][4], scenarios[i][3], side_length)
+        if point4 == None:            
+            scenarios = self.get_next_point_scenarios(scenarios, 3)
 
-        # then continue to the next
-        if (sorted_points[6] == None): # six known points
-            # each fifth point has one possible sixth point
-            for i in range(0, len(scenarios)):
-                scenarios[i][6] = Geometry.calculate_point_from_angle(ANGLE, scenarios[i][5], scenarios[i][4], side_length)
+        if point5 == None:
+            scenarios = self.get_next_point_scenarios(scenarios, 4)
 
-        # all seven points known handled above
+        if point6 == None:
+            scenarios = self.get_next_point_scenarios(scenarios, 5)
 
-        # you would only ever want to rotate your shape if you are vertex glued.
-        # if you are already given two or three points, there is no point in rotating your shape.
+        if point7 == None:
+            scenarios = self.get_next_point_scenarios(scenarios, 6)
+        
+        # makes all of the rotations around point1
         if vertex_gluing == True:
-            # now we will rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
-            # creating a new scenario, and add it to the list of scenarios
-            # 8 scenarios * 9 angles = 72 new scenarios
-            # 80 scenarios in total
-            # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex we are glued to.
-            angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
-            original_scenario_len = len(scenarios)
-            for i in range(original_scenario_len):
-                for angle in angles:
-                    new_scenario = Geometry.rotate(scenarios[i], math.radians(angle))
-                    scenarios.append(new_scenario)
+            scenarios = self.get_rotated_scenarios(scenarios)
 
-        temp = []
-        for s in scenarios:
-            if s not in temp: temp.append(s)
-        scenarios = temp
-
-        # unsort all scenarios
+        # puts back it lattice order
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
 
-        # a list of lists of 7 Points
         return scenarios
+
+    # gets the scenario that include the second point from the scenario including
+    # only the first point.
+    #  *second point is placed +1 to the x
+    # 
+    # scenarios - list of list of one point and three Nones
+    # 
+    # returns the new scenario
+    def get_second_point_scenario(self, scenarios):
+        new_scenarios = []
+        for scenario in scenarios:
+            point1 = scenario[0]
+
+            second_point = self.get_second_point(point1)
+            
+            new_scenarios.append([point1, second_point, None, None, None, None, None])
+
+        return new_scenarios
+    
+    # gets the second point given one point
+    #  *second point is placed +1 to the x
+    #
+    # point1 - 2d point
+    #
+    # returns the second point
+    def get_second_point(self, point1):
+        return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
+
+    # gets the scenarios that include the third points from the scenario including
+    # only the first point and the second point.
+    # 
+    # scenarios - list of list of one point and three Nones
+    # 
+    # returns the new scenario
+    def get_third_point_scenarios(self, scenarios):
+        new_scenarios = []
+        for scenario in scenarios:
+            point1 = scenario[0]
+            point2 = scenario[1]
+
+            third_points = self.get_third_points(point1, point2)
+            
+            for third_point in third_points:
+                new_scenarios.append([point1, point2, third_point, None, None, None, None])
+
+        return new_scenarios
+    
+    # gets the third points given two points
+    #
+    # point1 - 2d point
+    # point2 - 2d point
+    #
+    # returns the third and fourth points
+    def get_third_points(self, point1, point2):
+        third_points = []
+        side_length = Geometry.distance(point1, point2)
+
+        third_points.append(Geometry.calculate_point_from_angle(ANGLE, point2, point1, side_length))
+        third_points.append(Geometry.calculate_point_from_angle(-ANGLE, point2, point1, side_length))
+        
+        return third_points
+
+    # gets the scenarios that include the next points from the scenarios including
+    # 
+    # scenarios - list of list of one point and three Nones
+    # place - int, the index of the new point
+    # 
+    # returns the new scenario
+    def get_next_point_scenarios(self, scenarios, place):
+        new_scenarios = []
+        for scenario in scenarios:
+            point_prev3 = scenario[place - 3]
+            point_prev2 = scenario[place - 2]
+            point_prev1 = scenario[place - 1]
+
+            new_point = self.get_next_point(point_prev3, point_prev2, point_prev1)
+            
+            new_scenario = []
+            for i, point in enumerate(scenario):
+                if i == place:
+                    new_scenario.append(new_point)
+                else:
+                    new_scenario.append(point)
+            new_scenarios.append(new_scenario.copy())
+        
+        return new_scenarios
+
+    # gets the next point given the prior three points
+    #
+    # point_prev3 - 2d point | point before the point before the prior point
+    # point_prev2 - 2d point | point before the prior point
+    # point_prev1 - 2d point | prior point
+    #
+    # returns the fourth point
+    def get_next_point(self, point_prev3, point_prev2, point_prev1):
+        side_length = Geometry.distance(point_prev3, point_prev2)
+
+        angle = Geometry.get_angle(point_prev3, point_prev2, point_prev1)
+
+        next_point = Geometry.calculate_point_from_angle(angle, point_prev1, point_prev2, side_length)
+
+        return next_point
+    
+    # gets 10 scenarios rotated around the first point
+    #
+    # scenarios - the non-rotated scenarios 
+    #
+    # returns the rotated scenarios
+    def get_rotated_scenarios(self, scenarios):
+        new_scenarios = scenarios.copy()
+        for scenario in scenarios:
+            for angle in ROTATE_ANGLES:
+                new_scenarios.append(Geometry.rotate(scenario, angle))
+        return new_scenarios
+
+    # verify the the points compose a pentagon
+    #
+    # returns whether or not it composes a pentagon
+    def _verify_septagon(self):
+        return Septagon.are_septagons([self._points])
+
+    # verify the the points can form a pantagon
+    #
+    # returns whether or not it can form a pantagon
+    def _verify_septagon_n_points(self):
+        return Septagon.are_septagonable([self._points])
+
+    # determins if all of the scenarios are possible to create a pentagon
+    # 
+    # scenarios - list of lists of points
+    # 
+    # returns whether the scenarios are n points that could form pentagons
+    @staticmethod
+    def are_septagonable(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != NUM_SIDES:
+                return False
+            
+            num_present_sides = sum(_ is not None for _ in scenario)
+            
+            if num_present_sides >= 3:
+                # whether the loop has seen a none
+                has_noned = False
+                points = []
+                for point in scenario:
+                    if has_noned and point != None:
+                        return False
+                    if point == None:
+                        has_noned = True
+                    else:
+                        points.append(point)
+            
+                angles = []
+                sides = []
+
+                for i in range(len(points)-2):
+                    angles.append(Geometry.get_angle(points[i], points[i+1], points[i+2]))
+                for i in range(len(points)-1):
+                    sides.append(Geometry.distance(points[i], points[i+1]))
+                
+                if not math.isclose(abs(angles[0]), ANGLE, abs_tol=1e-9):
+                    return False
+                
+                for angle in angles[1:]:
+                    if not math.isclose(angle, angles[0], abs_tol=1e-9):
+                        return False
+                for side in sides[1:]:
+                    if not math.isclose(side, sides[0], abs_tol=1e-9):
+                        return False
+            
+        return True
+    
+    # determins if all of the scenarios are a pentagon
+    # 
+    # scenarios - list of lists of points
+    # 
+    # returns whether the scenarios are pentagons
+    @staticmethod
+    def are_septagons(scenarios):
+        for scenario in scenarios:
+            
+            if len(scenario) != NUM_SIDES:
+                return False
+            
+            if None in scenario:
+                return False
+        
+        return Septagon.are_septagonable(scenarios)

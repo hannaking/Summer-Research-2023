@@ -86,6 +86,13 @@ class RightTrapezoid():
         pt3 = sorted_points[2]
         pt4 = sorted_points[3]
 
+        # checks if a right trapezoid can't be made or if the passed in points are already a right trapezoid
+        if None not in sorted_points:
+            if(self._verify_righttrapezoid()):
+                return [self._points]
+            else:
+                return []
+
         scenarios = [[pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
                      [pt1, pt2, pt3, pt4],
@@ -125,8 +132,10 @@ class RightTrapezoid():
             third_points = self.get_third_points(pt1, second_point, side_len)
             for scenario in scenarios:
                 scenario[2] = third_points.pop(0)
-
+        
         if pt4 == None:
+            if(pt3 != None and not self._verify_righttrapezoid_3_points()):
+                return []
             # get fourth points
             angles = [45, -45, 90, -90, 90, -90, 135, -135]
             multipliers = [2 / math.sqrt(2), 2 / math.sqrt(2),
@@ -200,3 +209,71 @@ class RightTrapezoid():
     def get_fourth_points(self, point2, point3, angle, side_length):
         return Geometry.calculate_point_from_angle(angle, point3, point2, side_length)
 
+    def _verify_righttrapezoid(self):
+        return RightTrapezoid.are_righttrapezoids([self._points])
+
+    @staticmethod
+    def are_righttrapezoids(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                return False
+
+            if None in scenario:
+                return False
+
+            point1, point2, point3, point4 = scenario
+
+            angle1 = Geometry.get_angle(point1, point2, point3)
+            angle2 = Geometry.get_angle(point2, point3, point4)
+            angle3 = Geometry.get_angle(point3, point4, point1)
+            angle4 = Geometry.get_angle(point4, point1, point2)
+
+            if (not((math.isclose(angle1, RightTrapezoid.get_other_angle(angle2)) and
+                     math.isclose(angle3, angle4) and
+                     math.isclose(angle3, math.pi / 2)) or 
+                    (math.isclose(angle1, RightTrapezoid.get_other_angle(angle4)) and
+                     math.isclose(angle2, angle3) and
+                     math.isclose(angle2, math.pi / 2))
+                     )):
+                print(angle1, angle2, angle3, angle4)
+                return False
+                
+
+        return True
+
+    def _verify_righttrapezoid_3_points(self):
+        return RightTrapezoid.are_righttrapezoidable([self._points])
+
+    @staticmethod
+    def are_righttrapezoidable(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                    return False
+            
+            if(scenario[0] == None or
+               scenario[1] == None or
+               scenario[2] == None or
+               scenario[3] != None):
+                return False
+
+            point1 = scenario[0]
+            point2 = scenario[1]
+            point3 = scenario[2]
+            
+            angle = abs(Geometry.get_angle(point1, point2, point3))
+
+            if math.isclose(angle, 0, abs_tol=1e-9) or math.isclose(angle, math.pi, abs_tol=1e-9):
+                return False
+            
+        return True
+    
+    # Math
+
+    # gets the other angle in radians 
+    #
+    # angle(radians) - corrisponding angle to be converted
+    #
+    # returns the other angle
+    @staticmethod
+    def get_other_angle(angle):
+        return math.copysign(1, angle) * (math.pi - abs(angle))

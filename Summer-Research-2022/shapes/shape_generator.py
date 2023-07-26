@@ -10,9 +10,10 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, LineString
 from matplotlib import pyplot as plt
 from shapes.shape_factory import ShapeFactory
+from shapes.geometry import Geometry
 
 sys.path.append('Summer-Research-2022')
 from lattice import Lattice
@@ -157,7 +158,7 @@ class ShapeGenerator:
             #      A----B
             #       \  /
             #        \/       This has been drawn like A B D C
-            #        /\        instead of A B C D so it crosses
+            #        /\        instead of A B C D, so it crosses
             #       /  \
             #      D----C
             draw_order_points = []
@@ -169,7 +170,22 @@ class ShapeGenerator:
                 draw_order_points.append(corresponding_point)
 
             # create a polygon from the points
-            new_polygon = Polygon(draw_order_points)
+            # line segments need special treatment because in shapely, a line is not a polygon.
+            # it needs to be a LinearRing, which requires at least 4 points
+            # so, use interpolate to get 2 more points along the line
+            if (len(draw_order_points) == 2): # if line segment
+                # make a linestring so can use interpolate
+                pointStart = draw_order_points[0]
+                pointEnd = draw_order_points[1]
+                line = LineString([pointStart, pointEnd])
+                # get distance / 3, so can get points 1/3 and 2/3 along
+                distance = Geometry.distance(pointStart, pointEnd) / 3
+                # calculate new points and
+                # add to draw_order_points, making sure to add in the middle
+                draw_order_points.insert(1, line.interpolate(distance * 2))
+                draw_order_points.insert(1, line.interpolate(distance))
+                new_polygon = Polygon(draw_order_points)
+            else: new_polygon = Polygon(draw_order_points)
             # add it to our list of polygons
             polygons.append(new_polygon)
             i = i + 1

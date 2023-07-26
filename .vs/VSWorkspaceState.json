@@ -3,9 +3,14 @@
     "",
     "\\Summer-Research-2022",
     "\\Summer-Research-2022\\shapes",
+    "\\Summer-Research-2022\\shapes\\hexagon",
+    "\\Summer-Research-2022\\shapes\\line_segment",
+    "\\Summer-Research-2022\\shapes\\octagon",
     "\\Summer-Research-2022\\shapes\\pentagon",
+    "\\Summer-Research-2022\\shapes\\quadrilaterals",
+    "\\Summer-Research-2022\\shapes\\septagon",
     "\\Summer-Research-2022\\shapes\\unit_tests"
   ],
-  "SelectedNode": "\\Summer-Research-2022\\shapes\\unit_tests\\pentagon_unit_test.py",
+  "SelectedNode": "\\Summer-Research-2022\\shapes\\hexagon\\hexagon.py",
   "PreviewInSolutionExplorer": false
 }
