@@ -138,17 +138,17 @@ class RightTrapezoid():
                 past_side_len = Geometry.distance(scenario[1], scenario[2])
                 # +/-45
                 if math.degrees(abs(past_angle)) == 45:
-                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[3], 1/2 * past_side_len)
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[1], scenario[2], 1/2 * past_side_len)
                 # +/- 135
                 elif math.degrees(abs(past_angle)) == 135:
-                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(45), scenario[2], scenario[3], (2/math.sqrt(2)) * past_side_len)
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(45), scenario[1], scenario[2], (2/math.sqrt(2)) * past_side_len)
                 # either 90
                 else:
                     first_side_len = Geometry.distance(scenario[0], scenario[1])
                     if math.isclose(past_side_len, first_side_len):
-                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(135), scenario[2], scenario[3], math.sqrt(2) * past_side_len)
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(135), scenario[1], scenario[2], math.sqrt(2) * past_side_len)
                     else:
-                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[3], 1 * past_side_len)
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[1], scenario[2], 1 * past_side_len)
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?

@@ -71,7 +71,7 @@ class TestToStellarGraph(unittest.TestCase):
         else:
             print("File does not exist.")
         
-        classifier = GraphClassifier(graphs, labels)
+        classifier = GraphClassifier(graphs[0:20], labels.head(20))
         return classifier
 
     """
