@@ -19,9 +19,9 @@ from lattice import Lattice
 class TestRightTrapezoid(unittest.TestCase):
 
     def test_verify_righttrapezoid(self):
-        coords = [Point(0, 0), Point(1, 0), Point(1, 1), Point(0, 1)]
+        coords = [Point(0, 0), Point(0.5, 0.866), Point(0.933, 0.616), Point(0.683, 0.183)]
         shape = RightTrapezoid(coords)
-        #self.assertTrue(shape._verify_righttrapezoid())
+        self.assertTrue(shape._verify_righttrapezoid())
 
 
     #
