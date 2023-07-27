@@ -11,6 +11,7 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 from shapely.geometry import Point
+from quadrilaterals.dart import Dart
 from geometry import Geometry
 
 ANGLES = [math.radians(-120), math.radians(120), math.radians(-90),math.radians(90),
@@ -211,37 +212,6 @@ class Kite():
     def get_second_point(self, point1):
         return [Point(point1.x + DEFAULT_SIDE_LENGTH_SHORT, point1.y), 
                 Point(point1.x + DEFAULT_SIDE_LENGTH_LONG, point1.y)]
-
-
-    # finds the point that the line created by point1 and point2 intersects with
-    # a perpendicular line that passes through point3.
-    # if point1 == point2 returns point1
-    #
-    # point1 - 2d point that helps define the line
-    # point2 - 2d point that helps define the line
-    # point3 - 2d point that the perpendicular line falls under
-    #
-    # returns the intersect point
-    @staticmethod
-    def find_intersect(point1, point2, point3):
-        x1, y1 = point1.x, point1.y
-        x2, y2 = point2.x, point2.y
-        x3, y3 = point3.x, point3.y
-
-        px = x2 - x1
-        py = y2 - y1
-        
-        dAB = px * px + py * py
-        
-        if dAB != 0:
-            u = ((x3 - x1) * px + (y3 - y1) * py) / dAB
-        else:
-            return Point(x1, y1)
-
-        x = x1 + u * px
-        y = y1 + u * py
-
-        return Point(x, y)
     
      # verify the the points compose a kite
     #
@@ -254,8 +224,8 @@ class Kite():
     # returns whether or not it can form a kite
     def _verify_kite_3_points(self):
         p1 = self._points[0]
-        p2 = self._points[0]
-        p3 = self._points[0]
+        p2 = self._points[1]
+        p3 = self._points[2]
         return Kite.are_kiteable([[p1, p2, p3, None]])
 
     # determins if all of the scenarios are posible to create a kite
@@ -280,7 +250,13 @@ class Kite():
             point2 = scenario[1]
             point3 = scenario[2]
             
-            intersect_point = Kite.find_intersect(point1, point3, point2)
+            intersect_point = Dart.find_intersect(point1, point3, point2)
+            
+            if((math.isclose(intersect_point.x, point1.x, abs_tol=1e-9) and
+                math.isclose(intersect_point.y, point1.y, abs_tol=1e-9)) or
+               (math.isclose(intersect_point.x, point3.x, abs_tol=1e-9) and
+                math.isclose(intersect_point.y, point3.y, abs_tol=1e-9))):
+                return False
             
             diagonal = Geometry.distance(point1, point3)
             right = Geometry.distance(point1, intersect_point)
@@ -309,8 +285,8 @@ class Kite():
             
             point1, point2, point3, point4 = scenario
 
-            intersect_point1 = Kite.find_intersect(point1, point3, point2)
-            intersect_point2 = Kite.find_intersect(point2, point4, point1)
+            intersect_point1 = Dart.find_intersect(point1, point3, point2)
+            intersect_point2 = Dart.find_intersect(point2, point4, point1)
             
             # both intersect points must be the same
             if(not math.isclose(intersect_point1.x, intersect_point2.x, abs_tol=1e-9) or
@@ -326,7 +302,7 @@ class Kite():
             # one of the intersect points must be the midpoint its other diagonal
             # and the other must be off of its other diagonal, but not both
             if(not math.isclose(right1+left1, diagonal1, abs_tol=1e-9) or
-               not math.isclose(right2+left2, diagonal1, abs_tol=1e-9)):
+               not math.isclose(right2+left2, diagonal2, abs_tol=1e-9)):
                 return False
 
         return True
