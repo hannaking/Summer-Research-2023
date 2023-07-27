@@ -182,9 +182,15 @@ class IsoTrapezoid():
         side_length = Geometry.distance(point1, point2) / 2 if abs(angle) == math.radians(60) else Geometry.distance(point1, point2)
         return Geometry.calculate_point_from_angle(angle, point1, point2, side_length)
 
+    # verifies that the points are a isoscles trapezoid
+    #
+    # returns whether it is an isosceles trapezoid
     def _verify_isotrapezoid(self):
         return IsoTrapezoid.are_isotrapezoids([self._points])
 
+    # finds if the scenarios are isosceles trapezoids
+    #
+    # returns whether they are isosceles trapezoids
     @staticmethod
     def are_isotrapezoids(scenarios):
         for scenario in scenarios:
@@ -204,13 +210,18 @@ class IsoTrapezoid():
             if (not((math.isclose(angle1, angle2) and math.isclose(angle3, angle4)) or 
                     (math.isclose(angle1, angle4) and math.isclose(angle2, angle3)))):
                 return False
-                
-
+        
         return True
 
+    # verifies whether the points are 3 points that could form an isosceles trapezoid
+    #
+    # returns whether it is isosceles trapezoidable
     def _verify_isotrapezoid_3_points(self):
         return IsoTrapezoid.are_isotrapezoidable([self._points])
 
+    # gets whether the scenarios could form an isosceles trapezoid
+    #
+    # returns whether it is isosceles trapezoidable
     @staticmethod
     def are_isotrapezoidable(scenarios):
         for scenario in scenarios:

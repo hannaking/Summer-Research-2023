@@ -33,37 +33,6 @@ class RightTrapezoid():
         self._points = known_coords
 
     def coordinatize(self):
-        # you will start with either one point, two points, or three points.
-        #
-        # First, we sort the coordinates
-        #
-        # if you have one point, you will need to find the second point. There is only one option: 1 unit to the right of the start point.
-        # We make this decision based on the fact that since we only know the first point, we have no knowledge of the size of the square,
-        # so we default to 1 unit. It is to the right because it would look the same whether it was to the left, up, or down, so it does not make
-        # much of a meaningful difference.
-        #
-        # once two points are found, you will need to find the third points (plural!) 
-        # If you were given two points to start with, you find the distance between the two. 
-        # This is the side length of the square, so you know how far away the third point should be.
-        # There are two options: above the second point and below the second point.
-        #
-        # Once three points are found, you will need to find the fourth points.
-        # There is only one option: the final corner of the square.
-        # However, you need to repeat the process for each third coordinate.
-        # Like before, find the side length by finding the distance between two of the points.
-        # Then you'll find the points that are 90 and -90 degrees from the line formed by the third point and the second point.
-        # Only one of these coordinates is correct.
-        # We find the correct point by creating vectors between the first point and the second point, then the first point and the two possible third points.
-        # We check which of the vectors are orthogonal to the vector between the first point and the second point.
-        # The one that is orthogonal is the correct point.
-        # The one that is not orthogonal is the incorrect point.
-        #
-        # Once you have the fourth point, you have a complete scenario.
-        #
-        # For each of these scenarios, we rotate the points about the origin with the angles we care about:
-        # [30, 45, 60, 90, 180 ,-30, -45 ,-60 ,-90] degrees (will convert to radians)
-        # Each of these is a new scenario.
-        # We then unsort these scenarios, then return them.
 
         if None not in self._points:
             scenarios.append(self._points)
@@ -201,9 +170,15 @@ class RightTrapezoid():
 
         return third_points
 
+    # verifies whether the points form a right trapezoid
+    #
+    # returns whether it is a right trapezoid
     def _verify_righttrapezoid(self):
         return RightTrapezoid.are_righttrapezoids([self._points])
 
+    # determins if the scenarios are right trapezoids
+    #
+    # returns whether they are rght trapezoids
     @staticmethod
     def are_righttrapezoids(scenarios):
         for scenario in scenarios:
@@ -233,9 +208,15 @@ class RightTrapezoid():
 
         return True
 
+    # verifies the points are three points that can form a right trapezoid
+    #
+    # returns if it can form a right trapezoid
     def _verify_righttrapezoid_3_points(self):
         return RightTrapezoid.are_righttrapezoidable([self._points])
 
+    # determines whether the scenarios are 4 points that can form right trapezoids
+    #
+    # returns whether they can form right trapezoids
     @staticmethod
     def are_righttrapezoidable(scenarios):
         for scenario in scenarios:

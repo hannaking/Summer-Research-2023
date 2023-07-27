@@ -142,9 +142,15 @@ class Isosceles():
 
         return third_points
 
+    # verifies the points form an isosceles triangle
+    #
+    # returns whether is is an isosceles triangle
     def _verify_isosceles_triangle(self):
         return Isosceles.are_isosceles_triangles([self._points])
     
+    # determines wheter the scenarios form isosceles triangles
+    #
+    # returns whether they are isosceles triangles
     @staticmethod
     def are_isosceles_triangles(scenarios):
         for scenario in scenarios:

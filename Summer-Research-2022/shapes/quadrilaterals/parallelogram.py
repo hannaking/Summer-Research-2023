@@ -238,6 +238,9 @@ class Parallelogram():
             
         return True
     
+    # finds if the scenarios are parallelographs
+    #
+    # returns whether they are parallelograms
     @staticmethod
     def are_parallelograms(scenarios):
         for scenario in scenarios:

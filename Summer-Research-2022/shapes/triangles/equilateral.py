@@ -80,7 +80,9 @@ class Equilateral():
         # a list of lists of 3 Points
         return scenarios
 
-    
+    # verifies the points form an equilateral triangle
+    #
+    # returns whether it is a triangle
     def _verify_equilateral_triangle(self):
         if len(self._points) != 3:
             return False

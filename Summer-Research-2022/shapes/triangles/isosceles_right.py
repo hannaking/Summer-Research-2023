@@ -11,10 +11,6 @@ from geometry import Geometry
 
 DEFAULT_SIDE_LENGTH = 1
 
-
-
-# _points = a list of Point objects that represent the starting position for the equilateral triangle
-
 # sides of equal length, all angles are 60 degrees
 class IsoscelesRight(): 
     def __init__(self, known_coords):
@@ -133,7 +129,9 @@ class IsoscelesRight():
 
         return third_points
     
-    
+    # verifies the points form an isosceles rihgt triangle
+    #
+    # returns whether it is an isosceles triangle triangle
     def _verify_isosceles_triangle(self):
         if len(self._points) != 3:
             return False

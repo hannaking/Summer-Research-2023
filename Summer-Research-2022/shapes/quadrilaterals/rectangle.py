@@ -35,17 +35,17 @@ class Rectangle():
         # First, we sort the coordinates
         #
         # if you have one point, you will need to find the second point. There is only one option: 1 unit to the right of the start point.
-        # We make this decision based on the fact that since we only know the first point, we have no knowledge of the size of the square,
+        # We make this decision based on the fact that since we only know the first point, we have no knowledge of the size of the rectangle,
         # so we default to 1 unit. It is to the right because it would look the same whether it was to the left, up, or down, so it does not make
         # much of a meaningful difference.
         #
         # once two points are found, you will need to find the third points (plural!) 
         # If you were given two points to start with, you find the distance between the two. 
-        # This is the side length of the square, so you know how far away the third point should be.
-        # There are two options: above the second point and below the second point.
+        # This is the side length of the rectangle, so you know how far away the third point should be (2x that or 1/2 that).
+        # There are four options: above the second point(2x or 1/2x) and below the second point(2x or 1/2x).
         #
         # Once three points are found, you will need to find the fourth points.
-        # There is only one option: the final corner of the square.
+        # There is only one option: the final corner of the rectangle.
         # However, you need to repeat the process for each third coordinate.
         # Like before, find the side length by finding the distance between two of the points.
         # Then you'll find the points that are 90 and -90 degrees from the line formed by the third point and the second point.
@@ -100,7 +100,7 @@ class Rectangle():
         #                                     = 8 before rotations
         #                                     * (this + 9 angles) = 80 max scenarios
 
-        # boolean that tells whether this square is vertex glued or not. default to False.
+        # boolean that tells whether this rectangle is vertex glued or not. default to False.
         vertex_gluing = False
 
         # so third points works if 2 in
@@ -183,7 +183,7 @@ class Rectangle():
 
         return third_points
 
-    # return a Point object. there is 1 option: the final corner of the square.
+    # return a Point object. there is 1 option: the final corner of the rectangle.
     # finds the fourth points by finding the point 90 degrees from the line formed by pt 2 and pt 1
     # notice how this is FLIPPED from get_third_points.
     # need the if... negative angle to avoid twists -> be on the right side of the first segment
@@ -194,9 +194,15 @@ class Rectangle():
         if (point3.x, point3.y) < (point2.x, point2.y): return Geometry.calculate_point_from_angle(-ANGLE, point1, point2, side_length)
         return Geometry.calculate_point_from_angle(ANGLE, point1, point2, side_length)
     
+    # verifies if the points forms a rectangle
+    #
+    # returns if it is a rectangle
     def _verify_rectangle(self):
         return Rectangle.are_rectangles([self._points])
 
+    # finds if the scenarios are rectangles
+    #
+    # returns whether they are rectangles
     @staticmethod
     def are_rectangles(scenarios):
         for scenario in scenarios:
@@ -223,9 +229,15 @@ class Rectangle():
 
         return True
 
+    # verifies if the points are 3 points that could form a rectangle
+    #
+    # returns if it could form a rectangle
     def _verify_rectangle_3_points(self):
         return Rectangle.are_rectangleable([self._points])
 
+    # finds if the scenarios can form rectangles
+    #
+    # returns whether they are rectangleable
     @staticmethod
     def are_rectangleable(scenarios):
         for scenario in scenarios:
