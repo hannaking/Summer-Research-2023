@@ -11,7 +11,7 @@ from textbook_identifier import TextbookIdentifier
 if __name__ == '__main__':
 
     show_lattices = False
-    show_figures  = False
+    show_figures  = True
 
     if not show_lattices:
         print("Not showing lattices.")
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0,         2,        0,      0,        0,        0,         0       ]
+    input_shape_list = [0,        2,         1,     0,         0,        0,         0       ]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -64,19 +64,19 @@ if __name__ == '__main__':
     # options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
     #          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
     #          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
-    shape_types = ['Isosceles', 'NonIsoscelesRight']
+    shape_types = ['Square', 'Equilateral']
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
     
     # puts the figures on the plane and removes overlapping figures
-    shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
+    # shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
 
-    # figures = 0
-    # for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
-    #     print("Lattices:", str(i+1) + "/" + str(len(lattices_final)))
-    #     if True:
-    #         for j, graph in enumerate(graphs):
-    #             print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
-    #             figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], False)
-    # print(figures)
+    figures = 0
+    for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
+        print("Lattices:", str(i+1) + "/" + str(len(lattices_final)))
+        if True:
+            for j, graph in enumerate(graphs):
+                print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
+                figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
+    print(figures)

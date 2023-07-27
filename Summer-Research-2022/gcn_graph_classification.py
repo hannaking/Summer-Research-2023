@@ -15,7 +15,7 @@ from keras.losses import binary_crossentropy
 from keras.callbacks import EarlyStopping
 import keras_tuner
 from keras.utils.vis_utils import plot_model
-from ann_visualizer.visualize import ann_viz;
+#from ann_visualizer.visualize import ann_viz;
 import visualkeras
 
 from to_stellar_graph import ToStellarGraph

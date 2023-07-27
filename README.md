@@ -5,7 +5,18 @@ Lattice-Based Generation of Geometry Figures is a program that allows users to i
 
 ## Requirements
 
-I'm not quite sure yet
+    stellargraph
+    networkx
+    numpy
+    matplotlib
+    itertools
+    shapely
+    pandas
+    sklearn
+    tensorflow
+    keras
+    keras_tuner
+    visualkeras
 
 ## Usage
 

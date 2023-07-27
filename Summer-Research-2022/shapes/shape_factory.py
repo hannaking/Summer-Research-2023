@@ -5,7 +5,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-from shapes.triangles.triangle_factory              import TriangleFactory
+from shapes.triangles.triangle_factory       import TriangleFactory
 from quadrilaterals.quadrilateral_factory    import QuadrilateralFactory
 from pentagon.pentagon_factory               import PentagonFactory
 from hexagon.hexagon_factory                 import HexagonFactory
