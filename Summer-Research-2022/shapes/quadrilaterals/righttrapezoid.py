@@ -137,18 +137,18 @@ class RightTrapezoid():
                 past_angle = Geometry.get_angle(scenario[0], scenario[1], scenario[2])
                 past_side_len = Geometry.distance(scenario[1], scenario[2])
                 # +/-45
-                if math.degrees(abs(past_angle)) == 45:
-                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[1], scenario[2], 1/2 * past_side_len)
-                # +/- 135
-                elif math.degrees(abs(past_angle)) == 135:
-                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(45), scenario[1], scenario[2], (2/math.sqrt(2)) * past_side_len)
+                if math.isclose(math.degrees(abs(past_angle)), 45):
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[1], 0.5 * past_side_len)
+                    # +/- 135
+                elif math.isclose(math.degrees(abs(past_angle)), 135):
+                    scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(45), scenario[2], scenario[1], math.sqrt(2) * past_side_len)
                 # either 90
                 else:
                     first_side_len = Geometry.distance(scenario[0], scenario[1])
                     if math.isclose(past_side_len, first_side_len):
-                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(135), scenario[1], scenario[2], math.sqrt(2) * past_side_len)
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(135), scenario[2], scenario[1], math.sqrt(2) * past_side_len)
                     else:
-                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[1], scenario[2], 1 * past_side_len)
+                        scenario[3] = Geometry.calculate_point_from_angle((past_angle / abs(past_angle)) * math.radians(90), scenario[2], scenario[1], 1 * past_side_len)
 
         # get rid of any unused / empty / repeated scenarios
         # necessary?
@@ -184,11 +184,6 @@ class RightTrapezoid():
         return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
     # return a list of Point objects. 
-    # finds the third points by finding the point 90 degrees and -90 degrees from the line formed by pt 1 and pt 2
-    # i need this to be the other of what the first two points are
-    #     so, if points one and 2 are a short side, this needs to be a long side and vice versa
-    #     how do I know? i don't :/
-    #     we decided to use a factor of 2 for the side lengths. so I can return both length first / 2 and first * 2 i think
     def get_third_points(self, point1, point2, side_len):
         side_lengths = [math.sqrt(2) * side_len,
                         (2/math.sqrt(2)) * side_len,
@@ -198,8 +193,8 @@ class RightTrapezoid():
         
         third_points = []
         # this will make the second side
-        # so, need  t->a      a->b      b->f        f->t
-        #           135, -35  45, -45   90, -90     90, -90
+        # so, need  t->a       a->b      b->f        f->t
+        #           135, -135  45, -45   90, -90     90, -90
         for i in range(len(side_lengths)):
             third_points.append(Geometry.calculate_point_from_angle(angles[i], point2, point1, side_lengths[i]))
             third_points.append(Geometry.calculate_point_from_angle(-angles[i], point2, point1, side_lengths[i]))
