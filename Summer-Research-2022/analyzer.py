@@ -639,10 +639,10 @@ class Analyzer():
 #for amount in textbook_node_counts:
 #    textbook_node_counts[amount] /= base_node_counts[amount]
 
-data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
-textbook_node_counts = data["Textbook"]["Node Count Info"]["count"]
+# data = Analyzer.read_data("Summer-Research-2022/hold", "textbook_118.json")
+# textbook_node_counts = data["Textbook"]["Node Count Info"]["count"]
 
-Analyzer._create_histogram(textbook_node_counts, False, "Node Counts")
+# Analyzer._create_histogram(textbook_node_counts, False, "Node Counts")
 
 #Analyzer.perform_test_parts()
 
@@ -664,6 +664,9 @@ Analyzer._create_histogram(textbook_node_counts, False, "Node Counts")
 # plt.ylabel('Percent Textbook Shape Distribution')
 # plt.show()
 # plt.close()
+
+
+#Analyzer.aquire_willingness()
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -466,7 +466,7 @@ class GraphClassifier:
 
 # print(model.layers)
 
-# a = visualkeras.graph_view(model, layer_spacing=75)
+# a = visualkeras.graph_view(model, layer_spacing=75, node_spacing=-10)
 
 # print(a.show())
 
