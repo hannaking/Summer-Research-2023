@@ -11,7 +11,7 @@ from textbook_identifier import TextbookIdentifier
 if __name__ == '__main__':
 
     show_lattices = False
-    show_figures  = True
+    show_figures  = False
 
     if not show_lattices:
         print("Not showing lattices.")
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Create input shape list
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0,        2,         1,     0,         0,        0,         0       ]
+    input_shape_list = [0,        1,         1,     0,         0,        0,         0       ]
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
     #          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
     #          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
-    shape_types = ['Square', 'Equilateral']
+    shape_types = ['Square', 'IsoscelesRight', 'Equilateral']
 
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
@@ -78,5 +78,6 @@ if __name__ == '__main__':
         if True:
             for j, graph in enumerate(graphs):
                 print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
-                figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
+                if True:
+                    figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
     print(figures)
