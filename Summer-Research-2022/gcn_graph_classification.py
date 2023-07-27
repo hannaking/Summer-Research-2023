@@ -26,11 +26,14 @@ class GraphClassifier:
     """
     The Graph Classifier can create a model that predicts a label for a list of graphs, or
     use a model to predict the labels of never-before-seen graphs.
-
-    stellar_graphs - a list of stellar graphs that the graph classifier will be working on
-    graphs_labels - the label indicating, for each graph, whether the graph is from a textbook
-    model - the model that predicts whether a graph is textbook-like or not.
+    
     """
+
+    # initializes the graph classifier
+    #
+    # stellar_graphs - a list of stellar graphs that the graph classifier will be working on
+    # graphs_labels - the label indicating, for each graph, whether the graph is from a textbook
+    # model - the model that predicts whether a graph is textbook-like or not.
     def __init__(self, stellar_graphs:StellarGraph, graph_labels:pd.Series=None, model=None):
         self.set_graphs(stellar_graphs, graph_labels)
         self.model = model

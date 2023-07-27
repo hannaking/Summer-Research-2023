@@ -20,6 +20,11 @@ VERTEX_LATTICE_LAYER    = 1
 BOTTOM_LATTICE_LAYER    = 0
 
 class LatticeGenerator:
+    """
+    The Lattice Generator class creates all lattice representations of figures that could represent a 
+    list of shape quantities formatted as [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
+
+    """
 
     def __init__(self, shape_amounts):
 
@@ -200,6 +205,16 @@ class LatticeGenerator:
 
     # constrains the lattice matrix to only matricies that have the correct number of shapes
     def constrain_to_final(self, matrix, num_shapes):
+        '''
+        flattens the Lattice matrix, removes associated the integer list and
+        aquires only the Lattices that have a given number of total shape nodes
+
+        matrix - the full Lattice matrix
+        
+        num_shapes - the number of shape nodes desired on the final Lattices
+
+        returns the finalized list of Lattices
+        '''
         final = []
         for layer in matrix:
             for lattice, _ in layer:
@@ -211,6 +226,11 @@ class LatticeGenerator:
     # glue shapes in shape list in every possible way
     # maximum shapes in a figure will be one more than the number of shapes in the shape list
     def glue_shapes(self):
+        '''
+        creates a matrix of Lattice representaions
+
+        returns the Lattice matrix
+        '''
 
         # sum shape array
         upper_bound = sum(self._shape_amounts)

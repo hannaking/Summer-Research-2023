@@ -29,6 +29,9 @@ class LatticeMatrix:
     # as there are shapes in the shapes list
     def __init__(self, shape_amount):
         self._lattice_matrix = []
+        '''
+        matrix of tuples composed of Lattices and integer lists
+        '''
 
         for _ in range(shape_amount):
             self._lattice_matrix.append([])

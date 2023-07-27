@@ -106,7 +106,14 @@ class FaceGraphGenerator:
     #
     # returns a set of face graphs
     @staticmethod
-    def from_lattices(lattices:list[Lattice]):
+    def from_lattices(lattices:list[Lattice]) -> list[list[nx.MultiGraph]]:
+        '''
+        Converts a finilized list of Lattice objects into dual (face) graphs as Networkx MultiGraphs
+
+        lattices - list of Lattice objects
+
+        returns a list of lists of dual graphs such that each lattice is parallel to its assosciated list of dual graphs
+        '''
         face_graphs = []
         
         for lattice in lattices:

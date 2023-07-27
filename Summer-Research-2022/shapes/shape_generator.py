@@ -55,7 +55,9 @@ NUMBER_SHAPE_MAP = {00 : 'Segment',
                     50 : 'RegularSept',
                     60 : 'RegularOct'}
 
-"""
+
+class ShapeGenerator:
+    """
     The ShapeGenerator class is responsible for everything that has to do with putting a lattice on a plane.
     To do this, instantiate a ShapeGenerator, then call generate_by_lattice_traversal(lattice), with lattice being the lattice
     you're generating shapes for.
@@ -84,10 +86,8 @@ NUMBER_SHAPE_MAP = {00 : 'Segment',
         look in shape_factory.py for more details on how the corresponding vertices are actually found.
 
     coordinates: a Point object. When the word "coordinate" is used, it means a point on the graph.
-"""
-class ShapeGenerator:
+    """
 
-    #TODO: Add more shape types
     def __init__(self, shape_types=None):
 
         self._draw_order_indices = []
@@ -363,6 +363,19 @@ class ShapeGenerator:
 
 
     def generate_from_dual_lattice_pairs(self, lattices, dual_graphs, show_scenarios=False):
+        '''
+        puts the figures on the plane using the arrangements from the lattices and the specific shapes
+        from the associated dual graphs
+
+        lattices - list of Lattices
+
+        dual_graphs - list of lists of networkx MutiGraphs associated with each lattice
+
+        show_scenarios - whether or not to display the figures that are on the plane
+
+        returns the number of figures that were generated
+        '''
+        
         start = time.time()
 
         coords = []
