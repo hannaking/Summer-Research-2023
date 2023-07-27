@@ -24,7 +24,7 @@ ROTATE_ANGLES = [math.radians(30),
 # _points = a list of Point objects that represent the starting position for the equilateral triangle
 
 # 4 sides of equal length, all angles are 90 degrees
-class Square(): 
+class Square():
 
     def __init__(self, known_coords):
         self._points = known_coords
@@ -162,6 +162,9 @@ class Square():
 
         return next_point
 
+    # verifies that a square can be made out of the 3 points and that it is 3 points
+    #
+    # retuns whather a square can be made
     def _verify_square_3_points(self):
         if len(self._points) != 4:
                 return False
@@ -181,6 +184,7 @@ class Square():
             
         angle = abs(Geometry.get_angle(point1, point2, point3))
 
+        # angle must be 90 or -90 and the the sides must be the same length
         if not math.isclose(abs(angle), math.pi / 2, abs_tol=1e-9) or not math.isclose(side1, side2, abs_tol=1e-9):
             return False
             
@@ -199,15 +203,24 @@ class Square():
         return new_scenarios
     
 
+    # verifies that the four points create a square
     def _verify_square(self):
         return Square.are_squares([self._points])
 
+    # checks that all of the scearios are squares
+    #
+    # scenarios - list of lists of points
+    #
+    # returns whether they are squares
     @staticmethod
     def are_squares(scenarios):
         for scenario in scenarios:
+
+            # has four sides
             if len(scenario) != 4:
                 return False
             
+            # can't have a missing point
             if None in scenario:
                 return False
             
@@ -217,17 +230,16 @@ class Square():
             side2 = Geometry.distance(point2, point3)
             side3 = Geometry.distance(point3, point4)
             side4 = Geometry.distance(point4, point1)
-
-            if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
-                return False
         
             angle = Geometry.get_angle(point1, point2, point3)
 
+            # all sides must be the same
             if(not math.isclose(side1, side2, abs_tol=1e-9) or
                not math.isclose(side2, side3, abs_tol=1e-9) or
                not math.isclose(side3, side4, abs_tol=1e-9)):
                 return False
             
+            # angles must be 90 degrees (all others ensured by previous condition)
             if not math.isclose(abs(angle), math.pi / 2, abs_tol=1e-9):
                 return False
 
