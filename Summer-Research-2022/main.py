@@ -21,9 +21,21 @@ if __name__ == '__main__':
 
     print()
 
+
+    # ======================================================================================================= #
+    #                                                   Inputs
+
     # Create input shape list
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
-    input_shape_list = [0,        1,         1,     0,         0,        0,         0       ]
+    input_shape_list = [0,        1,         1,     0,         0,        0,         0       ] # counts
+
+    # chooses the specific shapes that will appear in the generated figures
+    # options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
+    #          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
+    #          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
+    shape_types = ['Square', 'IsoscelesRight', 'Equilateral']
+
+    # ======================================================================================================= #
 
     # Initialize the lattice generator.
     lattice_generator = LatticeGenerator(input_shape_list)
@@ -41,8 +53,8 @@ if __name__ == '__main__':
     key = TextbookIdentifier.identify(dual_graphs, "model__1")
     lattices_final, dual_graphs = TextbookIdentifier.get_only_in_textbook(lattices_final, dual_graphs, key)
     
-    # re-adds certain detail for the old figure generator
-    refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
+    # # re-adds certain detail for the old figure generator
+    # refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
 
     # Show lattices.
     if show_lattices:
@@ -60,24 +72,18 @@ if __name__ == '__main__':
     # examples: NonIsoscelesRight --> IsoscelesRight
     #           Parallelogram --> Square
 
-    # chooses the specific shapes that will appear in the generated figures
-    # options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
-    #          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
-    #          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
-    shape_types = ['Square', 'IsoscelesRight', 'Equilateral']
-
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
     
     # puts the figures on the plane and removes overlapping figures
-    # shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
+    shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
 
-    figures = 0
-    for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
-        print("Lattices:", str(i+1) + "/" + str(len(lattices_final)))
-        if True:
-            for j, graph in enumerate(graphs):
-                print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
-                if True:
-                    figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
-    print(figures)
+    # figures = 0
+    # for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
+    #     print("Lattices:", str(i+1) + "/" + str(len(lattices_final)))
+    #     if True:
+    #         for j, graph in enumerate(graphs):
+    #             print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
+    #             if True:
+    #                 figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
+    # print(figures)

@@ -30,6 +30,14 @@ from textbook_identifier import TextbookIdentifier
 #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
 input_shape_list = [0,         2,        0,      0,        0,        0,         0       ]
 
+# chooses the specific shapes that will appear in the generated figures
+# options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
+#          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
+#          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
+shape_types = ['Isosceles', 'NonIsoscelesRight']
+
+
+
 # Initialize the lattice generator.
 lattice_generator = LatticeGenerator(input_shape_list)
 
@@ -49,15 +57,11 @@ lattices_final, dual_graphs = TextbookIdentifier.get_only_in_textbook(lattices_f
 # determines whether or not the individual figures are displayed
 show_figures  = False
 
-# chooses the specific shapes that will appear in the generated figures
-# options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
-#          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
-#          'Dart',      'RegularPent', 'RegularHex',    'RegularSept',    'RegularOct'
-shape_types = ['Isosceles', 'NonIsoscelesRight']
-
 # Convert lattices to geometry figures.
 # not including the shape_types allows all shapes
 shape_generator = ShapeGenerator(shape_types)
+
+
 
 # puts the figures on the plane and removes overlapping figures
 shape_generator.generate_from_dual_lattice_pairs(final_lattices, dual_graphs, show_figures)
