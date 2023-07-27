@@ -37,7 +37,7 @@ class Square():
         sorted_points = [b[1] for b in first_sort]
 
         # checks if there are the correct number of points
-        if len(sorted_points) != 5:
+        if len(sorted_points) != 4:
             return []
 
         point1 = sorted_points[0]
@@ -62,7 +62,7 @@ class Square():
             vertex_gluing = True
         
         if point3 == None:
-            scenarios = self.get_third_points(scenarios[0][0], scenarios[0][1])
+            scenarios = self.get_third_point_scenarios(scenarios)
             # now scenarios has len 2
         else:
             # checks if the known n points can even form a square
@@ -198,31 +198,37 @@ class Square():
                 new_scenarios.append(Geometry.rotate(scenario, angle))
         return new_scenarios
     
+
     def _verify_square(self):
-        if len(self._points) != 4:
-            return False
-            
-        if None in self._points:
-            return False
-            
-        point1, point2, point3, point4 = self._points
+        return Square.are_squares([self._points])
 
-        side1 = Geometry.distance(point1, point2)
-        side2 = Geometry.distance(point2, point3)
-        side3 = Geometry.distance(point3, point4)
-        side4 = Geometry.distance(point4, point1)
+    @staticmethod
+    def are_squares(scenarios):
+        for scenario in scenarios:
+            if len(scenario) != 4:
+                return False
+            
+            if None in scenario:
+                return False
+            
+            point1, point2, point3, point4 = scenario
 
-        if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
-            return False
+            side1 = Geometry.distance(point1, point2)
+            side2 = Geometry.distance(point2, point3)
+            side3 = Geometry.distance(point3, point4)
+            side4 = Geometry.distance(point4, point1)
+
+            if not math.isclose(side1, side3, abs_tol=1e-9) or not math.isclose(side2, side4, abs_tol=1e-9):
+                return False
         
-        angle = Geometry.get_angle(point1, point2, point3)
+            angle = Geometry.get_angle(point1, point2, point3)
 
-        if(not math.isclose(side1, side2, abs_tol=1e-9) or
-           not math.isclose(side2, side3, abs_tol=1e-9) or
-           not math.isclose(side3, side4, abs_tol=1e-9)):
-            return False
+            if(not math.isclose(side1, side2, abs_tol=1e-9) or
+               not math.isclose(side2, side3, abs_tol=1e-9) or
+               not math.isclose(side3, side4, abs_tol=1e-9)):
+                return False
             
-        if not math.isclose(angle, math.pi / 2, abs_tol=1e-9):
-            return False
+            if not math.isclose(abs(angle), math.pi / 2, abs_tol=1e-9):
+                return False
 
         return True
