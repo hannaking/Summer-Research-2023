@@ -58,7 +58,67 @@ class TestKite(unittest.TestCase):
         scenarios = shape.coordinatize()
         TestKite.show_failed(scenarios)
         self.assertTrue(Kite.are_kites(scenarios))
-        self.assertEqual(len(scenarios), 80)
+        self.assertEqual(len(scenarios), 8)
+        unique = set()
+        for scenario in scenarios:
+            self.assertNotIn(tuple(scenario), unique)
+            unique.add(tuple(scenario))
+
+    def test_coordinatize_4_in_is_kite(self):
+        points = [Point(0,0), Point(1,0), Point(1,1), Point(0,1)]
+        shape = Kite(points)
+        scenarios = shape.coordinatize()
+        TestKite.show_failed(scenarios)
+        self.assertTrue(Kite.are_kites(scenarios))
+        self.assertEqual(len(scenarios), 1)
+        unique = set()
+        for scenario in scenarios:
+            self.assertNotIn(tuple(scenario), unique)
+            unique.add(tuple(scenario))
+
+    def test_coordinatize_4_in_is_not_kite(self):
+        points = [Point(0,0), Point(1,9), Point(1,1), Point(0,1)]
+        shape = Kite(points)
+        scenarios = shape.coordinatize()
+        TestKite.show_failed(scenarios)
+        self.assertTrue(Kite.are_kites(scenarios))
+        self.assertEqual(len(scenarios), 0)
+        unique = set()
+        for scenario in scenarios:
+            self.assertNotIn(tuple(scenario), unique)
+            unique.add(tuple(scenario))
+
+    def test_coordinatize_3_in_is_kite(self):
+        points = [Point(0,0), Point(1,0), Point(1,1), None]
+        shape = Kite(points)
+        scenarios = shape.coordinatize()
+        TestKite.show_failed(scenarios)
+        self.assertTrue(Kite.are_kites(scenarios))
+        self.assertEqual(len(scenarios), 1)
+        unique = set()
+        for scenario in scenarios:
+            self.assertNotIn(tuple(scenario), unique)
+            unique.add(tuple(scenario))
+
+    def test_coordinatize_3_in_is_not_kite(self):
+        points = [Point(0,0), Point(1,9), Point(1,1), None]
+        shape = Kite(points)
+        scenarios = shape.coordinatize()
+        TestKite.show_failed(scenarios)
+        self.assertTrue(Kite.are_kites(scenarios))
+        self.assertEqual(len(scenarios), 0)
+        unique = set()
+        for scenario in scenarios:
+            self.assertNotIn(tuple(scenario), unique)
+            unique.add(tuple(scenario))
+
+    def test_coordinatize_3_in_is_kite(self):
+        points = [Point(0,0), Point(1, -2), Point(2, 0), None]
+        shape = Kite(points)
+        scenarios = shape.coordinatize()
+        TestKite.show_failed(scenarios)
+        self.assertTrue(Kite.are_kites(scenarios))
+        self.assertEqual(len(scenarios), 1)
         unique = set()
         for scenario in scenarios:
             self.assertNotIn(tuple(scenario), unique)
@@ -69,22 +129,18 @@ class TestKite(unittest.TestCase):
     def test_get_second_point_int(self):
         pt1 = Point(1,1)
         shape = Kite([pt1])
-        second_points = shape.get_second_point(pt1)
+        second_point = shape.get_second_point(pt1)
 
-        self.assertAlmostEqual(second_points[0].x, 1 + 1)
-        self.assertAlmostEqual(second_points[0].y, 1)
-        self.assertAlmostEqual(second_points[1].x, 1 + math.sqrt(3))
-        self.assertAlmostEqual(second_points[1].y, 1)
+        self.assertAlmostEqual(second_point.x, 1 + 1)
+        self.assertAlmostEqual(second_point.y, 1)
 
     def test_get_second_point_irrational(self):
         pt1 = Point(math.pi, math.e)
         shape = Kite([[pt1]])
-        second_points = shape.get_second_point(pt1)
+        second_point = shape.get_second_point(pt1)
 
-        self.assertAlmostEqual(second_points[0].x, math.pi + 1)
-        self.assertAlmostEqual(second_points[0].y, math.e)
-        self.assertAlmostEqual(second_points[1].x, math.pi + math.sqrt(3))
-        self.assertAlmostEqual(second_points[1].y, math.e)
+        self.assertAlmostEqual(second_point.x, math.pi + 1)
+        self.assertAlmostEqual(second_point.y, math.e)
 
 # ==================================================== _verify_kite() tests ====================================================
     

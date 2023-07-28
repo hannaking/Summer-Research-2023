@@ -14,13 +14,14 @@ from shapely.geometry import Point
 from quadrilaterals.dart import Dart
 from geometry import Geometry
 
-ANGLES = [math.radians(-120), math.radians(120), math.radians(-90),math.radians(90),
-          math.radians(-90), math.radians(90), math.radians(-60), math.radians(60)]
-ANGLES2 = [math.radians(-90), math.radians(90), math.radians(-60),math.radians(60),
-          math.radians(-120), math.radians(120), math.radians(-90), math.radians(90)]
+# if less than 3 points in, use 60-90-120-90 angles
+DEFAULT_ANGLE_MIDDLE = math.radians(90)
+DEFAULT_ANGLE_SMALL = math.radians(60)
+DEFAULT_ANGLE_LARGE = math.radians(120)
 
 DEFAULT_SIDE_LENGTH = 1
-DEFAULT_RATIO = 2
+DEFAULT_RATIO = math.sqrt(3)
+
 ROTATE_ANGLES = [math.radians(30),
                  math.radians(45),
                  math.radians(60),
@@ -72,12 +73,73 @@ class Kite():
 
         # have 2 points
         if point3 == None:
+            new_scenarios = []
             for scenario in scenarios:
-                next_side_length_a = Geometry.distance(scenario[0], scenario[1]) * 2
-                next_side_length_b = Geometry.distance(scenario[0], scenario[1]) / 2
+                next_side_length_a = Geometry.distance(scenario[0], scenario[1]) * DEFAULT_RATIO
+                next_side_length_b = Geometry.distance(scenario[0], scenario[1]) / DEFAULT_RATIO
+                next_side_length_c = Geometry.distance(scenario[0], scenario[1])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_a),
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_SMALL, Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_a), scenario[1], next_side_length_a)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_b),
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_LARGE, Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_b), scenario[1], next_side_length_b)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_SMALL, scenario[1], scenario[0], next_side_length_c),
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, Geometry.calculate_point_from_angle(DEFAULT_ANGLE_SMALL, scenario[1], scenario[0], next_side_length_c), scenario[1], next_side_length_b)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_LARGE, scenario[1], scenario[0], next_side_length_c),
+                                      Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE, Geometry.calculate_point_from_angle(DEFAULT_ANGLE_LARGE, scenario[1], scenario[0], next_side_length_c), scenario[1], next_side_length_a)])
+                
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_a),
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_SMALL, Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_a), scenario[1], next_side_length_a)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_b),
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_LARGE, Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, scenario[1], scenario[0], next_side_length_b), scenario[1], next_side_length_b)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_SMALL, scenario[1], scenario[0], next_side_length_c),
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_SMALL, scenario[1], scenario[0], next_side_length_c), scenario[1], next_side_length_b)])
+                new_scenarios.append([scenario[0],
+                                      scenario[1],
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_LARGE, scenario[1], scenario[0], next_side_length_c),
+                                      Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_MIDDLE, Geometry.calculate_point_from_angle(-DEFAULT_ANGLE_LARGE, scenario[1], scenario[0], next_side_length_c), scenario[1], next_side_length_a)])
 
+            scenarios = new_scenarios
 
+        # 3 known points
+        elif point4 == None:
+            if not self._verify_kite_3_points(): return []
+            for scenario in scenarios:
+                # pick the appropriate side length
+                past_side_lengths = [abs(Geometry.distance(scenario[0], scenario[1])),
+                                     abs(Geometry.distance(scenario[1], scenario[2]))]
+                # if the 2 existing sides are of equal length, this next one will be *ratio and /ratio of that length
+                # if the 2 existing sides are not equal, this next one will be the length of the second side
 
+                angle_sign_multiplier = Geometry.get_angle(scenario[0], scenario[1], scenario[2]) / abs(Geometry.get_angle(scenario[0], scenario[1], scenario[2]))
+
+                # if you know two non-equal sides, you can solve the kite w SSS triangle proof
+                if past_side_lengths[0] > past_side_lengths[1]:
+                    next_angle = max(self.all_angles(past_side_lengths[1],
+                                                     past_side_lengths[0],
+                                                     Geometry.distance(scenario[0], scenario[2])))
+                    scenario[3] = Geometry.calculate_point_from_angle(next_angle * angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]))
+                elif past_side_lengths[0] < past_side_lengths[1]:
+                    next_angle = min(self.all_angles(past_side_lengths[1],
+                                                     past_side_lengths[0],
+                                                     Geometry.distance(scenario[0], scenario[2])))
+                    scenario[3] = Geometry.calculate_point_from_angle(next_angle * angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]))
+                # given two equal sides
+                else:                    
+                    scenario[3] = Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE * -angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]) * math.tan(Geometry.get_angle(scenario[0], scenario[1], scenario[2]) / 2))
 
         # makes all of the rotations around point1
         if vertex_gluing == True:
@@ -224,20 +286,20 @@ class Kite():
         return True
     #------------------------------------------------MATH-----------------------------------------------
 
-    # theta in radians
-    def get_long_diag(self, short_side, long_side, theta):
-        return math.sqrt(math.pow(long_side, 2) - (math.pow(short_side, 2) * math.pow(math.sin(theta/2)))) + (short_side * math.cos(theta/2))
+    def get_theta(self, short_side, long_side, diag):
+        return max(self.all_angles(short_side, long_side, diag))
 
     def all_angles(self, short_side, long_side, diag):
         return [self.get_a1(short_side, long_side, diag),
                 self.get_a2(short_side, long_side, diag),
-                self.get_a3(self.get_a1(short_side, long_side, diag), self.get_a2(short_side, long_side, diag))]
+                self.get_a3(self.get_a1(short_side, long_side, diag),
+                            self.get_a2(short_side, long_side, diag))]
 
-    def get_a1(short_side, long_side, diag):
+    def get_a1(self, short_side, long_side, diag):
         return 2 * math.acos((math.pow(short_side, 2) + math.pow(diag, 2) - math.pow(long_side, 2)) / 
                          (2 * short_side * diag))
 
-    def get_a2(short_side, long_side, diag):
+    def get_a2(self, short_side, long_side, diag):
         return 2 * math.acos((math.pow(long_side, 2) + math.pow(diag, 2) - math.pow(short_side, 2)) / 
                          (2 * long_side * diag))
 

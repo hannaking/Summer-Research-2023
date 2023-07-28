@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, 'C:/dev/Summer Research 2022/')
 from shapes.quadrilaterals.square import Square
 from shapes.quadrilaterals.rectangle import Rectangle
-from shapes.quadrilaterals.Rhombus import Rhombus
+#from shapes.quadrilaterals.Rhombus import Rhombus
 from shapes.quadrilaterals.parallelogram import Parallelogram
 from shapes.quadrilaterals.kite import Kite
 from shapes.quadrilaterals.righttrapezoid import RightTrapezoid
@@ -12,8 +12,8 @@ from shapes.quadrilaterals.dart import Dart
 # QuadrilateralFactory class 
 class QuadrilateralFactory:
 
-    def __init__(self):
-        self._types = [Square, Rectangle, Rhombus, Parallelogram, Kite, RightTrapezoid, IsoTrapezoid, Dart]
+    def __init__(self):                #Rhombus
+        self._types = [Square, Rectangle, Parallelogram, Kite, RightTrapezoid, IsoTrapezoid, Dart]
 
     def _empty_types(self):
         self._types = []
@@ -28,9 +28,9 @@ class QuadrilateralFactory:
                 self._types.append(Rectangle)
                 return True
 
-            if type == 'Rhombus':
-                self._types.append(Rhombus)
-                return True
+            #if type == 'Rhombus':
+             #   self._types.append(Rhombus)
+             #   return True
 
             if type == 'Parallelogram':
                 self._types.append(Parallelogram)

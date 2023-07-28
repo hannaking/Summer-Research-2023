@@ -1,8 +1,6 @@
 # Main file for the project.
 # This file is responsible for the main flow of the program.
-#from analyzer import Analyzer
-#from random_face_graph_creator import RandomFaceGraphCreator
-#from to_json import ToJson
+
 from lattice_generator import LatticeGenerator
 from face_graphs.face_graph_generator import FaceGraphGenerator
 from shapes.shape_generator import ShapeGenerator
@@ -29,6 +27,10 @@ if __name__ == '__main__':
     #                  [Segments, Triangles, Quads, Pentagons, Hexagons, Septagons, Octagons]
     input_shape_list = [0,        1,         1,     0,         0,        0,         0       ] # counts
 
+    # note: if a shape is handed enough points (minimum of 3) it can become a more rigorous shape
+    # examples: NonIsoscelesRight --> IsoscelesRight
+    #           Parallelogram --> Square
+
     # chooses the specific shapes that will appear in the generated figures
     # options: 'Segment',   'Equilateral', 'Isosceles',     'IsoscelesRight', 'NonIsoscelesRight', 'Square',
     #          'Rectangle', 'Rhombus',     'Parallelogram', 'Kite',           'RightTrapezoid',    'IsoTrapezoid',
@@ -53,9 +55,6 @@ if __name__ == '__main__':
     key = TextbookIdentifier.identify(dual_graphs, "model__1")
     lattices_final, dual_graphs = TextbookIdentifier.get_only_in_textbook(lattices_final, dual_graphs, key)
     
-    # # re-adds certain detail for the old figure generator
-    # refomatted_final = [[(lattice, [0, 0, 0, 0, 0, 0, 0]) for lattice in lattices_final]]
-
     # Show lattices.
     if show_lattices:
 
@@ -64,26 +63,8 @@ if __name__ == '__main__':
                 
                 lattice.show()
 
-    # face graphs is a list of lists, each list containing the face graphs for one lattice
-    # the lists are stored in the same order as their lattices are in lattices
-    # so they are associated, bc I need the lattice for the face graph later when graphing to the plane.
-
-    # note: if a shape is handed enough points (minimum of 3) it can become a more rigorius shape
-    # examples: NonIsoscelesRight --> IsoscelesRight
-    #           Parallelogram --> Square
-
     # Convert lattices to geometry figures.
     shape_generator = ShapeGenerator(shape_types)
     
     # puts the figures on the plane and removes overlapping figures
     shape_generator.generate_from_dual_lattice_pairs(lattices_final, dual_graphs, show_figures)
-
-    # figures = 0
-    # for i, (lattice, graphs) in enumerate(zip(lattices_final, dual_graphs)):
-    #     print("Lattices:", str(i+1) + "/" + str(len(lattices_final)))
-    #     if True:
-    #         for j, graph in enumerate(graphs):
-    #             print("      Dual Graphs:", str(j+1) + "/" + str(len(graphs)))
-    #             if True:
-    #                 figures += shape_generator.generate_from_dual_lattice_pairs([lattice], [[graph]], show_figures)
-    # print(figures)
