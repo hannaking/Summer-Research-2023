@@ -1,5 +1,11 @@
-import math
+# takes a non-zero number of points and returns lists of 2 points such that they form a line segment
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# side length defaults to 1
+# because line segments cannot be edge glued (lattice definition), all line segment will be of default length
 
+import math
 import sys
 import os
 
@@ -21,25 +27,22 @@ class Segment:
     def coordinatize(self):
         scenarios = []  # list of lists of Points
 
-        # shouldn't happen, because segments annot be edge glued
-        if None not in self._points: # two points in
+        # 2 Points in
+        # shouldn't happen, because segments cannot be edge glued
+        if None not in self._points:
             scenarios.append(self._points)
             return scenarios
 
-        # I need to sort the coords , dragging along a list of indices.
-        # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
-        # which i need to be happening so we maintain Point order
-
+        # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
-
-        # but this does get a sorted points list
         sorted_points = [b[1] for b in first_sort]
 
-        # to make it easier to understand what sorted points are
         point1 = sorted_points[0]
         point2 = sorted_points[1]
 
-        if point2 == None: # one point in
+        # 1 Point in
+        if point2 == None:
             # get second point
             point2 = Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
@@ -50,7 +53,7 @@ class Segment:
         # creating a new scenario, and add it to the list of scenarios
         # 1 scenario * 9 angles = 9 new scenarios
         # 10 scenarios in total
-        # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex the segment is glued to.
+        # note: we are rotating the points about point 1, because point 1 is either the origin or the vertex the segment is glued to
         angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
         original_scenario_len = len(scenarios)
         for i in range(original_scenario_len):
@@ -58,14 +61,17 @@ class Segment:
                 new_scenario = Geometry.rotate(scenarios[i], math.radians(angle))
                 scenarios.append(new_scenario)
 
-        # unsort all scenarios
+        # unsort all scenarios to be back in lattice order
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
 
-        # a list of lists of 3 Points
+        # a list of lists of 2 Points
         return scenarios
     
+    # verify the Points form a valid line segment
+    #
+    # return False if not 2 Points or if both Points are equal, otherwise True (valid line segment)
     def _verify_line_segment(self):
         if len(self._points) != 2:
             return False

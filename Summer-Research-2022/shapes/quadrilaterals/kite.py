@@ -1,8 +1,11 @@
-# fix comments
-# currently right kite only
+# takes a non zero number of points and returns lists of 4 points such that they form kites
+# a kite has two equal angles and two pairs of adjacent equal-length sides
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# if less than 3 points in, uses 60-90-120-90 angles
 
 import math
-
 import sys
 import os
 
@@ -39,11 +42,16 @@ class Kite():
     def __init__(self, known_coords):
         self._points = known_coords
 
+    # get the actual points of each possible valid kite
+    #
+    # returns a list of lists, each containing 4 Points
+    # return [] if not 4 Points used in constructor or if the Points provided cannot form a kite
     def coordinatize(self):
 
         scenarios = []
 
         # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None)]
         sorted_points = [b[1] for b in first_sort]
 
@@ -60,19 +68,42 @@ class Kite():
 
         scenarios = [[point1, point2, point3, point4]]
             
-        # checks if a kite can't be made or if the passed in points are already a kite
+        # 4 Points in
+        # checks if the Points given are or are not a valid kite
         if None not in sorted_points:
             if(self.are_kites(scenarios)):
                 return [self._points]
             else:
                 return []
 
+        # 1 Point known
         if point2 == None:
             scenarios = self.get_second_point_scenarios(scenarios)
             vertex_gluing = True
 
-        # have 2 points
+        # 2 Points known
         if point3 == None:
+            # get third and fourth points together
+            #
+            # the existing side is every side of the kite
+            # next side needs to be equal, longer, and shorter
+            #       /\
+            #      /  \
+            #   a /    \ b       short sides
+            #    /      \
+            #   /        \
+            #   \        /
+            #  d \      / c        long sides          (ascii limitations)
+            #     \    / 
+            #      \  /
+            #       \/
+            # need to go a -> b   (short side, short side) (large angle)
+            #            b -> c   (short side, long side)  (middle/duplicated angle)
+            #            c -> d   (long side, long side)   (small angle)
+            #            d -> a   (long side, short side)  (middle, duplicated angle)
+            # and each of those need to be done with both positive and negative angles
+            # total = 8 possible third points
+            # each third point has one possible fourth point
             new_scenarios = []
             for scenario in scenarios:
                 next_side_length_a = Geometry.distance(scenario[0], scenario[1]) * DEFAULT_RATIO
@@ -114,9 +145,11 @@ class Kite():
 
             scenarios = new_scenarios
 
-        # 3 known points
+        # 3 Points known
         elif point4 == None:
+
             if not self._verify_kite_3_points(): return []
+
             for scenario in scenarios:
                 # pick the appropriate side length
                 past_side_lengths = [abs(Geometry.distance(scenario[0], scenario[1])),
@@ -127,17 +160,24 @@ class Kite():
                 angle_sign_multiplier = Geometry.get_angle(scenario[0], scenario[1], scenario[2]) / abs(Geometry.get_angle(scenario[0], scenario[1], scenario[2]))
 
                 # if you know two non-equal sides, you can solve the kite w SSS triangle proof
+                # long side, short side
+                # uses the large angle to go from short to short
                 if past_side_lengths[0] > past_side_lengths[1]:
                     next_angle = max(self.all_angles(past_side_lengths[1],
                                                      past_side_lengths[0],
                                                      Geometry.distance(scenario[0], scenario[2])))
                     scenario[3] = Geometry.calculate_point_from_angle(next_angle * angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]))
+                
+                # short side, long side
+                # uses the small angle to go from long to long
                 elif past_side_lengths[0] < past_side_lengths[1]:
                     next_angle = min(self.all_angles(past_side_lengths[1],
                                                      past_side_lengths[0],
                                                      Geometry.distance(scenario[0], scenario[2])))
                     scenario[3] = Geometry.calculate_point_from_angle(next_angle * angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]))
-                # given two equal sides
+                
+                # two equal sides
+                # always uses the middle / duplicated angle
                 else:                    
                     scenario[3] = Geometry.calculate_point_from_angle(DEFAULT_ANGLE_MIDDLE * -angle_sign_multiplier, scenario[2], scenario[1], Geometry.distance(scenario[1], scenario[2]) * math.tan(Geometry.get_angle(scenario[0], scenario[1], scenario[2]) / 2))
 
@@ -152,13 +192,12 @@ class Kite():
 
         return scenarios
 
-    # gets the scenario that include the second point from the scenario including
-    # only the first point.
-    #  *second point is placed +1 to the x
+    # gets the scenarios with their new second points
+    # the second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
     # 
-    # scenarios - list of list of one point and three Nones
+    # scenarios - list of lists of 1 Point and 5 Nones
     # 
-    # returns the new scenario
+    # returns the list of lists, each with 2 Points and 4 Nones (the new scenarios)
     def get_second_point_scenarios(self, scenarios):
         new_scenarios = []
         for scenario in scenarios:
@@ -170,8 +209,8 @@ class Kite():
 
         return new_scenarios
     
-    # gets the second point given one point
-    #  *second point is placed +1 to the x
+    # calculates the second point given one point
+    #  *second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
     #
     # point1 - 2d point
     #
@@ -179,11 +218,12 @@ class Kite():
     def get_second_point(self, point1):
         return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
     
-    # gets 10 scenarios rotated around the first point
+    # rotates each scenario around the first point at the 10 predetermined angles
+    # only used for shapes with only one Point provided on construction
     #
-    # scenarios - the non-rotated scenarios 
+    # scenarios - the non-rotated scenarios
     #
-    # returns the rotated scenarios
+    # returns the rotated scenarios and the original scenarios passed in, as a list
     def get_rotated_scenarios(self, scenarios):
         new_scenarios = scenarios.copy()
         for scenario in scenarios:
@@ -206,7 +246,7 @@ class Kite():
         p3 = self._points[2]
         return Kite.are_kiteable([[p1, p2, p3, None]])
 
-    # determins if all of the scenarios are posible to create a kite
+    # determins if all of the scenarios area ble to create a kite
     # 
     # scenarios - list of lists of points
     # 
@@ -214,10 +254,11 @@ class Kite():
     @staticmethod
     def are_kiteable(scenarios):
         for scenario in scenarios:
-
+            # 4 spaces
             if len(scenario) != 4:
                 return False
             
+            # order (first three are Points and last is None)
             if (scenario[0] == None or
                 scenario[1] == None or
                 scenario[2] == None or
@@ -226,10 +267,26 @@ class Kite():
 
             point1 = scenario[0]
             point2 = scenario[1]
-            point3 = scenario[2]
+            point3 = scenario[2]            
             
+            #
+            # matching up the intersection I
+            #        ^
+            #       /|\ 
+            #      / | \     r = right   (below)
+            #     /  |  \    l = left    (below)
+            #    /   |   \
+            #   /____|____\ 
+            #   \  r |  l /
+            #    \   |   /
+            #     \  |  /
+            #      \ | /
+            #       \|/
+            #        v
+            #
+
             intersect_point = Dart.find_intersect(point1, point3, point2)
-            
+
             if((math.isclose(intersect_point.x, point1.x, abs_tol=1e-9) and
                 math.isclose(intersect_point.y, point1.y, abs_tol=1e-9)) or
                (math.isclose(intersect_point.x, point3.x, abs_tol=1e-9) and
@@ -246,7 +303,7 @@ class Kite():
 
         return True
     
-    # determins if all of the scenarios are posible are a kite
+    # determins if all of the scenarios are a kite
     # 
     # scenarios - list of lists of points
     # 
@@ -254,10 +311,11 @@ class Kite():
     @staticmethod
     def are_kites(scenarios):
         for scenario in scenarios:
-
+            # 4 spaces
             if len(scenario) != 4:
                 return False
             
+            # all Points filled
             if None in scenario:
                 return False
             
@@ -284,24 +342,27 @@ class Kite():
                 return False
 
         return True
-    #------------------------------------------------MATH-----------------------------------------------
-
-    def get_theta(self, short_side, long_side, diag):
-        return max(self.all_angles(short_side, long_side, diag))
-
+    # ------------------------------------------------ MATH ----------------------------------------------- #
+    # returns all three unique angles involved in the kite
     def all_angles(self, short_side, long_side, diag):
         return [self.get_a1(short_side, long_side, diag),
                 self.get_a2(short_side, long_side, diag),
                 self.get_a3(self.get_a1(short_side, long_side, diag),
                             self.get_a2(short_side, long_side, diag))]
 
+    # these use the SSS triangle proof on half the kite to solve for the angles
+    # first two could be either depending on kite orientation
+    #
+    # top / large angle (or bottom / small angle)
     def get_a1(self, short_side, long_side, diag):
         return 2 * math.acos((math.pow(short_side, 2) + math.pow(diag, 2) - math.pow(long_side, 2)) / 
                          (2 * short_side * diag))
 
+    # bottom / small angle (or top / large angle)
     def get_a2(self, short_side, long_side, diag):
         return 2 * math.acos((math.pow(long_side, 2) + math.pow(diag, 2) - math.pow(short_side, 2)) / 
                          (2 * long_side * diag))
 
+    #other angle (duplicated / middle angle)
     def get_a3(self, a1, a2):
         return 180 - (a1/2) - (a2/2)

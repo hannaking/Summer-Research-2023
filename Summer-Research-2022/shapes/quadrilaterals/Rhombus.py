@@ -1,6 +1,12 @@
+# takes a non zero number of points and returns lists of 6 points such that they form a rhombus
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# all sides will be of equal length, defaulting to side length 1
+# to differentiate from squares, it has 2 pairs of equal angles (default 80 and 100)
+
 import sys
 import math
-import collections
 import os
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -20,40 +26,50 @@ class Rhombus():
     def __init__(self, known_coords):
         self._points = known_coords
 
+    # get the actual points of each possible valid rhombus
+    #
+    # returns a list of lists, each containing 4 Points
+    # return [] if not 4 Points used in constructor or if the Points provided cannot form a rhombus
     def coordinatize(self):
 
-        scenarios = []  # list of lists of Points
+        scenarios = []
 
-        if None not in self._points:
-            scenarios.append(self._points)
-            return scenarios
-
-        # I need to sort the coords , dragging along a list of indices.
+        # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
-
-        # but this does get a sorted points list
         sorted_points = [b[1] for b in first_sort]
 
-        # to make it easier to understand what sorted points are
+        # 4 points known
+        # checks if the Points given are or are not a valid rhombus
+        if None not in sorted_points:
+            if(self._verify_rhombi()):
+                return [self._points]
+            else:
+                return []
+
         point1 = sorted_points[0]
         point2 = sorted_points[1]
         point3 = sorted_points[2]
         point4 = sorted_points[3]
 
-        # boolean that tells whether this square is vertex glued or not. default to False.
+        # boolean for whether this rhombus is vertex glued or not. default to False.
         vertex_gluing = False
 
+        # 1 Point known
         if point2 == None:
             # get second point
             point2 = self.get_second_point(point1)
-            # since we only have one point, we know that the square is vertex glued.
             vertex_gluing = True
 
+        # 2 Points known
         if point3 == None:
             # get third points
             third_points = self.get_third_points(point1, point2)
+        
+        # 3 Points known
         else:
             third_points = [point3]
+        
         # we have two scenarios at 0 degrees: above the x axis and below the x axis
         for third_point in third_points:
             if point4 == None:
@@ -61,14 +77,9 @@ class Rhombus():
                 fourth_point = self.get_fourth_points(point1, point2, third_point)
                 scenarios.append([point1, point2, third_point, fourth_point])
 
-        # you would only ever want to rotate your shape if you are vertex glued.
-        # if you are already given two or three points, there is no point in rotating your shape.
         if vertex_gluing == True:
             # now we will rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
             # creating a new scenario, and add it to the list of scenarios
-            # 2 scenarios * 9 angles = 18 new scenarios
-            # 20 scenarios in total
-            # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex we are glued to.
             angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
             original_scenario_len = len(scenarios)
             for i in range(original_scenario_len):
@@ -76,7 +87,7 @@ class Rhombus():
                     new_scenario = Geometry.rotate(scenarios[i], math.radians(angle))
                     scenarios.append(new_scenario)
 
-        # unsort all scenarios
+        # unsort all scenarios to lattice order
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
@@ -84,12 +95,18 @@ class Rhombus():
         # a list of lists of 4 Points
         return scenarios
 
-    # returns a Point object. there is only one option: 1 unit to the right of the start point.
+    # calculates the second point given one point
+    #  *second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
+    #
+    # point1 - 2d point
+    #
+    # returns the second point
     def get_second_point(self, point1):
         return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
-    # return a list of Point objects. 
-    # finds the third points by finding the point 90 degrees and -90 degrees from the line formed by pt 1 and pt 2
+    # return a list of Point objects
+    # 2 possible angles (large and small), each positive and negative
+    # total = 4 options
     def get_third_points(self, point1, point2):
         side_length = Geometry.distance(point1, point2)
         third_points = []
@@ -102,9 +119,7 @@ class Rhombus():
 
         return third_points
 
-    # return a Point object. there is 1 option: the final corner of the square.
-    # finds the fourth points by finding the point -90 degrees and 90 degrees from the line formed by pt 2 and pt 1
-    # notice how this is FLIPPED from get_third_points.
+    # return a Point object. there is 1 option: the final corner of the rhombus.
     def get_fourth_points(self, point1, point2, point3):
         side_length = Geometry.distance(point2, point3)
         angle = Geometry.get_angle(point1, point2, point3)
@@ -123,13 +138,15 @@ class Rhombus():
 
     # determines if the scenarios all form rhombi
     #
-    # returns whether they are rhombi
+    # returns whether all scenarios are rhombi
     @staticmethod
     def are_rhombi(scenarios):
         for scenario in scenarios:
+            # 4 spaces
             if len(scenario) != 4:
                 return False
 
+            # all points filled
             if None in scenario:
                 return False
 
@@ -140,10 +157,12 @@ class Rhombus():
                      Geometry.distance(point3, point4),
                      Geometry.distance(point4, point1)]
 
+            # all sides equal
             for side in sides:
                 if not math.isclose(sides[0], side):
                     return False
             
+            # no overlapped points
             if ((math.isclose(point1.x, point3.x) and math.isclose(point1.y, point3.y)) or 
                 (math.isclose(point2.x, point4.x) and math.isclose(point2.y, point4.y))):
                 return False
@@ -154,9 +173,11 @@ class Rhombus():
             angle3 = Geometry.get_angle(point3, point4, point1)
             angle4 = Geometry.get_angle(point4, point1, point2)
 
+            # angle pairs
             if not math.isclose(angle1, angle3) or not math.isclose(angle2, angle4):
                 return False
             
+            # no flat angles
             for angle in [angle1, angle2, angle3, angle4]:
                 if math.isclose(angle, math.radians(180)) or math.isclose(angle, math.radians(0), abs_tol=1e-9):
                     return False

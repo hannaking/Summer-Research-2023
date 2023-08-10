@@ -1,3 +1,25 @@
+# takes a non zero number of points and returns lists of 4 points such that they form darts
+
+# if one point is passed in the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# the sides have a ratio of 1:2 if possible otherwise the small angle = (180 - top angle) / 4
+#
+#
+# s  --> small angle
+# b  --> big angle
+# b' --> angle opposite of big angle
+# t  --> top angle
+# I  --> short side
+# L  --> large side
+#               / \
+#             /  t  \
+#           /         \
+#       L /     _b_     \ L
+#       /     /  b' \     \
+#     / s /             \ s \
+#   / /  I               I  \ \
+# //                           \\
+
 import math
 import sys
 import os
@@ -19,32 +41,11 @@ DEFAULT_ANGLES = [#math.radians(30),
                   math.pi - (math.radians(300) + 2*math.asin(math.sin(math.radians(300)/2)/2))/2,
                   math.pi - (math.radians(270) + 2*math.asin(math.sin(math.radians(270)/2)/2))/2]
 
-# s  --> small angle
-# b  --> big angle
-# b' --> angle opposite of big angle
-# t  --> top angle
-# I  --> short side
-# L  --> large side
-#               / \
-#             /  t  \
-#           /         \
-#       L /     _b_     \ L
-#       /     /  b' \     \
-#     / s /             \ s \
-#   / /  I               I  \ \
-# //                           \\
-
 class Dart():
      
     def __init__(self, known_coords):
         self._points = known_coords
 
-    # takes a non zero number of points and returns lists of 4 points such that they form darts 
-    # if one point is passed in the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90
-    # degree roations
-    # the sides have a ratio of 1:2 if possible otherwise the small angle = (180 - top angle) / 4
-    # if 2 or fewer points are passed in the small angle is 
-    #
     # returns a list of scenarios
     def coordinatize(self):
 
@@ -489,7 +490,7 @@ class Dart():
 
         return True
     
-    # Math
+    # ------------- Math ------------- #
 
     # gets the length of the interior diagonal
     #

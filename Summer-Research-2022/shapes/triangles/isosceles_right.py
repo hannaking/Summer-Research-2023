@@ -1,3 +1,17 @@
+# takes a non zero number of points and returns lists of 3 points such that they form isosceles right triangles
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# the first side is both the base and a side and will be length 1 unless it is an edge glue to something with a different length
+#
+# 45 45 90 triangle rules
+#        /\
+#       /90\
+#   x  /    \  x
+#     /45  45\
+#    '--------'
+#     x*sqrt(2)
+
 import sys
 import math
 import os
@@ -17,86 +31,51 @@ class IsoscelesRight():
         self._points = known_coords
 
     def coordinatize(self):
-        # you will start with either one point, two points, or three points.
-        #
-        # First, we sort the coordinates #?
-        #
-        # if you have one point, you will need to find the second point. There is only one option: 1 unit to the right of the start point.
-        # We make this decision based on the fact that since we only know the first point, we have no knowledge of the size of the square,
-        # so we default to 1 unit. It is to the right because it would look the same whether it was to the left, up, or down, so it does not make
-        # much of a meaningful difference.
-        #
-        # once two points are found, you will need to find the third points (plural!) 
-        # If you were given two points to start with, you find the distance between the two. 
-        # This is the side length of the square, so you know how far away the third point should be.
-        # There are two options: above the second point and below the second point.
-        #
-        # Once three points are found, you will need to find the fourth points.
-        # There is only one option: the final corner of the square.
-        # However, you need to repeat the process for each third coordinate.
-        # Like before, find the side length by finding the distance between two of the points.
-        # Then you'll find the points that are 90 and -90 degrees from the line formed by the third point and the second point.
-        # Only one of these coordinates is correct.
-        # We find the correct point by creating vectors between the first point and the second point, then the first point and the two possible third points.
-        # We check which of the vectors are orthogonal to the vector between the first point and the second point.
-        # The one that is orthogonal is the correct point.
-        # The one that is not orthogonal is the incorrect point.
-        #
-        # Once you have the fourth point, you have a complete scenario.
-        #
-        # For each of these scenarios, we rotate the points about the origin with the angles we care about:
-        # [30, 45, 60, 90, 180 ,-30, -45 ,-60 ,-90] degrees (will convert to radians)
-        # Each of these is a new scenario.
-        # We then unsort these scenarios, then return them.
 
-        scenarios = []  # list of lists of Points
+        scenarios = []
 
-        # I need to sort the coords , dragging along a list of indices.
-        # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
-        # which i need to be happening so we maintain Point order
-
+        # sort the coords , dragging along a list of indices
+        # Later, sort that list of indices and drag the points along with it, which will unsort the list of Points
+        # maintains Point order in the lattice which is needed in generator
+        #
+        # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None ) ]
-
-        # but this does get a sorted points list
         sorted_points = [b[1] for b in first_sort]
 
-        # to make it easier to understand what sorted points are
         point1 = sorted_points[0]
         point2 = sorted_points[1]
         point3 = sorted_points[2]
 
-        # checks if a right isotriangle can't be made or if the passed in points are already a right isotriangle
+        # 3 Points known
+        # checks if the Points given are or are not a valid isosceles right triangle
         if None not in sorted_points:
             if(self._verify_isosceles_triangle()):
                 return [self._points]
             else:
                 return []
 
-        # boolean that tells whether this triangle is vertex glued or not. default to False.
+        # boolean for whether this triangle is vertex glued or not. default to False.
         vertex_gluing = False
 
+        # 1 Point known
         if point2 == None:
             # get second point
             point2 = self.get_second_point(point1)
-            # since we only have one point, we know that the square is vertex glued.
             vertex_gluing = True
 
+        # 2 Points known
         if point3 == None:
-            # get third points (two because it could be above or below the start line)
             third_points = self.get_third_points(point1, point2)
-
-        # we have 4 scenarios at 0 degrees: 90 degrees above and below the x axis, and 45 degrees above and below the x axis
+        # 4 options for third point: 90 degrees above and below the x axis, and 45 degrees above and below the x axis
         for i in range(len(third_points)):
             scenarios.append([point1, point2, third_points[i]])
 
-        # you would only ever want to rotate your shape if you are vertex glued.
+        # you would only ever want to rotate your shape if you are vertex glued or the first shape on the board
         # if you are already given two or three points, there is no point in rotating your shape.
         if vertex_gluing == True:
-            # now we will rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
+            # rotate each scenario by [30,45,60,90,180,-30-45,-60,-90] degrees (will convert to radians),
             # creating a new scenario, and add it to the list of scenarios
-            # 4 scenarios * 9 angles = 36 new scenarios
-            # 40 scenarios in total
-            # note: we are rotating the points about point 1, because we know that point 1 is either the origin or the vertex we are glued to.
             angles = [30, 45, 60, 90, 180, -30, -45, -60, -90]
             original_scenario_len = len(scenarios)
             for i in range(original_scenario_len):
@@ -112,13 +91,34 @@ class IsoscelesRight():
         # a list of lists of 3 Points
         return scenarios
 
-    # returns a Point object. there is only one option: 1 unit to the right of the start point.
+    # calculates the second point given one point
+    #  *second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
+    #
+    # point1 - 2d point
+    #
+    # returns the second point
     def get_second_point(self, point1):
         return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
-    # return a list of Point objects. there are four options: 90, -90, 45, -45 degrees.
-    # when each point is calculated, side_length is used to find what the length of the new side should be according to the proportions of
-    # an isosceles right triangle.
+    # given 2 points that form one segment
+    # that segment is both the base and an isosceles side (2 options)
+    #      (no need for it to be an isosceles side twice because an iso right tri has symmetry down the center)
+    # for each of those cases, the next point must be above and below the existing segment (2 options per)
+    # Cases:
+    # 1. Given base, positive angle
+    #      1-------2
+    #             /
+    #            / <- side, length is given/sqrt(2), angle is 45
+    #           /
+    #          3
+    # 2. Given base, negative angle
+    #          3
+    #           \
+    #            \  <- side, length is given/sqrt(2), angle is -45
+    #             \
+    #      1-------2
+    # 3. Given side, positive angle                (I can't draw these) (angle is +/- 90)
+    # 4. Given side, negative angle     (the next side is the other side and it has the same length)
     def get_third_points(self, point1, point2):
         side_length = Geometry.distance(point1, point2)
         third_points = []
@@ -129,9 +129,10 @@ class IsoscelesRight():
 
         return third_points
     
-    # verifies the points form an isosceles rihgt triangle
+    # verifies the points form an isosceles right triangle
     #
-    # returns whether it is an isosceles triangle triangle
+    # return True if there are three points, one right angle, and two matching sides
+    # return False otherwise
     def _verify_isosceles_triangle(self):
         if len(self._points) != 3:
             return False

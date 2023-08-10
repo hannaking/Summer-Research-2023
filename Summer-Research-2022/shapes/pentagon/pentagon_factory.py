@@ -1,3 +1,6 @@
+# manages pentagon construction
+# only regular pentagons are supported, so only one type of pentagon is possible
+
 import sys
 import os
 
@@ -15,6 +18,12 @@ class PentagonFactory:
     def _empty_types(self):
         self._types = []
 
+    # determines which types of pentagons are to be constructed
+    # pentagons can only be regular pentagons
+    #
+    # type - string type of Pentagon to be included
+    #
+    # return True if type is 'RegularPent', otherwise False
     def _include_type(self, type):
 
         if type == 'RegularPent':
@@ -23,6 +32,11 @@ class PentagonFactory:
 
         return False
 
+    # get all possible scenarios based on the given coords
+    #
+    # coords - known point(s) involved in the pentagon
+    #
+    # returns a list of lists of Points, each a valid and complete pentagon
     def _coordinatize(self, coords):
         scenarios = []
         

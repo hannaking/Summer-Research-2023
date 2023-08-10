@@ -1,3 +1,8 @@
+# manages triangle construction
+# 4 types of triangles are supported:
+# Equilateral    Isosceles Right     Isosceles     Non-Isosceles Right
+#                  (45-45-90)                          (30-60-90)
+
 import sys
 import os
 
@@ -10,8 +15,6 @@ from triangles.isosceles_right           import IsoscelesRight
 from triangles.non_isosceles_right       import NonIsoscelesRight
 from triangles.isosceles                 import Isosceles
 
-#TODO remeber to add back all other triangle types
-# TriangleFactory class 
 class TriangleFactory:
 
     def __init__(self):
@@ -20,6 +23,12 @@ class TriangleFactory:
     def _empty_types(self):
         self._types = []
 
+    # determines which types of triangles are to be constructed
+    # 4 types: Equilateral, IsoscelesRight, NonIsoscelesRight, Isosceles
+    #
+    # type - string type of Triangle to be included
+    #
+    # return True if type is a valid triangle type, otherwise False
     def _include_type(self, type):
 
         if type == 'Equilateral':
@@ -40,6 +49,11 @@ class TriangleFactory:
 
         return False
 
+    # get all possible scenarios based on the given coords
+    #
+    # coords - known point(s) involved in the triangle
+    #
+    # returns a list of lists of Points, each a valid and complete triangle
     def _coordinatize(self, coords):
         
         scenarios = []

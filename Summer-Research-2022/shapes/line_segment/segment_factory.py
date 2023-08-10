@@ -1,3 +1,6 @@
+# manages line segment construction
+# only one type of line segment ('Segment') is possible
+
 import sys
 import os
 
@@ -16,6 +19,12 @@ class SegmentFactory:
     def _empty_types(self):
         self._types = []
 
+    # determines which types of line segments are to be constructed
+    # there is only one type of line segment
+    #
+    # type - string type of Segment to be included
+    #
+    # return True if type is 'Segment', otherwise False
     def _include_type(self, type):
 
         if type == 'Segment':
@@ -24,6 +33,11 @@ class SegmentFactory:
 
         return False
 
+    # get all possible scenarios based on the given coords
+    #
+    # coords - known point(s) involved in the segment
+    #
+    # returns a list of lists of Points, each a valid and complete segment
     def _coordinatize(self, coords):
         
         scenarios = []

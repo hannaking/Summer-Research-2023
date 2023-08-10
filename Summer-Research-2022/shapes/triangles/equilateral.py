@@ -1,6 +1,17 @@
+# takes a non zero number of points and returns lists of 3 points such that they form equilateral triangles 
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# all sides will be of equal length, defaulting to side length 1
+# all interior angles are 60 degrees
+#        /\
+#       /60\
+#   x  /    \  x
+#     /60  60\
+#    '--------'
+#         x
 
 import math
-
 import sys
 import os
 
@@ -16,64 +27,66 @@ DEFAULT_SIDE_LENGTH = 1
 
 # _points = a list of Point objects that represent the starting position for the equilateral triangle
 
-# sides of equal length, all angles are 60 degrees
 class Equilateral(): 
-    # coming from Triangle (?) based on the lattice
     def __init__(self, known_coords):
         self._points = known_coords
         self._draw_order_indices = []
 
     def coordinatize(self):
         # you will start with either one or two Points in _points that are not None
-        # i need to see which index(es) in the list is/are not None, I can't assume it gois Point None None or Point Point None like I did before
-        # then that index in _points is the jumping off point for the rest of the points
         #
-        # if you start with one point, you need to get every second point for the possible angles (just do pos and neg angles because I will filter it after)
+        # if you start with one point, you need to get every second point for the possible rotation angles
+        # use the default side length (1 unit)
         # then do the same as you would if you got two points for every second point you got above
-
+        #
         # if you start with two, you have the length of the desired segment and you have only two options for the third point - on one side of the segment or on the other
-        # so 60 or -60 degrees from either of the points (doen't matter which) becaue this is an equilateral triangle
-        
-        # make sure to not overwrite any points
-        # each unique group of three points is its own scenario
+        # so 60 or -60 degrees from either of the points (doesn't matter which) becaue this is an equilateral triangle, with interior angles of 60
 
-        # about the Lattice - there is a whole mess about sorting and unsorting the coord list to make it match the lattice in thr factory
-        scenarios = []  # list of lists of Points
+        scenarios = []
+        second_points = []
 
-        second_points = [] # list of possible second points in the shape - don't necessarily go in the second position of the list
-
-        # I need to sort the coords , dragging along a list of indices.
-        # Later, I will sort that list of indices and drag the points along with it, which will unsort the list of Points
-        # which i need to be happening so we maintain Point order
+        # sort the coords , dragging along a list of indices
+        # Later, sort that list of indices and drag the points along with it, which will unsort the list of Points
+        # maintains Point order in the lattice which is needed in generator
+        #
+        # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None )]
-
-        # but this does get a sorted points list
-
         sorted_points = [b[1] for b in first_sort]
 
-        # checks if an equilateral triangle can't be made or if the passed in points are already an equilateral triangle
+        # 3 Points known
+        # checks if the Points given are or are not a valid equilateral triangle
         if None not in sorted_points:
             if(self._verify_equilateral_triangle()):
                 return [self._points]
             else:
                 return []
 
+        # 1 Point known
         # get all possible next point for the given single point
+        # includes all rotations
         if (sorted_points[1] == None): # one known point
             second_points.extend(Geometry.get_second_points(sorted_points[0]))
-        else: # two known points
+        else:
             second_points.append(sorted_points[1])
 
+        # 2 Points known
         # there are two possible third points per second point
+        # third point 1:
+        #   1----2
+        #         \
+        #          3     positive angle
+        # third point 2:
+        #          3     negative angle
+        #         /
+        #   1----2
         for point in second_points:
             side_length = sorted_points[0].distance(point)
             third_point = Geometry.calculate_point_from_angle(ANGLE, sorted_points[0], point, side_length)
 
-            # unsort
+            # build the scenario and unsort
             scenario = [sorted_points[0], point, third_point]
-            # print("before unsort",[str(x) for x in scenario])
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
-            # print("after unsort:",[str(x) for x in scenario])
 
             scenarios.append(scenario)
 
@@ -82,7 +95,7 @@ class Equilateral():
 
     # verifies the points form an equilateral triangle
     #
-    # returns whether it is a triangle
+    # returns True if 3 equilateral sides, otherwise False
     def _verify_equilateral_triangle(self):
         if len(self._points) != 3:
             return False
@@ -92,7 +105,7 @@ class Equilateral():
         side2 = Geometry.distance(self._points[1], self._points[2])
         side3 = Geometry.distance(self._points[2], self._points[0])
         
-        # Check if it's an equilateral triangle
+        # Check if it's equilateral
         if not math.isclose(side1, side2) or not math.isclose(side2, side3):
             return False
 

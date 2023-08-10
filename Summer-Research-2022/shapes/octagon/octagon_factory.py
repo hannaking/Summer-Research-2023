@@ -1,3 +1,6 @@
+# manages octagon construction
+# only regular octagons are supported, so only one type of octagon is possible
+
 import sys
 import os
 
@@ -15,6 +18,12 @@ class OctagonFactory:
     def _empty_types(self):
         self._types = []
 
+    # determines which types of octagons are to be constructed
+    # octagons can only be regular octagons
+    #
+    # type - string type of Octagon to be included
+    #
+    # return True if type is 'RegularOct', otherwise False
     def _include_type(self, type):
 
         if type == 'RegularOct':
@@ -23,6 +32,11 @@ class OctagonFactory:
 
         return False
 
+    # get all possible scenarios based on the given coords
+    #
+    # coords - known point(s) involved in the octagon
+    #
+    # returns a list of lists of Points, each a valid and complete octagon
     def _coordinatize(self, coords):
         scenarios = []
         

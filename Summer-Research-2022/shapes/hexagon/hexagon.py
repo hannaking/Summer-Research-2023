@@ -1,3 +1,12 @@
+# takes a non zero number of points and returns lists of 6 points such that they form regular hexagons 
+#
+# if only one point is used in construction, the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90 degree rotations
+#
+# all sides will be of equal length, defaulting to side length 1
+# all interior angles are 120 degrees
+#
+# all uses of "hexagon" refer to a regular hexagon, even if not specified
+
 import math
 import sys
 import os
@@ -27,18 +36,17 @@ class Hexagon():
      
     def __init__(self, known_coords):
         self._points = known_coords
-
-    # takes a non zero number of points and returns lists of 4 points such that they form pentagons 
-    # if one point is passed in the scenerios include 30, 45, 60, 90, 180, -30, -45, -60, and -90
-    # degree roations
-    # the sides have a ratio of 1:2 unless the ratio is included in the input points
+    
+    # get the actual points of each possible valid hexagon
     #
-    # returns a list of scenarios
+    # returns a list of lists, each containing 6 Points
+    # return [] if not 6 Points used in constructor or if the Points provided cannot form a regular hexagon
     def coordinatize(self):
 
         scenarios = []
 
         # sorts to be traversible in order
+        # (so Points are built in a path order around the shape, not in the order they occur on the lattice)
         first_sort = [ b for b in sorted(enumerate(self._points), key=lambda e: e[1] is None)]
         sorted_points = [b[1] for b in first_sort]
 
@@ -57,17 +65,20 @@ class Hexagon():
 
         scenarios = [[point1, point2, point3, point4, point5, point6]]
             
-        # checks if a pentagon can't be made or if the passed in points are already a pentagon
+        # 6 Points in
+        # checks if the Points given are or are not a valid regular hexagon
         if None not in sorted_points:
             if(self._verify_hexagon()):
                 return [self._points]
             else:
                 return []
 
+        # 1 Point in
         if point2 == None:
             scenarios = self.get_second_point_scenario(scenarios)
             vertex_gluing = True
         
+        # 2 Points in
         if point3 == None:
             scenarios = self.get_third_point_scenarios(scenarios)
         else:
@@ -75,33 +86,35 @@ class Hexagon():
             if(not self._verify_hexagon_n_points()):
                 return []
 
+        # 3 Points in
         if point4 == None:            
             scenarios = self.get_next_point_scenarios(scenarios, 3)
 
+        # 4 Points in
         if point5 == None:           
             scenarios = self.get_next_point_scenarios(scenarios, 4) 
 
+        # 5 Points in
         if point6 == None:
             scenarios = self.get_next_point_scenarios(scenarios, 5)
         
-        # makes all of the rotations around point1
+        # make all of the rotations about point1
         if vertex_gluing == True:
             scenarios = self.get_rotated_scenarios(scenarios)
 
-        # puts back it lattice order
+        # put back in lattice order
         for i, scenario in enumerate(scenarios):
             scenario = [b[1] for b in sorted(zip(first_sort, scenario), key=lambda e: e[0][0])]
             scenarios[i] = scenario
 
         return scenarios
 
-    # gets the scenario that include the second point from the scenario including
-    # only the first point.
-    #  *second point is placed +1 to the x
+    # gets the scenarios with their new second points
+    # the second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
     # 
-    # scenarios - list of list of one point and three Nones
+    # scenarios - list of lists of 1 Point and 5 Nones
     # 
-    # returns the new scenario
+    # returns the list of lists, each with 2 Points and 4 Nones (the new scenarios)
     def get_second_point_scenario(self, scenarios):
         new_scenarios = []
         for scenario in scenarios:
@@ -113,8 +126,8 @@ class Hexagon():
 
         return new_scenarios
     
-    # gets the second point given one point
-    #  *second point is placed +1 to the x
+    # calculates the second point given one point
+    #  *second point is placed DEFAULT_SIDE_LENGTH units to the right (1 unit)
     #
     # point1 - 2d point
     #
@@ -122,12 +135,13 @@ class Hexagon():
     def get_second_point(self, point1):
         return Point(point1.x + DEFAULT_SIDE_LENGTH, point1.y)
 
-    # gets the scenarios that include the third points from the scenario including
-    # only the first point and the second point.
+    # get the scenarios with their new third points
+    # each first and second point pair has 2 possible third points, 
+    # so number of scenarios will double
     # 
-    # scenarios - list of list of one point and three Nones
+    # scenarios - list of lists of 2 Points and 4 Nones
     # 
-    # returns the new scenario
+    # returns the list of lists, each with 3 Points and 3 Nones (the new scenarios)
     def get_third_point_scenarios(self, scenarios):
         new_scenarios = []
         for scenario in scenarios:
@@ -141,12 +155,21 @@ class Hexagon():
 
         return new_scenarios
     
-    # gets the third points given two points
+    # calculates the third points given two points
+    # each first and second point pair has 2 possible third points
+    # third point 1:
+    #   1----2
+    #         \
+    #          3     positive angle
+    # third point 2:
+    #          3     negative angle
+    #         /
+    #   1----2
     #
     # point1 - 2d point
     # point2 - 2d point
     #
-    # returns the third and fourth points
+    # returns a list of the 2 possible third points
     def get_third_points(self, point1, point2):
         third_points = []
         side_length = Geometry.distance(point1, point2)
@@ -156,27 +179,34 @@ class Hexagon():
         
         return third_points
 
-    # gets the scenarios that include the next points from the scenarios including
+    # get the scenarios that include their new next points
+    # must know at least 3 points already
+    # each scenario will have only one possible next point
     # 
-    # scenarios - list of list of one point and three Nones
+    # scenarios - list of lists containing at least one None and the rest Points, length 6
     # place - int, the index of the new point
+    #         place = 3 means you want to get the fourth point
     # 
     # returns the new scenario
     def get_next_point_scenarios(self, scenarios, place):
         new_scenarios = []
         for scenario in scenarios:
+            # determine past three points
             point_prev3 = scenario[place - 3]
             point_prev2 = scenario[place - 2]
             point_prev1 = scenario[place - 1]
 
+            # calculate this point
             new_point = self.get_next_point(point_prev3, point_prev2, point_prev1)
             
+            # build the new scenario
             new_scenario = []
             for i, point in enumerate(scenario):
                 if i == place:
                     new_scenario.append(new_point)
                 else:
                     new_scenario.append(point)
+            
             new_scenarios.append(new_scenario.copy())
         
         return new_scenarios
@@ -187,21 +217,21 @@ class Hexagon():
     # point_prev2 - 2d point | point before the prior point
     # point_prev1 - 2d point | prior point
     #
-    # returns the fourth point
+    # returns the next point
     def get_next_point(self, point_prev3, point_prev2, point_prev1):
         side_length = Geometry.distance(point_prev3, point_prev2)
-
         angle = Geometry.get_angle(point_prev3, point_prev2, point_prev1)
 
         next_point = Geometry.calculate_point_from_angle(angle, point_prev1, point_prev2, side_length)
 
         return next_point
     
-    # gets 10 scenarios rotated around the first point
+    # rotates each scenario around the first point at the 10 predetermined angles
+    # only used for shapes with only one Point provided on construction
     #
-    # scenarios - the non-rotated scenarios 
+    # scenarios - the non-rotated scenarios
     #
-    # returns the rotated scenarios
+    # returns the rotated scenarios and the original scenarios passed in, as a list
     def get_rotated_scenarios(self, scenarios):
         new_scenarios = scenarios.copy()
         for scenario in scenarios:
@@ -209,36 +239,42 @@ class Hexagon():
                 new_scenarios.append(Geometry.rotate(scenario, angle))
         return new_scenarios
 
-    # verify the the points compose a pentagon
+    # verify the the points compose a regular hexagon
     #
-    # returns whether or not it composes a pentagon
+    # returns whether or not the Points provided on construction compose a regular hexagon
     def _verify_hexagon(self):
         return Hexagon.are_hexagons([self._points])
 
-    # verify the the points can form a pantagon
+    # verify the the points can form a regular hexagon
     #
-    # returns whether or not it can form a pantagon
+    # returns whether or not the Points provided on construction can form a regular hexagon
     def _verify_hexagon_n_points(self):
         return Hexagon.are_hexagonable([self._points])
 
-    # determins if all of the scenarios are possible to create a pentagon
+    # determines if all of the scenarios could create a regular hexagon
     # 
-    # scenarios - list of lists of points
+    # scenarios - list of lists of Points and (possibly) Nones
     # 
-    # returns whether the scenarios are n points that could form pentagons
+    # returns True if all of the scenarios could form a regular hexagon
+    # returns False if not (scenario len not 6, varied side lengths, points out of order, varied angles)
     @staticmethod
     def are_hexagonable(scenarios):
         for scenario in scenarios:
+            # not 6 spaces in the scenario list
             if len(scenario) != NUM_SIDES:
                 return False
             
             num_present_sides = sum(_ is not None for _ in scenario)
             
+            # no need to consider if only 2 points provided - a line segment with room for 4 more Points can always become a hex
             if num_present_sides >= 3:
                 # whether the loop has seen a none
                 has_noned = False
+                
                 points = []
                 for point in scenario:
+                    # points out of order
+                    # ex Point, Point, None, Point, Point, None
                     if has_noned and point != None:
                         return False
                     if point == None:
@@ -246,17 +282,18 @@ class Hexagon():
                     else:
                         points.append(point)
             
+
                 angles = []
                 sides = []
-
+                # collect angles and side lengths
                 for i in range(len(points)-2):
                     angles.append(Geometry.get_angle(points[i], points[i+1], points[i+2]))
                 for i in range(len(points)-1):
                     sides.append(Geometry.distance(points[i], points[i+1]))
                 
+                # check that all angles match ANGLE and all side lengths match
                 if not math.isclose(abs(angles[0]), ANGLE, abs_tol=1e-9):
-                    return False
-                
+                    return False               
                 for angle in angles[1:]:
                     if not math.isclose(angle, angles[0], abs_tol=1e-9):
                         return False
@@ -266,11 +303,12 @@ class Hexagon():
             
         return True
     
-    # determins if all of the scenarios are a pentagon
+    # determines if all of the scenarios are a regular hexagon
+    # checks number of sides, that no point is None, and then calls are_hexagonable
     # 
     # scenarios - list of lists of points
     # 
-    # returns whether the scenarios are pentagons
+    # returns whether the scenarios are regular hexagons
     @staticmethod
     def are_hexagons(scenarios):
         for scenario in scenarios:
